@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 const MilesAnimation = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [displayTotal, setDisplayTotal] = useState(52000)
   const [hasCompletedCycle, setHasCompletedCycle] = useState(false)
+  const animationTimerRef = useRef(null)
+  const displayTotalRef = useRef(52000) // Храним текущее значение для синхронного доступа
 
   // Операции в порядке по нумерации (против часовой стрелки)
   const operations = [
@@ -18,69 +20,89 @@ const MilesAnimation = () => {
 
   const baseTotal = 52000
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => {
-        const nextIndex = prevIndex + 1
-        // Когда дошли до последней операции и переходим к началу
-        if (nextIndex >= operations.length) {
-          setHasCompletedCycle(true)
-          return 0 // Возвращаемся к началу
-        }
-        return nextIndex
-      })
-    }, 2000) // Переключение каждые 2 секунды
-
-    return () => clearInterval(interval)
-  }, [operations.length])
-
-  // Анимация счетчика при изменении индекса
-  useEffect(() => {
-    let targetTotal
-    
-    // Если это начало цикла (currentIndex === 0 после завершения цикла), возвращаемся к базовой сумме
-    if (currentIndex === 0 && hasCompletedCycle) {
-      targetTotal = baseTotal
-      setHasCompletedCycle(false)
-    } else if (currentIndex === 0 && !hasCompletedCycle) {
-      // Первая операция - начинаем с базовой суммы
-      targetTotal = baseTotal
-    } else {
-      // Вычисляем накопленную сумму до текущей операции
-      let accumulated = baseTotal
-      operations.slice(0, currentIndex + 1).forEach(op => {
-        accumulated += op.amount
-      })
-      targetTotal = accumulated
+  // Функция для запуска анимации счетчика
+  const animateCounter = (targetTotal, startTotal) => {
+    // Очищаем предыдущий таймер, если он есть
+    if (animationTimerRef.current) {
+      clearInterval(animationTimerRef.current)
+      animationTimerRef.current = null
     }
 
     const duration = 1000 // 1 секунда анимации
     const steps = 30
-    const difference = targetTotal - displayTotal
+    const difference = targetTotal - startTotal
     const stepValue = difference / steps
     const stepDuration = duration / steps
 
     if (Math.abs(difference) < 1) {
       setDisplayTotal(targetTotal)
+      displayTotalRef.current = targetTotal
       return
     }
 
     let currentStep = 0
-    const timer = setInterval(() => {
+    animationTimerRef.current = setInterval(() => {
       currentStep++
       if (currentStep <= steps) {
-        setDisplayTotal(prev => {
-          const newValue = prev + stepValue
-          return Math.round(newValue)
-        })
+        const newValue = startTotal + (stepValue * currentStep)
+        const roundedValue = Math.round(newValue)
+        setDisplayTotal(roundedValue)
+        displayTotalRef.current = roundedValue
       } else {
         setDisplayTotal(targetTotal)
-        clearInterval(timer)
+        displayTotalRef.current = targetTotal
+        if (animationTimerRef.current) {
+          clearInterval(animationTimerRef.current)
+          animationTimerRef.current = null
+        }
       }
     }, stepDuration)
+  }
 
-    return () => clearInterval(timer)
-  }, [currentIndex, baseTotal, operations])
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Получаем текущее значение синхронно
+      const currentTotal = displayTotalRef.current
+      
+      // Вычисляем следующий индекс используя функциональную форму
+      setCurrentIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) >= operations.length ? 0 : prevIndex + 1
+        
+        // Вычисляем целевую сумму для следующей операции
+        let targetTotal
+        if (nextIndex === 0) {
+          // Возвращаемся к базовой сумме
+          setHasCompletedCycle(true)
+          targetTotal = baseTotal
+        } else {
+          // Вычисляем накопленную сумму до следующей операции
+          let accumulated = baseTotal
+          operations.slice(0, nextIndex + 1).forEach(op => {
+            accumulated += op.amount
+          })
+          targetTotal = accumulated
+        }
+
+        // Запускаем анимацию счетчика синхронно с переключением операции
+        animateCounter(targetTotal, currentTotal)
+        
+        return nextIndex
+      })
+    }, 2000) // Переключение каждые 2 секунды
+
+    return () => {
+      clearInterval(interval)
+      if (animationTimerRef.current) {
+        clearInterval(animationTimerRef.current)
+        animationTimerRef.current = null
+      }
+    }
+  }, [operations.length])
+
+  // Синхронизируем ref с состоянием
+  useEffect(() => {
+    displayTotalRef.current = displayTotal
+  }, [displayTotal])
 
 
   return (

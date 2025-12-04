@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import heroFinger from '../assets/images/hero_finger.png'
 
 const AllExtras = () => {
-    const [selectedBenefit, setSelectedBenefit] = useState(null)
     const [isVisible, setIsVisible] = useState(false)
     const sectionRef = useRef(null)
 
@@ -106,8 +105,7 @@ const AllExtras = () => {
                         return (
                         <div
                             key={benefit.id}
-                            className={`benefit-card ${isVisible ? 'animate-card' : ''} ${selectedBenefit === benefit.id ? 'selected' : ''}`}
-                            onClick={() => setSelectedBenefit(benefit.id)}
+                            className={`benefit-card ${isVisible ? 'animate-card' : ''}`}
                             style={{
                                 animationDelay: `${delay}s`,
                             }}
@@ -121,11 +119,6 @@ const AllExtras = () => {
                                     <div className="benefit-description">{benefit.description}</div>
                                 )}
                             </div>
-                            {selectedBenefit === benefit.id && (
-                                <div className="benefit-checkmark">
-                                    <div className="checkmark-circle">✓</div>
-                                </div>
-                            )}
                         </div>
                         )
                     })}

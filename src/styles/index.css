@@ -900,7 +900,9 @@ body {
     filter: blur(10px);
   }
   50% {
+    opacity: 1;
     transform: scale(1.1) rotate(5deg) translateY(-10px);
+    filter: blur(0);
   }
   100% {
     opacity: 1;
