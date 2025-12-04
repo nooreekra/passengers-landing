@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import heroImage from '../assets/images/hero_bclass.png'
+import heroImage from '../assets/images/hero_bclass.jpg'
 import PartnersCarousel from './PartnersCarousel'
 
 const CollectMiles = () => {
