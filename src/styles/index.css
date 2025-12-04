@@ -533,6 +533,7 @@ body {
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   line-height: 0.9;
   letter-spacing: 1px;
+  padding-top: 20px;
 }
 
 .landing-description {
