@@ -1,9 +1,36 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import istanbulImage from '../assets/images/istanbul_street.png'
 import teamupImage from '../assets/images/teamup.png'
 import maldivesImage from '../assets/images/maldives_room.png'
 
 const SpendMiles = () => {
+    const [isVisible, setIsVisible] = useState(false)
+    const sectionRef = useRef(null)
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setIsVisible(true)
+                    }
+                })
+            },
+            {
+                threshold: 0.2,
+            }
+        )
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current)
+        }
+
+        return () => {
+            if (sectionRef.current) {
+                observer.unobserve(sectionRef.current)
+            }
+        }
+    }, [])
 
     const options = [
         {
@@ -34,14 +61,20 @@ const SpendMiles = () => {
 
 
     return (
-        <div className="spend-miles-section">
+        <div className="spend-miles-section" ref={sectionRef}>
             <div className="spend-miles-section-title">
                 <p className="section-title">spend miles</p>
             </div>
             <h2 className="section-subtitle">choose your next getaway</h2>
             <div className="spend-options-container">
-                {options.map((option) => (
-                    <div key={option.id} className="spend-option-wrapper">
+                {options.map((option, index) => (
+                    <div 
+                        key={option.id} 
+                        className={`spend-option-wrapper ${isVisible ? 'animate-slide-up' : ''}`}
+                        style={{
+                            animationDelay: `${index * 0.3}s`,
+                        }}
+                    >
                         <div className="spend-option-header">
                             <div className="spend-option-destination">{option.destination}</div>
                         </div>

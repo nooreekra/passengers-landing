@@ -7,6 +7,7 @@ import SpendMiles from '../components/SpendMiles'
 import AllExtras from '../components/AllExtras'
 import StatusBenefits from '../components/StatusBenefits'
 import PartnersBenefits from '../components/PartnersBenefits'
+import Footer from '../components/Footer'
 
 const HomePage = () => {
   return (
@@ -52,6 +53,9 @@ const HomePage = () => {
       <section className="partners-section">
         <PartnersBenefits />
       </section>
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

@@ -1,8 +1,35 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import heroFinger from '../assets/images/hero_finger.png'
 
 const AllExtras = () => {
     const [selectedBenefit, setSelectedBenefit] = useState(null)
+    const [isVisible, setIsVisible] = useState(false)
+    const sectionRef = useRef(null)
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setIsVisible(true)
+                    }
+                })
+            },
+            {
+                threshold: 0.2,
+            }
+        )
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current)
+        }
+
+        return () => {
+            if (sectionRef.current) {
+                observer.unobserve(sectionRef.current)
+            }
+        }
+    }, [])
 
     const IconWifi = () => (
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -64,18 +91,26 @@ const AllExtras = () => {
     ]
 
     return (
-        <div className="benefits-selection-section">
+        <div className="benefits-selection-section" ref={sectionRef}>
             <div className="benefits-background" style={{ backgroundImage: `url(${heroFinger})` }}>
                 <div className="benefits-overlay"></div>
             </div>
             <div className="benefits-content">
                 <p className="section-subtitle">all extras at your finger point</p>
                 <div className="benefits-grid">
-                    {benefits.map((benefit) => (
+                    {benefits.map((benefit, index) => {
+                        const row = Math.floor(index / 3)
+                        const col = index % 3
+                        const delay = row * 0.2 + col * 0.15
+                        
+                        return (
                         <div
                             key={benefit.id}
-                            className={`benefit-card ${selectedBenefit === benefit.id ? 'selected' : ''}`}
+                            className={`benefit-card ${isVisible ? 'animate-card' : ''} ${selectedBenefit === benefit.id ? 'selected' : ''}`}
                             onClick={() => setSelectedBenefit(benefit.id)}
+                            style={{
+                                animationDelay: `${delay}s`,
+                            }}
                         >
                             <div className="benefit-icon">
                                 {benefit.icon && React.createElement(benefit.icon)}
@@ -92,7 +127,8 @@ const AllExtras = () => {
                                 </div>
                             )}
                         </div>
-                    ))}
+                        )
+                    })}
                 </div>
             </div>
         </div>
