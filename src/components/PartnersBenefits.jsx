@@ -35,10 +35,10 @@ const PartnersBenefits = () => {
   }, [])
   const benefits = [
     { text: 'Welcome Bonus', image: bonus3d },
-    { text: 'Free monthly treat.', image: cake3d },
+    { text: 'Free monthly treat', image: cake3d },
     { text: 'Priority check in at business class counter', image: checkin3d },
-    { text: 'Advance seat booking.', image: seat3d },
-    { text: 'extended check-in, check out time', image: dinner3d },
+    { text: 'Advance seat booking', image: seat3d },
+    { text: 'Extended check-in, check out time', image: dinner3d },
   ]
 
   return (
@@ -48,7 +48,6 @@ const PartnersBenefits = () => {
         </div>
       <h2 className="section-subtitle">exclusive Perks</h2>
       <div className="partners-benefits-container">
-        {/* Center Content */}
         <div className="partners-center-content">
           <ul className="partners-benefits-list">
             {benefits.map((benefit, index) => (
@@ -59,43 +58,31 @@ const PartnersBenefits = () => {
                   animationDelay: `${index * 0.15}s`,
                 }}
               >
+                {index % 2 === 0 && (
+                  <img 
+                    src={benefit.image} 
+                    alt={benefit.text}
+                    className={`partners-benefit-3d-model ${isVisible ? 'animate-3d' : ''}`}
+                    style={{
+                      animationDelay: `${index * 0.2 + 0.4}s`,
+                    }}
+                  />
+                )}
                 <span className="partners-benefit-text">{benefit.text}</span>
+                {index % 2 === 1 && (
+                  <img 
+                    src={benefit.image} 
+                    alt={benefit.text}
+                    className={`partners-benefit-3d-model ${isVisible ? 'animate-3d' : ''}`}
+                    style={{
+                      animationDelay: `${index * 0.2 + 0.4}s`,
+                    }}
+                  />
+                )}
               </li>
             ))}
           </ul>
         </div>
-
-        {/* 3D Models - Left Side (absolute positioned inside container) */}
-        {benefits.map((benefit, index) => (
-          index % 2 === 0 && (
-            <img 
-              key={index}
-              src={benefit.image} 
-              alt={benefit.text}
-              className={`partners-benefit-3d-model left-model model-${index} ${isVisible ? 'animate-3d' : ''}`}
-              style={{
-                top: `${3 + index * 18}%`,
-                animationDelay: `${index * 0.2 + 0.4}s`,
-              }}
-            />
-          )
-        ))}
-
-        {/* 3D Models - Right Side (absolute positioned inside container) */}
-        {benefits.map((benefit, index) => (
-          index % 2 === 1 && (
-            <img 
-              key={index}
-              src={benefit.image} 
-              alt={benefit.text}
-              className={`partners-benefit-3d-model right-model model-${index} ${isVisible ? 'animate-3d' : ''}`}
-              style={{
-                top: `${20 + (index - 1) * 18}%`,
-                animationDelay: `${index * 0.2 + 0.4}s`,
-              }}
-            />
-          )
-        ))}
       </div>
     </div>
   )

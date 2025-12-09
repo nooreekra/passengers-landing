@@ -28,15 +28,15 @@ const LoginForm = ({ onSubmit, isLoading }) => {
     const newErrors = {}
     
     if (!formData.email) {
-      newErrors.email = 'Email обязателен'
+      newErrors.email = 'Email is required'
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Введите корректный email'
+      newErrors.email = 'Enter a valid email'
     }
     
     if (!formData.password) {
-      newErrors.password = 'Пароль обязателен'
+      newErrors.password = 'Password is required'
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Пароль должен содержать минимум 6 символов'
+      newErrors.password = 'Password must contain at least 6 characters'
     }
     
     setErrors(newErrors)
@@ -68,7 +68,7 @@ const LoginForm = ({ onSubmit, isLoading }) => {
           value={formData.email}
           onChange={handleChange}
           className={`form-input ${errors.email ? 'error' : ''}`}
-          placeholder="Введите ваш email"
+          placeholder="Enter your email"
           disabled={isLoading}
         />
         {errors.email && (
@@ -78,7 +78,7 @@ const LoginForm = ({ onSubmit, isLoading }) => {
 
       <div className="form-group">
         <label htmlFor="password" className="form-label">
-          Пароль
+          Password
         </label>
         <div className="password-container">
           <input
@@ -88,7 +88,7 @@ const LoginForm = ({ onSubmit, isLoading }) => {
             value={formData.password}
             onChange={handleChange}
             className={`form-input ${errors.password ? 'error' : ''}`}
-            placeholder="Введите ваш пароль"
+            placeholder="Enter your password"
             disabled={isLoading}
           />
           <button
@@ -113,16 +113,16 @@ const LoginForm = ({ onSubmit, isLoading }) => {
         {isLoading ? (
           <>
             <span className="loading-spinner"></span>
-            Вход...
-          </>
+            Signing in...
+          </> 
         ) : (
-          'Войти'
+          'Sign In'
         )}
       </button>
 
       <div className="forgot-password">
         <a href="#" onClick={(e) => e.preventDefault()}>
-          Забыли пароль?
+          Forgot password?
         </a>
       </div>
     </form>

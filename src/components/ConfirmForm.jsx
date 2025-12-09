@@ -26,9 +26,9 @@ const ConfirmForm = ({ email, onSubmit, isLoading, onBack }) => {
     const newErrors = {}
     
     if (!formData.code.trim()) {
-      newErrors.code = 'Код подтверждения обязателен'
+      newErrors.code = 'Confirmation code is required'
     } else if (formData.code.trim().length < 4) {
-      newErrors.code = 'Код должен содержать минимум 4 символа'
+      newErrors.code = 'Code must contain at least 4 characters'
     }
     
     setErrors(newErrors)
@@ -50,7 +50,7 @@ const ConfirmForm = ({ email, onSubmit, isLoading, onBack }) => {
     <form onSubmit={handleSubmit} className="login-form">
       <div className="form-group">
         <label htmlFor="code" className="form-label">
-          Код подтверждения
+          Confirmation Code
         </label>
         <input
           type="text"
@@ -59,7 +59,7 @@ const ConfirmForm = ({ email, onSubmit, isLoading, onBack }) => {
           value={formData.code}
           onChange={handleChange}
           className={`form-input ${errors.code ? 'error' : ''}`}
-          placeholder="Введите код из email"
+          placeholder="Enter code from email"
           disabled={isLoading}
           maxLength="10"
         />
@@ -67,7 +67,7 @@ const ConfirmForm = ({ email, onSubmit, isLoading, onBack }) => {
           <div className="field-error">{errors.code}</div>
         )}
         <div style={{ marginTop: '8px', fontSize: '12px', color: '#718096' }}>
-          Код отправлен на {email}
+          Code sent to {email}
         </div>
       </div>
 
@@ -79,10 +79,10 @@ const ConfirmForm = ({ email, onSubmit, isLoading, onBack }) => {
         {isLoading ? (
           <>
             <span className="loading-spinner"></span>
-            Подтверждение...
-          </>
+            Confirming...
+          </> 
         ) : (
-          'Подтвердить'
+          'Confirm'
         )}
       </button>
 
@@ -93,7 +93,7 @@ const ConfirmForm = ({ email, onSubmit, isLoading, onBack }) => {
           onClick={onBack}
           disabled={isLoading}
         >
-          Назад
+          Back
         </button>
       )}
     </form>
@@ -101,6 +101,10 @@ const ConfirmForm = ({ email, onSubmit, isLoading, onBack }) => {
 }
 
 export default ConfirmForm
+
+
+
+
 
 
 

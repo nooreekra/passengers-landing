@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import LoginForm from './LoginForm'
 import RegistrationForm from './RegistrationForm'
 import ConfirmForm from './ConfirmForm'
+import AgreementsModal from './AgreementsModal'
 import authService from '../services/authService'
 import { config } from '../config/env'
 
@@ -12,6 +13,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [success, setSuccess] = useState('')
   const [registrationEmail, setRegistrationEmail] = useState('')
   const [showConfirm, setShowConfirm] = useState(false)
+  const [showAgreements, setShowAgreements] = useState(false)
 
   // Закрытие модалки по Escape
   useEffect(() => {
@@ -45,26 +47,26 @@ const AuthModal = ({ isOpen, onClose }) => {
       const response = await authService.login(credentials)
       
       if (response && response.accessToken) {
-        setSuccess('Успешный вход! Перенаправление...')
+        setSuccess('Login successful! Redirecting...')
         setTimeout(() => {
           window.location.href = config.DASHBOARD_URL
         }, 1000)
       } else {
-        setError('Ошибка авторизации. Попробуйте еще раз.')
+        setError('Authorization error. Please try again.')
       }
     } catch (err) {
       console.error('Login error:', err)
       
       if (err.message.includes('401') || err.message.includes('Unauthorized')) {
-        setError('Неверный email или пароль')
+        setError('Invalid email or password')
       } else if (err.message.includes('403') || err.message.includes('Forbidden')) {
-        setError('Доступ запрещен. Обратитесь к администратору')
+        setError('Access denied. Contact administrator')
       } else if (err.message.includes('500') || err.message.includes('Internal Server Error')) {
-        setError('Ошибка сервера. Попробуйте позже')
+        setError('Server error. Please try later')
       } else if (err.message.includes('Network') || err.message.includes('fetch')) {
-        setError('Ошибка сети. Проверьте подключение к интернету')
+        setError('Network error. Check your internet connection')
       } else {
-        setError(err.message || 'Произошла ошибка при входе. Попробуйте еще раз.')
+        setError(err.message || 'An error occurred during login. Please try again.')
       }
     } finally {
       setIsLoading(false)
@@ -80,20 +82,25 @@ const AuthModal = ({ isOpen, onClose }) => {
       await authService.register(userData)
       setRegistrationEmail(userData.email)
       setShowConfirm(true)
-      setSuccess('Регистрация успешна! Проверьте email для получения кода подтверждения.')
+      setSuccess('Registration successful! Check your email for the confirmation code.')
+      
+      // Автоматически скрываем сообщение об успехе через 5 секунд
+      setTimeout(() => {
+        setSuccess('')
+      }, 5000)
     } catch (err) {
       console.error('Registration error:', err)
       
       if (err.message.includes('400') || err.message.includes('Bad Request')) {
-        setError('Проверьте правильность введенных данных')
+        setError('Check the correctness of the entered data')
       } else if (err.message.includes('409') || err.message.includes('Conflict')) {
-        setError('Пользователь с таким email уже существует')
+        setError('User with this email already exists')
       } else if (err.message.includes('500') || err.message.includes('Internal Server Error')) {
-        setError('Ошибка сервера. Попробуйте позже')
+        setError('Server error. Please try later')
       } else if (err.message.includes('Network') || err.message.includes('fetch')) {
-        setError('Ошибка сети. Проверьте подключение к интернету')
+        setError('Network error. Check your internet connection')
       } else {
-        setError(err.message || 'Произошла ошибка при регистрации. Попробуйте еще раз.')
+        setError(err.message || 'An error occurred during registration. Please try again.')
       }
     } finally {
       setIsLoading(false)
@@ -109,12 +116,12 @@ const AuthModal = ({ isOpen, onClose }) => {
       const response = await authService.confirmEmail(confirmData.email, confirmData.code)
       
       if (response && response.accessToken) {
-        setSuccess('Email успешно подтвержден! Перенаправление...')
+        setSuccess('Email successfully confirmed! Redirecting...')
         setTimeout(() => {
           window.location.href = config.DASHBOARD_URL
         }, 1500)
       } else {
-        setSuccess('Email успешно подтвержден!')
+        setSuccess('Email successfully confirmed!')
         setTimeout(() => {
           setShowConfirm(false)
           setMode('login')
@@ -124,15 +131,15 @@ const AuthModal = ({ isOpen, onClose }) => {
       console.error('Confirmation error:', err)
       
       if (err.message.includes('400') || err.message.includes('Bad Request')) {
-        setError('Неверный код подтверждения')
+        setError('Invalid confirmation code')
       } else if (err.message.includes('404') || err.message.includes('Not Found')) {
-        setError('Код подтверждения не найден или истек')
+        setError('Confirmation code not found or expired')
       } else if (err.message.includes('500') || err.message.includes('Internal Server Error')) {
-        setError('Ошибка сервера. Попробуйте позже')
+        setError('Server error. Please try later')
       } else if (err.message.includes('Network') || err.message.includes('fetch')) {
-        setError('Ошибка сети. Проверьте подключение к интернету')
+        setError('Network error. Check your internet connection')
       } else {
-        setError(err.message || 'Произошла ошибка при подтверждении. Попробуйте еще раз.')
+        setError(err.message || 'An error occurred during confirmation. Please try again.')
       }
     } finally {
       setIsLoading(false)
@@ -150,7 +157,18 @@ const AuthModal = ({ isOpen, onClose }) => {
     setError('')
     setSuccess('')
     setShowConfirm(false)
+    setShowAgreements(false)
     setRegistrationEmail('')
+    
+    // Если переключаемся на регистрацию, показываем модалку соглашений
+    if (newMode === 'register') {
+      setShowAgreements(true)
+    }
+  }
+
+  const handleAgreementsAccept = () => {
+    setShowAgreements(false)
+    // После принятия соглашений показываем форму регистрации
   }
 
   const handleClose = () => {
@@ -158,11 +176,27 @@ const AuthModal = ({ isOpen, onClose }) => {
     setError('')
     setSuccess('')
     setShowConfirm(false)
+    setShowAgreements(false)
     setRegistrationEmail('')
     onClose()
   }
 
   if (!isOpen) return null
+
+  // Если нужно показать модалку соглашений, показываем её
+  if (showAgreements && mode === 'register') {
+    return (
+      <AgreementsModal
+        isOpen={true}
+        onClose={() => {
+          setShowAgreements(false)
+          setMode('login')
+        }}
+        onAccept={handleAgreementsAccept}
+        entityType="Business"
+      />
+    )
+  }
 
   return (
     <div className="auth-modal-overlay" onClick={handleClose}>
@@ -172,13 +206,13 @@ const AuthModal = ({ isOpen, onClose }) => {
         </button>
         
         <div className="auth-modal-header">
-          <h2 className="auth-modal-title">Добро пожаловать</h2>
+          <h2 className="auth-modal-title">Welcome</h2>
           <p className="auth-modal-subtitle">
             {showConfirm 
-              ? 'Подтвердите ваш email' 
+              ? 'Confirm your email' 
               : mode === 'login'
-                ? 'Войдите в свой аккаунт'
-                : 'Зарегистрируйтесь'}
+                ? 'Sign in to your account'
+                : 'Sign up'}
           </p>
         </div>
 
@@ -189,14 +223,14 @@ const AuthModal = ({ isOpen, onClose }) => {
               onClick={() => handleModeChange('login')}
               disabled={isLoading}
             >
-              Вход
+              Sign In
             </button>
             <button
               className={`tab-button ${mode === 'register' ? 'active' : ''}`}
               onClick={() => handleModeChange('register')}
               disabled={isLoading}
             >
-              Регистрация
+              Sign Up
             </button>
           </div>
         )}
@@ -237,6 +271,10 @@ const AuthModal = ({ isOpen, onClose }) => {
 }
 
 export default AuthModal
+
+
+
+
 
 
 

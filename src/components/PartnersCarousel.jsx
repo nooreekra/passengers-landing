@@ -27,3 +27,7 @@ const PartnersCarousel = () => {
 
 export default PartnersCarousel
 
+
+
+
+

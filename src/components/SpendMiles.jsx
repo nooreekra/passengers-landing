@@ -75,15 +75,13 @@ const SpendMiles = () => {
                             animationDelay: `${index * 0.3}s`,
                         }}
                     >
-                        <div className="spend-option-header">
-                            <div className="spend-option-destination">{option.destination}</div>
-                        </div>
                         <div
                             className="spend-option-card"
                             style={{ backgroundImage: `url(${option.image})` }}
                         >
                             <div className="spend-option-overlay"></div>
-                            <div className="spend-option-content">
+                            <div className="spend-option-header">
+                                <div className="spend-option-destination">{option.destination}</div>
                                 <div className="spend-option-subtitle">{option.subtitle}</div>
                             </div>
                             <div className="price-tag">

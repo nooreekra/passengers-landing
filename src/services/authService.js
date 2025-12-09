@@ -141,11 +141,15 @@ class AuthService {
   // Register new user
   async register(userData) {
     try {
+      // Определяем язык из браузера или используем значение по умолчанию
+      const language = navigator.language || 'en-US'
+      
       const response = await fetch(getApiUrl('/api/auth/register'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Accept-Language': language
         },
         body: JSON.stringify({
           firstName: userData.firstName,
@@ -160,8 +164,21 @@ class AuthService {
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
       }
 
-      const data = await response.json()
-      return data
+      // Если статус 204 No Content, возвращаем пустой объект
+      if (response.status === 204) {
+        return {}
+      }
+
+      // Проверяем, есть ли тело ответа перед парсингом JSON
+      const contentType = response.headers.get('content-type')
+      if (contentType && contentType.includes('application/json')) {
+        const text = await response.text()
+        if (text) {
+          return JSON.parse(text)
+        }
+      }
+      
+      return {}
     } catch (error) {
       console.error('Registration error:', error)
       throw error
@@ -171,11 +188,15 @@ class AuthService {
   // Confirm email with code
   async confirmEmail(email, code) {
     try {
+      // Определяем язык из браузера или используем значение по умолчанию
+      const language = navigator.language || 'en-US'
+      
       const response = await fetch(getApiUrl('/api/auth/confirm'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Accept-Language': language
         },
         body: JSON.stringify({
           email: email,
@@ -188,7 +209,20 @@ class AuthService {
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
       }
 
-      const data = await response.json()
+      // Если статус 204 No Content, возвращаем пустой объект
+      if (response.status === 204) {
+        return {}
+      }
+
+      // Проверяем, есть ли тело ответа перед парсингом JSON
+      const contentType = response.headers.get('content-type')
+      let data = {}
+      if (contentType && contentType.includes('application/json')) {
+        const text = await response.text()
+        if (text) {
+          data = JSON.parse(text)
+        }
+      }
       
       // Store tokens and user data if provided
       if (data.accessToken) {

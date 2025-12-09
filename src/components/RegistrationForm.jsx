@@ -30,23 +30,23 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
     const newErrors = {}
     
     if (!formData.firstName.trim()) {
-      newErrors.firstName = 'Имя обязательно'
+      newErrors.firstName = 'First name is required'
     }
     
     if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Фамилия обязательна'
+      newErrors.lastName = 'Last name is required'
     }
     
     if (!formData.email) {
-      newErrors.email = 'Email обязателен'
+      newErrors.email = 'Email is required'
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Введите корректный email'
+      newErrors.email = 'Enter a valid email'
     }
     
     if (!formData.password) {
-      newErrors.password = 'Пароль обязателен'
+      newErrors.password = 'Password is required'
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Пароль должен содержать минимум 6 символов'
+      newErrors.password = 'Password must contain at least 6 characters'
     }
     
     setErrors(newErrors)
@@ -69,7 +69,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
     <form onSubmit={handleSubmit} className="login-form">
       <div className="form-group">
         <label htmlFor="firstName" className="form-label">
-          Имя
+          First Name
         </label>
         <input
           type="text"
@@ -78,7 +78,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
           value={formData.firstName}
           onChange={handleChange}
           className={`form-input ${errors.firstName ? 'error' : ''}`}
-          placeholder="Введите ваше имя"
+          placeholder="Enter your first name"
           disabled={isLoading}
         />
         {errors.firstName && (
@@ -88,7 +88,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
 
       <div className="form-group">
         <label htmlFor="lastName" className="form-label">
-          Фамилия
+          Last Name
         </label>
         <input
           type="text"
@@ -97,7 +97,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
           value={formData.lastName}
           onChange={handleChange}
           className={`form-input ${errors.lastName ? 'error' : ''}`}
-          placeholder="Введите вашу фамилию"
+          placeholder="Enter your last name"
           disabled={isLoading}
         />
         {errors.lastName && (
@@ -116,7 +116,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
           value={formData.email}
           onChange={handleChange}
           className={`form-input ${errors.email ? 'error' : ''}`}
-          placeholder="Введите ваш email"
+          placeholder="Enter your email"
           disabled={isLoading}
         />
         {errors.email && (
@@ -126,7 +126,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
 
       <div className="form-group">
         <label htmlFor="password" className="form-label">
-          Пароль
+          Password
         </label>
         <div className="password-container">
           <input
@@ -136,7 +136,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
             value={formData.password}
             onChange={handleChange}
             className={`form-input ${errors.password ? 'error' : ''}`}
-            placeholder="Введите ваш пароль"
+            placeholder="Enter your password"
             disabled={isLoading}
           />
           <button
@@ -161,10 +161,10 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
         {isLoading ? (
           <>
             <span className="loading-spinner"></span>
-            Регистрация...
-          </>
+            Registering...
+          </> 
         ) : (
-          'Зарегистрироваться'
+          'Sign Up'
         )}
       </button>
     </form>
@@ -172,6 +172,10 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
 }
 
 export default RegistrationForm
+
+
+
+
 
 
 
