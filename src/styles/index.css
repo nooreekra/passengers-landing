@@ -1061,7 +1061,7 @@ body {
 /* Agreements Modal Styles */
 .agreements-modal-content {
   max-width: 800px;
-  max-height: 90vh;
+  max-height: 85vh;
   display: flex;
   flex-direction: column;
 }
@@ -1249,7 +1249,7 @@ body {
 @media (max-width: 768px) {
   .agreements-modal-content {
     max-width: 95%;
-    max-height: 95vh;
+    max-height: 85vh;
   }
 
   .agreement-content {
