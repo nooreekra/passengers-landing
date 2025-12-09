@@ -1,4 +1,4 @@
-import { getApiUrl, getAuthHeaders } from '../config/env'
+import { getApiUrl, getAuthHeaders, config } from '../config/env'
 
 class AuthService {
   constructor() {
@@ -41,6 +41,11 @@ class AuthService {
         // Convert ISO string to timestamp
         const expiresAt = new Date(data.accessTokenExpiresAt).getTime()
         localStorage.setItem('token_expires_at', expiresAt)
+      }
+
+      // Create session if user data is available (like in ims-frontend)
+      if (data.accessToken && data.user) {
+        await this.createSession(data.accessToken, data.user.role?.type || 'Partnership')
       }
 
       return data
@@ -136,6 +141,45 @@ class AuthService {
   // Get access token
   getAccessToken() {
     return localStorage.getItem('access_token')
+  }
+
+  // Create session on dashboard (similar to ims-frontend)
+  // For cross-domain scenarios, we redirect with token in URL for automatic auth
+  async createSession(accessToken, role) {
+    try {
+      // Check if dashboard is on the same origin
+      const dashboardUrl = config.DASHBOARD_URL
+      const currentOrigin = window.location.origin
+      const dashboardOrigin = new URL(dashboardUrl).origin
+      
+      if (currentOrigin === dashboardOrigin) {
+        // Same origin - create session via API route (like in ims-frontend)
+        await fetch('/api/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ accessToken, role }),
+          credentials: 'include',
+        })
+      }
+      // For different origins, token will be passed via URL parameter
+      // Dashboard will automatically authenticate using the token
+    } catch (error) {
+      console.warn('Session creation skipped (dashboard is on different domain):', error)
+      // This is expected for cross-domain scenarios
+    }
+  }
+
+  // Redirect to dashboard with token for automatic authentication
+  redirectToDashboard(accessToken, role) {
+    const dashboardUrl = new URL(config.DASHBOARD_URL)
+    
+    // Add token and role as URL parameters for automatic authentication
+    dashboardUrl.searchParams.set('token', accessToken)
+    dashboardUrl.searchParams.set('role', role)
+    dashboardUrl.searchParams.set('autoAuth', 'true')
+    
+    // Redirect to dashboard - it will automatically authenticate using the token
+    window.location.href = dashboardUrl.toString()
   }
 
   // Register new user
@@ -237,6 +281,11 @@ class AuthService {
       if (data.accessTokenExpiresAt) {
         const expiresAt = new Date(data.accessTokenExpiresAt).getTime()
         localStorage.setItem('token_expires_at', expiresAt)
+      }
+
+      // Create session if user data is available (like in ims-frontend)
+      if (data.accessToken && data.user) {
+        await this.createSession(data.accessToken, data.user.role?.type || 'Partnership')
       }
 
       return data

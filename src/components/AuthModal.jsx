@@ -48,8 +48,13 @@ const AuthModal = ({ isOpen, onClose }) => {
       
       if (response && response.accessToken) {
         setSuccess('Login successful! Redirecting...')
+        
+        // Get user role from response
+        const userRole = response.user?.role?.type || 'Partnership'
+        
+        // Redirect to dashboard with token for automatic authentication
         setTimeout(() => {
-          window.location.href = config.DASHBOARD_URL
+          authService.redirectToDashboard(response.accessToken, userRole)
         }, 1000)
       } else {
         setError('Authorization error. Please try again.')
@@ -117,8 +122,13 @@ const AuthModal = ({ isOpen, onClose }) => {
       
       if (response && response.accessToken) {
         setSuccess('Email successfully confirmed! Redirecting...')
+        
+        // Get user role from response
+        const userRole = response.user?.role?.type || 'Partnership'
+        
+        // Redirect to dashboard with token for automatic authentication
         setTimeout(() => {
-          window.location.href = config.DASHBOARD_URL
+          authService.redirectToDashboard(response.accessToken, userRole)
         }, 1500)
       } else {
         setSuccess('Email successfully confirmed!')
