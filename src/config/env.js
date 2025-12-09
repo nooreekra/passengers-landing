@@ -9,8 +9,8 @@ export const config = {
   NODE_ENV: import.meta.env.VITE_NODE_ENV || 'development',
   
   // Dashboard URLs for different environments
-  DASHBOARD_URL_DEV: import.meta.env.VITE_DASHBOARD_URL_DEV || 'https://app-ims-web-test-neu.azurewebsites.net/dashboard/partnership',
-  DASHBOARD_URL_PROD: import.meta.env.VITE_DASHBOARD_URL_PROD || 'https://imssavvy.co.uk/dashboard/partnership',
+  DASHBOARD_URL_DEV: import.meta.env.VITE_DASHBOARD_URL_DEV || 'https://app-ims-web-test-neu.azurewebsites.net/passenger',
+  DASHBOARD_URL_PROD: import.meta.env.VITE_DASHBOARD_URL_PROD || 'https://imssavvy.co.uk/passenger',
   
   // Get the correct dashboard URL based on environment
   get DASHBOARD_URL() {

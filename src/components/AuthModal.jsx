@@ -124,7 +124,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         setSuccess('Email successfully confirmed! Redirecting...')
         
         // Get user role from response
-        const userRole = response.user?.role?.type || 'Partnership'
+        const userRole = response.user?.role?.type || 'Passenger'
         
         // Redirect to dashboard with token for automatic authentication
         setTimeout(() => {
