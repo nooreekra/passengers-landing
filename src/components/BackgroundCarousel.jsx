@@ -1,11 +1,14 @@
+"use client"
+
 import React, { useState, useEffect } from 'react'
-import istanbul from '../assets/images/istanbul.webp'
-import maldives from '../assets/images/maldives.jpg'
-import paris from '../assets/images/parish.jpg'
-import beach from '../assets/images/beach.jpg'
 
 const BackgroundCarousel = () => {
-  const images = [istanbul, maldives, paris, beach]
+  const images = [
+    '/images/landing/istanbul.webp',
+    '/images/landing/maldives.jpg',
+    '/images/landing/parish.jpg',
+    '/images/landing/beach.jpg'
+  ]
   const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {

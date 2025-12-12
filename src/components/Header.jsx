@@ -1,5 +1,6 @@
+"use client"
+
 import React, { useState } from 'react'
-import logo from '../assets/images/logo.png'
 import AuthModal from './AuthModal'
 
 const Header = () => {
@@ -18,7 +19,7 @@ const Header = () => {
       <header className="landing-header">
         <div className="header-container">
           <div className="header-logo">
-            <img src={logo} alt="Logo" />
+            <img src="/images/landing/logo.png" alt="Logo" />
           </div>
           
           <div className="header-actions">

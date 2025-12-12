@@ -1,0 +1,1371 @@
+"use client";
+
+import React, { useState, Fragment, useEffect, useRef } from "react";
+import Link from "next/link";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { User, Mail, Phone, QrCode, ChevronDown, ChevronUp, Copy, Maximize2, X, Plane, Lock, ChevronRight } from "lucide-react";
+import { Dialog, Transition } from "@headlessui/react";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import InfoTooltip from "@/shared/ui/InfoTooltip";
+import Loader from "@/shared/ui/Loader";
+import { getTransactions, TransactionItem, getTierHistories, TierHistory, getTransactionsSummary, TransactionsSummary, getMilesSummary, MilesSummary, getTiers, Tier } from "@/shared/api/passenger";
+import { useTranslation } from "react-i18next";
+
+// Transaction types
+interface Transaction {
+    id: string;
+    date: Date;
+    type: "income" | "expense"; // income or expense
+    category: string; // Restaurant, Hotel, Trip, etc.
+    miles: number; // number of miles
+    description?: string; // additional description (e.g., route for trip)
+}
+
+// Circular progress component
+const CircularProgress = ({
+    label,
+    value,
+    target,
+    unit = "",
+    size = 80
+}: {
+    label: string;
+    value: number;
+    target: number;
+    unit?: string;
+    size?: number;
+}) => {
+    const { t } = useTranslation();
+    const percentage = Math.min((value / target) * 100, 100);
+    const radius = (size - 10) / 2;
+    const circumference = 2 * Math.PI * radius;
+    const offset = circumference - (percentage / 100) * circumference;
+    const centerX = size / 2;
+    const centerY = size / 2;
+    const showCheckpoints = target < 30;
+    const checkpointLength = 6; // длина чекпойнта
+    const checkpointInnerRadius = radius - checkpointLength; // внутренний радиус (внутри круга)
+    const checkpointOuterRadius = radius; // внешний радиус (на границе круга, не выходит за него)
+
+    // Для Gym показываем только 1 чекпойнт (подписка на месяц)
+    const checkpointCount = label === "Gym" ? 1 : (showCheckpoints ? target : 0);
+
+    // Генерация чекпойнтов
+    const checkpoints = checkpointCount > 0 ? Array.from({ length: checkpointCount }, (_, i) => {
+        // SVG повернут на -90 градусов, поэтому начинаем с 0 градусов для верхней точки
+        const angle = (i * 360 / checkpointCount);
+        const angleRad = (angle * Math.PI) / 180;
+        // Точки на окружности: обе внутри круга, не выходят за границу
+        const x1 = centerX + checkpointInnerRadius * Math.cos(angleRad);
+        const y1 = centerY + checkpointInnerRadius * Math.sin(angleRad);
+        const x2 = centerX + checkpointOuterRadius * Math.cos(angleRad);
+        const y2 = centerY + checkpointOuterRadius * Math.sin(angleRad);
+        return { x1, y1, x2, y2 };
+    }) : [];
+
+    return (
+        <div className="flex flex-col items-center gap-2">
+            <div className="relative" style={{ width: size, height: size }}>
+                <svg width={size} height={size} className="transform -rotate-90">
+                    <circle
+                        cx={size / 2}
+                        cy={size / 2}
+                        r={radius}
+                        stroke="#E5E7EB"
+                        strokeWidth="4"
+                        fill="none"
+                    />
+                    {/* Чекпойнты */}
+                    {(showCheckpoints || label === "Gym") && checkpoints.map((checkpoint, index) => (
+                        <line
+                            key={index}
+                            x1={checkpoint.x1}
+                            y1={checkpoint.y1}
+                            x2={checkpoint.x2}
+                            y2={checkpoint.y2}
+                            stroke="#9CA3AF"
+                            strokeWidth="2"
+                        />
+                    ))}
+                    <circle
+                        cx={size / 2}
+                        cy={size / 2}
+                        r={radius}
+                        stroke="#3B82F6"
+                        strokeWidth="4"
+                        fill="none"
+                        strokeDasharray={circumference}
+                        strokeDashoffset={offset}
+                        strokeLinecap="round"
+                        className="transition-all duration-500"
+                    />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    {label === "Gym" ? (
+                        <>
+                            <div className="text-xs font-semibold text-gray-800">{t("passenger.account.active")}</div>
+                            <div className="text-[10px] text-gray-500">{t("passenger.account.subscription")}</div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="text-xs font-semibold text-gray-800">{value}</div>
+                            {unit && <div className="text-[10px] text-gray-500">{unit}</div>}
+                        </>
+                    )}
+                </div>
+            </div>
+            <div className="text-xs font-medium text-gray-700 text-center max-w-[80px]">
+                {label}
+            </div>
+        </div>
+    );
+};
+
+const AccountPage = () => {
+    const { t } = useTranslation();
+    const user = useSelector((state: RootState) => state.user.current);
+    const [activeTab, setActiveTab] = useState<"details" | "transactions">("details");
+    // Some transactions expanded by default
+    const [expandedTransactions, setExpandedTransactions] = useState<Set<string>>(new Set());
+    const [isQrExpanded, setIsQrExpanded] = useState(false);
+    const [transactionsData, setTransactionsData] = useState<TransactionItem[]>([]);
+    const [loadingTransactions, setLoadingTransactions] = useState(false);
+    const [tierHistories, setTierHistories] = useState<TierHistory[]>([]);
+    const [loadingTierHistories, setLoadingTierHistories] = useState(false);
+    const [tiers, setTiers] = useState<Tier[]>([]);
+    const [loadingTiers, setLoadingTiers] = useState(false);
+    const [transactionsSummary, setTransactionsSummary] = useState<TransactionsSummary | null>(null);
+    const [loadingSummary, setLoadingSummary] = useState(false);
+    const [milesSummary, setMilesSummary] = useState<MilesSummary | null>(null);
+    const [loadingMilesSummary, setLoadingMilesSummary] = useState(false);
+    const detailsTabRef = useRef<HTMLButtonElement>(null);
+    const transactionsTabRef = useRef<HTMLButtonElement>(null);
+
+    // Mock data
+    const mockData = {
+        name: "MS Aliya Ismagulova",
+        status: "Silver" as "Bronze" | "Silver" | "Gold",
+        membershipId: "1M3354885139",
+        totalMiles: 50000,
+        pendingMiles: 10000,
+        currentStatus: "Silver" as "Bronze" | "Silver" | "Gold",
+        nextStatus: "Gold" as "Bronze" | "Silver" | "Gold",
+        nextStatusDiscount: 25,
+        progressToNext: 65, // 65% to next status
+        categories: [
+            { name: "Hotels", value: 1, target: 3, unit: "nights" },
+            { name: "Banks", value: 1500, target: 3000, unit: "Miles" },
+            { name: "Coffee Shops", value: 10, target: 15, unit: "visits" },
+            { name: "Restaurants", value: 5, target: 10, unit: "visits" },
+            { name: "Gas st.", value: 400, target: 800, unit: "Miles" },
+            { name: "Gym", value: 1, target: 1, unit: "month subscription" },
+        ],
+        // Last 3 months for progress bar - будет заполнено из API
+        lastThreeMonths: [],
+        // Goal achievement data - будет заполнено из API
+        trips: {
+            current: 0,
+            target: 0,
+        },
+        monthlyActivityGoal: 0,
+    };
+
+    // Загрузка списка тиров из справочника
+    useEffect(() => {
+        const fetchTiers = async () => {
+            try {
+                setLoadingTiers(true);
+                const tiersData = await getTiers();
+                setTiers(tiersData);
+            } catch (error) {
+                console.error('Ошибка при загрузке списка тиров:', error);
+            } finally {
+                setLoadingTiers(false);
+            }
+        };
+
+        fetchTiers();
+    }, []);
+
+    // Загрузка истории уровней лояльности
+    useEffect(() => {
+        const fetchTierHistories = async () => {
+            try {
+                setLoadingTierHistories(true);
+                const histories = await getTierHistories(3);
+                setTierHistories(histories);
+            } catch (error) {
+                console.error('Ошибка при загрузке истории уровней лояльности:', error);
+            } finally {
+                setLoadingTierHistories(false);
+            }
+        };
+
+        fetchTierHistories();
+    }, []);
+
+    // Загрузка сводки по транзакциям
+    useEffect(() => {
+        const fetchSummary = async () => {
+            try {
+                setLoadingSummary(true);
+                const summary = await getTransactionsSummary();
+                setTransactionsSummary(summary);
+            } catch (error) {
+                console.error('Ошибка при загрузке сводки по транзакциям:', error);
+            } finally {
+                setLoadingSummary(false);
+            }
+        };
+
+        fetchSummary();
+    }, []);
+
+    // Загрузка сводки по милям
+    useEffect(() => {
+        const fetchMilesSummary = async () => {
+            try {
+                setLoadingMilesSummary(true);
+                const summary = await getMilesSummary();
+                setMilesSummary(summary);
+            } catch (error) {
+                console.error('Ошибка при загрузке сводки по милям:', error);
+            } finally {
+                setLoadingMilesSummary(false);
+            }
+        };
+
+        fetchMilesSummary();
+    }, []);
+
+    // Загрузка транзакций из API
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                setLoadingTransactions(true);
+                const response = await getTransactions(0, 100);
+                setTransactionsData(response.items);
+                // Разворачиваем первые несколько транзакций по умолчанию
+                if (response.items.length > 0) {
+                    const defaultExpanded = new Set(response.items.slice(0, 3).map(item => item.id));
+                    setExpandedTransactions(defaultExpanded);
+                }
+            } catch (error) {
+                console.error('Ошибка при загрузке транзакций:', error);
+            } finally {
+                setLoadingTransactions(false);
+            }
+        };
+
+        if (activeTab === "transactions") {
+            fetchTransactions();
+        }
+    }, [activeTab]);
+
+    // Преобразование tier histories в формат lastThreeMonths
+    const lastThreeMonths = React.useMemo(() => {
+        if (tierHistories.length === 0) {
+            return []; // Возвращаем пустой массив если нет данных
+        }
+
+        // Берем последние 3 месяца из истории
+        const sortedHistories = [...tierHistories].sort((a, b) =>
+            new Date(a.validFrom).getTime() - new Date(b.validFrom).getTime()
+        );
+
+        const lastThree = sortedHistories.slice(-3);
+
+        return lastThree.map(history => {
+            const date = new Date(history.validFrom);
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const month = monthNames[date.getMonth()];
+
+            // Преобразуем code tier в статус
+            const tierCode = history.tier.code.toLowerCase();
+            let status: "Bronze" | "Silver" | "Gold" = "Bronze";
+            if (tierCode === "silver") {
+                status = "Silver";
+            } else if (tierCode === "gold") {
+                status = "Gold";
+            }
+
+            return { month, status, tier: history.tier };
+        });
+    }, [tierHistories]);
+
+    // Получение текущего тира из user.tier (из auth/me)
+    const currentTier = React.useMemo(() => {
+        if (user?.tier) {
+            return user.tier;
+        }
+        return null;
+    }, [user]);
+
+    // Получение фона карты в зависимости от статуса
+    const getCardBackground = () => {
+        if (!currentTier) {
+            return "/images/membership/bronze.jpg";
+        }
+        const tierCode = currentTier.code.toLowerCase();
+        const validTiers = ["bronze", "silver", "gold", "platinum"];
+        if (validTiers.includes(tierCode)) {
+            return `/images/membership/${tierCode}.jpg`;
+        }
+        return "/images/membership/bronze.jpg";
+    };
+
+    // Определение текущего статуса на основе user.tier
+    const currentStatus = React.useMemo(() => {
+        if (currentTier) {
+            const tierCode = currentTier.code.toLowerCase();
+            // Преобразуем code в статус для обратной совместимости
+            if (tierCode === "bronze") return "Bronze";
+            if (tierCode === "silver") return "Silver";
+            if (tierCode === "gold") return "Gold";
+        }
+        // Fallback на последний месяц из истории, если нет текущего тира
+        if (lastThreeMonths.length > 0) {
+            return lastThreeMonths[lastThreeMonths.length - 1].status;
+        }
+        return "Bronze"; // Дефолтный статус
+    }, [currentTier, lastThreeMonths]);
+
+    // Определение следующего тира на основе levelOrder из справочника
+    const nextTier = React.useMemo(() => {
+        if (!currentTier || tiers.length === 0) return null;
+
+        // Сортируем тиры по levelOrder (от меньшего к большему: Bronze=1, Silver=2, Gold=3)
+        const sortedTiers = [...tiers].sort((a, b) => a.levelOrder - b.levelOrder);
+
+        // Находим текущий тир в справочнике по id
+        const currentIndex = sortedTiers.findIndex(t => t.id === currentTier.id);
+
+        // Если текущий тир не найден в справочнике, пытаемся найти по code
+        if (currentIndex === -1) {
+            const foundByCode = sortedTiers.findIndex(t => t.code.toLowerCase() === currentTier.code.toLowerCase());
+            if (foundByCode === -1) {
+                // Если не нашли вообще, возвращаем null
+                return null;
+            }
+            // Если нашли по code, используем этот индекс
+            const actualIndex = foundByCode;
+            // Если текущий тир - последний, следующий остается тем же
+            if (actualIndex >= sortedTiers.length - 1) {
+                return currentTier;
+            }
+            // Возвращаем следующий тир по порядку
+            return sortedTiers[actualIndex + 1];
+        }
+
+        // Если текущий тир - последний, следующий остается тем же
+        if (currentIndex >= sortedTiers.length - 1) {
+            return currentTier;
+        }
+
+        // Возвращаем следующий тир по порядку (более высокий levelOrder)
+        return sortedTiers[currentIndex + 1];
+    }, [currentTier, tiers]);
+
+    // Определение следующего статуса для обратной совместимости
+    const nextStatus = React.useMemo(() => {
+        if (nextTier) {
+            const tierCode = nextTier.code.toLowerCase();
+            if (tierCode === "bronze") return "Bronze";
+            if (tierCode === "silver") return "Silver";
+            if (tierCode === "gold") return "Gold";
+        }
+        return "Gold";
+    }, [nextTier]);
+
+    // Преобразование summary данных в формат компонента
+    const tripsData = React.useMemo(() => {
+        if (transactionsSummary) {
+            return {
+                current: transactionsSummary.tripsCompleted,
+                target: transactionsSummary.tripsRequired,
+            };
+        }
+        return mockData.trips;
+    }, [transactionsSummary]);
+
+    const monthlyActivityGoal = React.useMemo(() => {
+        return transactionsSummary?.monthlyActivityRequired || mockData.monthlyActivityGoal;
+    }, [transactionsSummary]);
+
+    const categoriesData = React.useMemo(() => {
+        if (transactionsSummary && transactionsSummary.activities) {
+            return transactionsSummary.activities.map(activity => {
+                // Преобразуем metric в unit для отображения
+                let unit = activity.metric;
+                if (activity.metric === "miles") {
+                    unit = "Miles";
+                } else if (activity.metric === "visits") {
+                    unit = "visits";
+                } else if (activity.metric === "nights") {
+                    unit = "nights";
+                } else if (activity.metric === "subscription") {
+                    unit = "month subscription";
+                }
+
+                // Преобразуем название для отображения
+                let displayName = activity.name;
+                if (activity.name === "Gas Stations") {
+                    displayName = "Gas st.";
+                }
+
+                return {
+                    name: displayName,
+                    value: activity.completed,
+                    target: activity.required,
+                    unit: unit,
+                };
+            });
+        }
+        return mockData.categories;
+    }, [transactionsSummary]);
+
+    const monthlyActivityCompleted = React.useMemo(() => {
+        if (transactionsSummary) {
+            return transactionsSummary.monthlyActivityCompleted;
+        }
+        return categoriesData.filter(cat => cat.value >= cat.target).length;
+    }, [transactionsSummary, categoriesData]);
+
+    // Преобразование данных API в формат компонента для транзакций
+    const transactions: Transaction[] = transactionsData.map(item => ({
+        id: item.id,
+        date: new Date(item.createdAt),
+        type: item.type === "Earn" ? "income" : "expense",
+        category: item.category,
+        miles: Math.abs(item.miles), // Используем абсолютное значение, знак определяется типом
+        description: item.description,
+    }));
+
+    // Group transactions by month
+    const groupedTransactions = transactions.reduce((acc, transaction) => {
+        const monthKey = `${transaction.date.getFullYear()}-${transaction.date.getMonth()}`;
+        if (!acc[monthKey]) {
+            acc[monthKey] = [];
+        }
+        acc[monthKey].push(transaction);
+        return acc;
+    }, {} as Record<string, Transaction[]>);
+
+    // Sort months in descending order
+    const sortedMonths = Object.keys(groupedTransactions).sort((a, b) => {
+        const [yearA, monthA] = a.split("-").map(Number);
+        const [yearB, monthB] = b.split("-").map(Number);
+        if (yearA !== yearB) return yearB - yearA;
+        return monthB - monthA;
+    });
+
+    const toggleTransaction = (id: string) => {
+        setExpandedTransactions(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(id)) {
+                newSet.delete(id);
+            } else {
+                newSet.add(id);
+            }
+            return newSet;
+        });
+    };
+
+    const formatMonthYear = (monthKey: string) => {
+        const [year, month] = monthKey.split("-").map(Number);
+        const date = new Date(year, month, 1);
+        return date.toLocaleDateString("en-US", { month: "long", year: "numeric" }).toUpperCase();
+    };
+
+    const formatDate = (date: Date) => {
+        return date.toLocaleDateString("en-US", { month: "long", day: "numeric" });
+    };
+
+    const handleCopyMembershipId = () => {
+        if (user?.imsNumber) {
+            navigator.clipboard.writeText(user.imsNumber);
+            // Can add toast notification here
+        }
+    };
+
+    // Функция для получения hex цвета статуса из тира или fallback
+    const getStatusColor = (status: string): string => {
+        // Сначала пытаемся найти в справочнике тиров
+        const tier = tiers.find(t => t.code.toLowerCase() === status.toLowerCase());
+        if (tier) {
+            return tier.color;
+        }
+        // Fallback на старые цвета (hex значения)
+        const statusColors: Record<string, string> = {
+            Bronze: "#CD7F32", // amber-600 equivalent
+            Silver: "#9CA3AF", // gray-400 equivalent
+            Gold: "#EAB308", // yellow-500 equivalent
+        };
+        return statusColors[status] || "#9CA3AF";
+    };
+
+    // Функция для получения класса цвета для timeline (используем hex в style)
+    const getStatusColorClass = (status: string): string => {
+        const statusColors: Record<string, string> = {
+            Bronze: "bg-amber-600",
+            Silver: "bg-gray-400",
+            Gold: "bg-yellow-500",
+        };
+        return statusColors[status] || "bg-gray-400";
+    };
+
+    const statusOrder: ("Bronze" | "Silver" | "Gold")[] = ["Bronze", "Silver", "Gold"];
+    const currentIndex = statusOrder.indexOf(currentStatus);
+    const nextIndex = currentIndex < statusOrder.length - 1 ? currentIndex + 1 : currentIndex;
+
+    // Проверка загрузки основных данных
+    const isLoading = loadingTiers || loadingSummary || loadingMilesSummary;
+
+    return (
+        <div className="relative min-h-screen pb-20">
+            {/* Header with logo */}
+            <header className="bg-background-dark px-4 pt-3 pb-3">
+                <div className="flex justify-between items-center">
+                    <Link href="/passenger" className="flex items-center gap-2 cursor-pointer">
+                        <Image
+                            src="/images/logo.png"
+                            alt="IMS Savvy"
+                            width={135}
+                            height={30}
+                            priority
+                        />
+                    </Link>
+                </div>
+            </header>
+
+            {/* Tabs - на уровне хедера */}
+            <div className="bg-background-dark px-4 py-2">
+                <div className="relative flex justify-center gap-4">
+                    <button
+                        ref={detailsTabRef}
+                        onClick={() => setActiveTab("details")}
+                        className={`flex-1 text-center text-sm font-medium pb-1 ${
+                            activeTab === "details"
+                                ? "text-blue-600"
+                                : "text-gray-500"
+                        }`}
+                    >
+                        {t("passenger.account.accountDetails")}
+                    </button>
+                    <button
+                        ref={transactionsTabRef}
+                        onClick={() => setActiveTab("transactions")}
+                        className={`flex-1 text-center text-sm font-medium pb-1 ${
+                            activeTab === "transactions"
+                                ? "text-blue-600"
+                                : "text-gray-500"
+                        }`}
+                    >
+                        {t("passenger.account.recentTransactions")}
+                    </button>
+                    {/* Анимированный индикатор */}
+                    <motion.div
+                        className="absolute bottom-0 h-0.5 bg-blue-600"
+                        initial={false}
+                        animate={{
+                            left: activeTab === "details" 
+                                ? detailsTabRef.current?.offsetLeft || 0 
+                                : transactionsTabRef.current?.offsetLeft || 0,
+                            width: activeTab === "details"
+                                ? detailsTabRef.current?.offsetWidth || 0
+                                : transactionsTabRef.current?.offsetWidth || 0,
+                        }}
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                </div>
+            </div>
+
+            {/* Background image */}
+            <div className="absolute inset-0 -z-10">
+                <Image
+                    src="/images/passengersbg.png"
+                    alt="Background"
+                    fill
+                    className="object-cover blur-[2px]"
+                    priority
+                />
+                {/* Darkening overlay for readability */}
+                <div className="absolute inset-0 bg-black/45" />
+            </div>
+
+            <div className="relative px-4 py-6">
+                <div className="max-w-[600px] mx-auto">
+                    {/* Loader для основных данных */}
+                    {isLoading && (
+                        <Loader text={t("passenger.account.loading")} textColor="text-label-white" />
+                    )}
+
+                    {/* Account Details Tab */}
+                    {!isLoading && activeTab === "details" && (
+                        <>
+                            {/* User Info Section */}
+                            <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm p-6 border border-white/30 mb-6">
+                                <div className="flex flex-col items-center mb-4">
+                                    <div className="text-center">
+                                        <h2 className="text-xl font-semibold mb-2">
+                                            {user ? `${user.firstName} ${user.lastName}` : mockData.name}
+                                        </h2>
+                                        {currentTier && (
+                                            <div
+                                                className="inline-block px-3 py-1 rounded-md text-white text-sm font-medium"
+                                                style={{ backgroundColor: currentTier.color }}
+                                            >
+                                                {currentTier.name}
+                                            </div>
+                                        )}
+                                        <div className="mt-3">
+                                            <p className="text-xs text-gray-500">{t("passenger.account.imsSavvyMember")}</p>
+                                            <p className="text-sm font-medium text-gray-800">
+                                                {user?.imsNumber || "—"}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Miles Info */}
+                                <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-6">
+                                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2 sm:p-4 border border-white/30 flex items-center justify-between gap-1 sm:gap-3">
+                                        <div className="flex items-center gap-1">
+                                            <p className="text-xs sm:text-sm text-gray-600">{t("passenger.account.totalMiles")}</p>
+                                            <InfoTooltip
+                                                text={t("passenger.account.totalMilesTooltip")}
+                                                position="top"
+                                            />
+                                        </div>
+                                        <p className="text-base sm:text-xl font-bold text-gray-900">
+                                            {milesSummary ? milesSummary.totalMiles.toLocaleString() : mockData.totalMiles.toLocaleString()}
+                                        </p>
+                                    </div>
+                                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2 sm:p-4 border border-white/30 flex items-center justify-between gap-1 sm:gap-3">
+                                        <div className="flex items-center gap-1">
+                                            <p className="text-xs sm:text-sm text-gray-600">{t("passenger.account.pending")}</p>
+                                            <InfoTooltip
+                                                text={t("passenger.account.pendingTooltip")}
+                                                position="top"
+                                            />
+                                        </div>
+                                        <p className="text-base sm:text-xl font-bold text-gray-900">
+                                            {milesSummary ? milesSummary.unconfirmed.toLocaleString() : mockData.pendingMiles.toLocaleString()}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* QR Code Section */}
+                                <div className="flex flex-col items-center mb-6">
+                                    <div className="relative">
+                                        <div className="bg-white rounded-lg p-4 shadow-sm">
+                                            <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center">
+                                                <QrCode className="h-16 w-16 text-gray-400" />
+                                            </div>
+                                        </div>
+
+                                        {/* Resize button */}
+                                        <button
+                                            onClick={() => setIsQrExpanded(true)}
+                                            className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-white rounded-full p-2 shadow-lg border-2 border-gray-200 hover:border-blue-500 transition-colors"
+                                        >
+                                            <Maximize2 className="h-5 w-5 text-gray-600" />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Digital Card Modal */}
+                                <Transition appear show={isQrExpanded} as={Fragment}>
+                                    <Dialog as="div" className="relative z-50" onClose={() => setIsQrExpanded(false)}>
+                                        <Transition.Child
+                                            as={Fragment}
+                                            enter="ease-out duration-300"
+                                            enterFrom="opacity-0"
+                                            enterTo="opacity-100"
+                                            leave="ease-in duration-200"
+                                            leaveFrom="opacity-100"
+                                            leaveTo="opacity-0"
+                                        >
+                                            <div className="fixed inset-0 bg-black/50" />
+                                        </Transition.Child>
+
+                                        <div className="fixed inset-0 overflow-y-auto">
+                                            <Transition.Child
+                                                as={Fragment}
+                                                enter="ease-out duration-300"
+                                                enterFrom="opacity-0"
+                                                enterTo="opacity-100"
+                                                leave="ease-in duration-200"
+                                                leaveFrom="opacity-100"
+                                                leaveTo="opacity-0"
+                                            >
+                                                <Dialog.Panel className="w-full h-full bg-gray-100 flex flex-col overflow-hidden">
+                                                    {/* Close button */}
+                                                    <div className="flex justify-end p-4 flex-shrink-0">
+                                                        <button
+                                                            onClick={() => setIsQrExpanded(false)}
+                                                            className="text-gray-500 hover:text-gray-700 transition-colors"
+                                                        >
+                                                            <X className="h-6 w-6" />
+                                                        </button>
+                                                    </div>
+
+                                                    <div className="flex-1 overflow-y-auto flex flex-col items-center px-6 pb-6 pt-4 gap-6 min-h-0">
+                                                        {/* Digital Card */}
+                                                        <div className="relative rounded-xl p-6 shadow-lg overflow-hidden flex-shrink-0" style={{ width: '320px', height: '500px' }}>
+                                                            {/* Background image based on tier */}
+                                                            <div className="absolute inset-0">
+                                                                <Image
+                                                                    src={getCardBackground()}
+                                                                    alt="Membership card background"
+                                                                    fill
+                                                                    className="object-cover"
+                                                                />
+                                                            </div>
+
+                                                            {/* Overlay for better text readability */}
+                                                            <div className="absolute inset-0 bg-black/20" />
+
+                                                            {/* Decorative lines */}
+                                                            <div className="absolute inset-0 opacity-10">
+                                                                <div className="absolute top-0 left-0 w-full h-full" style={{
+                                                                    backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)'
+                                                                }} />
+                                                            </div>
+
+                                                            <div className="relative z-10 h-full flex flex-col">
+                                                                {/* Logo */}
+                                                                <div className="flex items-start mb-6">
+                                                                    <div className="rounded-lg p-2">
+                                                                        <Image
+                                                                            src="/images/logo.png"
+                                                                            alt="IMS Savvy"
+                                                                            width={120}
+                                                                            height={26}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Loyalty Rewards text */}
+                                                                <h2 className="text-2xl font-bold text-white mb-auto mt-4">{t("passenger.account.loyaltyRewards")}</h2>
+
+                                                                {/* Membership ID and Name */}
+                                                                <div className="mt-auto">
+                                                                    {currentTier && (
+                                                                        <div className="mb-4">
+                                                                            <span
+                                                                                className="text-white text-lg italic font-semibold px-4 py-2 rounded-full shadow-lg inline-block"
+                                                                                style={{
+                                                                                    backgroundColor: currentTier.color,
+                                                                                    boxShadow: `0 4px 14px 0 ${currentTier.color}40`
+                                                                                }}
+                                                                            >
+                                                                                {currentTier.name}
+                                                                            </span>
+                                                                        </div>
+                                                                    )}
+                                                                    <div>
+                                                                        <p className="text-white text-sm font-semibold mb-1">
+                                                                            {user ? `${user.firstName} ${user.lastName}`.toUpperCase() : mockData.name.toUpperCase()}
+                                                                        </p>
+                                                                        <p className="text-white text-xs font-medium">
+                                                                            {t("passenger.account.membership")} {user?.imsNumber || "—"}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* QR Code */}
+                                                        <div className="flex justify-center flex-shrink-0">
+                                                            <div className="bg-white rounded-lg p-4 shadow-md">
+                                                                <div className="w-64 h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+                                                                    <QrCode className="h-48 w-48 text-gray-400" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Instruction text */}
+                                                        <p className="text-sm text-gray-600 text-center">
+                                                            {t("passenger.account.completeTicketTransactions")}
+                                                        </p>
+
+                                                        {/* Copy to clipboard button */}
+                                                        {user?.imsNumber && (
+                                                            <button
+                                                                onClick={handleCopyMembershipId}
+                                                                className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium"
+                                                                title={t("passenger.account.copyMembershipId")}
+                                                            >
+                                                                <Copy className="h-4 w-4" />
+                                                                <span>{t("passenger.account.copyToClipboard")}</span>
+                                                            </button>
+                                                        )}
+
+                                                        {/* Membership ID with copy */}
+                                                        {user?.imsNumber && (
+                                                            <div className="flex items-center justify-center gap-2 p-3 border-2 border-dashed border-blue-500 rounded-lg bg-blue-50">
+                                                                <span className="text-sm font-semibold text-blue-600">
+                                                                    {user.imsNumber}
+                                                                </span>
+                                                                <button
+                                                                    onClick={handleCopyMembershipId}
+                                                                    className="p-1 hover:bg-blue-100 rounded transition-colors"
+                                                                    title={t("passenger.account.copyMembershipId")}
+                                                                >
+                                                                    <Copy className="h-4 w-4 text-blue-600" />
+                                                                </button>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </Dialog.Panel>
+                                            </Transition.Child>
+                                        </div>
+                                    </Dialog>
+                                </Transition>
+
+                                {/* Status Timeline - Last 3 Months */}
+                                <div className="pt-4 px-6 pb-6 mb-6">
+                                    <div className="relative">
+                                        {loadingTierHistories ? (
+                                            <div className="text-center py-4 text-gray-500 text-sm">{t("passenger.account.loadingTierHistories")}</div>
+                                        ) : lastThreeMonths.length === 0 ? (
+                                            <div className="text-center py-4 text-gray-500 text-sm">{t("passenger.account.noTierData")}</div>
+                                        ) : (
+                                            <>
+                                                <div className="h-4 overflow-visible flex gap-1">
+                                                    {lastThreeMonths.map((monthData, index) => {
+                                                        // Получаем фон из тира
+                                                        const getTierBackground = () => {
+                                                            if (monthData.tier) {
+                                                                const tierCode = monthData.tier.code.toLowerCase();
+                                                                const validTiers = ["bronze", "silver", "gold", "platinum"];
+                                                                if (validTiers.includes(tierCode)) {
+                                                                    return `/images/membership/${tierCode}.jpg`;
+                                                                }
+                                                            }
+                                                            // Fallback на основе статуса
+                                                            const statusCode = monthData.status.toLowerCase();
+                                                            if (["bronze", "silver", "gold", "platinum"].includes(statusCode)) {
+                                                                return `/images/membership/${statusCode}.jpg`;
+                                                            }
+                                                            return "/images/membership/bronze.jpg";
+                                                        };
+                                                        const isFirst = index === 0;
+                                                        const isLast = index === lastThreeMonths.length - 1;
+                                                        return (
+                                                            <div
+                                                                key={index}
+                                                                className={`h-full flex-1 relative overflow-hidden ${isFirst ? 'rounded-l-full' : ''
+                                                                    } ${isLast ? 'rounded-r-full' : ''
+                                                                    }`}
+                                                            >
+                                                                {/* Background image */}
+                                                                <div className="absolute inset-0">
+                                                                    <Image
+                                                                        src={getTierBackground()}
+                                                                        alt={`${monthData.status} tier background`}
+                                                                        fill
+                                                                        className="object-cover"
+                                                                    />
+                                                                </div>
+                                                                {/* Overlay for better text readability */}
+                                                                <div className="absolute inset-0 bg-black/30" />
+                                                                {/* Status label inside segment */}
+                                                                <div className="absolute inset-0 flex items-center justify-center z-10">
+                                                                    <span className="text-[10px] font-medium text-white">
+                                                                        {monthData.status}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+
+                                                {/* Month labels below timeline */}
+                                                <div className="flex mt-1 gap-1">
+                                                    {lastThreeMonths.map((monthData, index) => (
+                                                        <div
+                                                            key={index}
+                                                            className="flex flex-col items-center flex-1"
+                                                        >
+                                                            <span className="text-xs text-gray-500 font-medium">{monthData.month}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+
+                                
+
+                                    {/* Status Progress and Monthly Activity Section */}
+                                    <div className="bg-white/80 py-4 px-6 rounded-xl shadow-sm border border-white/30">
+                                    {/* Status Cards - Current and Next */}
+                                    <div className="mb-3">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-2 text-center">
+                                            You are on your way to
+                                        </h3>
+                                    </div>
+                                    <div className="flex items-center justify-between mb-8" style={{ gap: 'clamp(8px, 2vw, 16px)' }}>
+                                        {/* Current status card on the left */}
+                                        <div className="flex-1 min-w-0">
+                                            {currentTier ? (
+                                                <div className="relative shadow-lg overflow-hidden w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.5rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
+                                                    {/* Background image */}
+                                                    <div className="absolute inset-0">
+                                                        <Image
+                                                            src={getCardBackground()}
+                                                            alt={`${currentStatus} tier background`}
+                                                            fill
+                                                            className="object-cover"
+                                                        />
+                                                    </div>
+
+                                                    {/* Overlay for better text readability */}
+                                                    <div className="absolute inset-0 bg-black/20" />
+
+                                                    {/* Decorative lines */}
+                                                    <div className="absolute inset-0 opacity-10">
+                                                        <div className="absolute top-0 left-0 w-full h-full" style={{
+                                                            backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)'
+                                                        }} />
+                                                    </div>
+
+                                                    <div className="relative z-10 h-full flex flex-col">
+                                                        {/* Logo */}
+                                                        <div className="flex items-start card-logo-container" style={{ marginBottom: '0.375rem' }}>
+                                                            <div className="card-logo-wrapper" style={{ padding: '0.125rem', borderRadius: '0.25rem' }}>
+                                                                <Image
+                                                                    src="/images/logo.png"
+                                                                    alt="IMS Savvy"
+                                                                    width={120}
+                                                                    height={26}
+                                                                    className="card-logo"
+                                                                    style={{ width: 'clamp(2.5rem, 8vw, 3.75rem)', height: 'auto' }}
+                                                                />
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Discount */}
+                                                        <div className="flex-1 flex flex-col justify-center">
+                                                            <div className="text-white card-discount-container" style={{ marginBottom: '0.375rem', textShadow: '0 0.0625rem 0.125rem rgba(0,0,0,0.5)' }}>
+                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(1.2rem, 4vw, 2.125rem)' }}>{Math.round(currentTier.discountPercent * 100)}%</span>
+                                                                <span className="font-medium card-discount-text" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.8875rem)', marginLeft: '0.1875rem' }}>{t("passenger.account.discount")}</span>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Membership ID and Name */}
+                                                        <div className="flex justify-between items-end mt-auto card-bottom-container" style={{ gap: '0.1875rem' }}>
+                                                            <div className="flex-1 min-w-0 card-info-container">
+                                                                <p className="text-white font-medium card-ims-number" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5rem)', marginBottom: '0.0625rem', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                    {user?.imsNumber || "—"}
+                                                                </p>
+                                                                <p className="text-white font-semibold card-owner-name" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.825rem)', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                    {user ? `${user.firstName} ${user.lastName}`.toUpperCase() : mockData.name.toUpperCase()}
+                                                                </p>
+                                                            </div>
+                                                            <span
+                                                                className="text-white italic font-semibold shadow-lg inline-block flex-shrink-0 card-status-badge"
+                                                                style={{
+                                                                    fontSize: 'clamp(0.45rem, 1.2vw, 0.5625rem)',
+                                                                    padding: '0.125rem 0.375rem',
+                                                                    borderRadius: '9999px',
+                                                                    backgroundColor: currentTier.color,
+                                                                    boxShadow: `0 0.125rem 0.4375rem 0 ${currentTier.color}40`,
+                                                                    textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.5)'
+                                                                }}
+                                                            >
+                                                                {currentTier.name}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="relative rounded-xl shadow-lg overflow-hidden bg-gray-400 w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.5rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
+                                                    <div className="absolute inset-0 bg-black/20" />
+                                                    <div className="relative z-10 h-full flex flex-col">
+                                                        <div className="flex items-start card-logo-container" style={{ marginBottom: '0.375rem' }}>
+                                                            <div className="card-logo-wrapper" style={{ padding: '0.125rem', borderRadius: '0.25rem' }}>
+                                                                <Image
+                                                                    src="/images/logo.png"
+                                                                    alt="IMS Savvy"
+                                                                    width={120}
+                                                                    height={26}
+                                                                    className="card-logo"
+                                                                    style={{ width: 'clamp(2.5rem, 8vw, 3.75rem)', height: 'auto' }}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex-1 flex flex-col justify-center">
+                                                            <div className="text-white card-discount-container" style={{ marginBottom: '0.375rem', textShadow: '0 0.0625rem 0.125rem rgba(0,0,0,0.5)' }}>
+                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(1.2rem, 4vw, 2.125rem)' }}>0%</span>
+                                                                <span className="font-medium card-discount-text" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.9875rem)', marginLeft: '0.1875rem' }}>{t("passenger.account.discount")}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex justify-between items-end mt-auto card-bottom-container" style={{ gap: '0.1875rem' }}>
+                                                            <div className="flex-1 min-w-0 card-info-container">
+                                                                <p className="text-white font-medium card-ims-number" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5rem)', marginBottom: '0.0625rem', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                    {user?.imsNumber || "—"}
+                                                                </p>
+                                                                <p className="text-white font-semibold card-owner-name" style={{ fontSize: 'clamp(0.55rem, 1.5vw, 0.625rem)', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                    {user ? `${user.firstName} ${user.lastName}`.toUpperCase() : mockData.name.toUpperCase()}
+                                                                </p>
+                                                            </div>
+                                                            <span className="text-white italic font-semibold shadow-lg inline-block flex-shrink-0 bg-gray-500 card-status-badge" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5625rem)', padding: '0.125rem 0.375rem', borderRadius: '9999px', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.5)' }}>
+                                                                {currentStatus}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Arrow between cards */}
+                                        <div className="flex items-center justify-center flex-shrink-0" style={{ width: 'clamp(20px, 4vw, 32px)' }}>
+                                            <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
+                                        </div>
+
+                                        {/* Next status card on the right */}
+                                        <div className="flex-1 min-w-0">
+                                            {nextTier && nextTier.id !== currentTier?.id ? (
+                                                <div className="relative shadow-lg overflow-hidden w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.5rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
+                                                    {/* Background image */}
+                                                    <div className="absolute inset-0">
+                                                        <Image
+                                                            src={(() => {
+                                                                const tierCode = nextTier.code.toLowerCase();
+                                                                const validTiers = ["bronze", "silver", "gold", "platinum"];
+                                                                if (validTiers.includes(tierCode)) {
+                                                                    return `/images/membership/${tierCode}.jpg`;
+                                                                }
+                                                                return "/images/membership/bronze.jpg";
+                                                            })()}
+                                                            alt={`${nextStatus} tier background`}
+                                                            fill
+                                                            className="object-cover"
+                                                        />
+                                                    </div>
+
+                                                    {/* Overlay for better text readability */}
+                                                    <div className="absolute inset-0 bg-black/20" />
+
+                                                    {/* Decorative lines */}
+                                                    <div className="absolute inset-0 opacity-10">
+                                                        <div className="absolute top-0 left-0 w-full h-full" style={{
+                                                            backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)'
+                                                        }} />
+                                                    </div>
+
+                                                    {/* Lock icon overlay */}
+                                                    <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40">
+                                                        <Lock className="text-white/80" style={{ width: 'clamp(40px, 6vw, 64px)', height: 'clamp(40px, 6vw, 64px)' }} />
+                                                    </div>
+
+                                                    <div className="relative z-10 h-full flex flex-col opacity-60">
+                                                        {/* Logo */}
+                                                        <div className="flex items-start card-logo-container" style={{ marginBottom: '0.375rem' }}>
+                                                            <div className="card-logo-wrapper" style={{ padding: '0.125rem', borderRadius: '0.25rem' }}>
+                                                                <Image
+                                                                    src="/images/logo.png"
+                                                                    alt="IMS Savvy"
+                                                                    width={120}
+                                                                    height={26}
+                                                                    className="card-logo"
+                                                                    style={{ width: 'clamp(2.5rem, 8vw, 3.75rem)', height: 'auto' }}
+                                                                />
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Discount */}
+                                                        <div className="flex-1 flex flex-col justify-center">
+                                                            <div className="text-white card-discount-container" style={{ marginBottom: '0.375rem', textShadow: '0 0.0625rem 0.125rem rgba(0,0,0,0.5)' }}>
+                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(1.2rem, 4vw, 2.125rem)' }}>{Math.round(nextTier.discountPercent * 100)}%</span>
+                                                                <span className="font-medium card-discount-text" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.8875rem)', marginLeft: '0.1875rem' }}>{t("passenger.account.discount")}</span>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        {/* Membership ID and Name */}
+                                                        <div className="flex justify-between items-end mt-auto card-bottom-container" style={{ gap: '0.1875rem' }}>
+                                                            <div className="flex-1 min-w-0 card-info-container">
+                                                                <p className="text-white font-medium card-ims-number" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5rem)', marginBottom: '0.0625rem', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                    {user?.imsNumber || "—"}
+                                                                </p>
+                                                                <p className="text-white font-semibold card-owner-name" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.825rem)', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                    {user ? `${user.firstName} ${user.lastName}`.toUpperCase() : mockData.name.toUpperCase()}
+                                                                </p>
+                                                            </div>
+                                                            <span
+                                                                className="text-white italic font-semibold shadow-lg inline-block flex-shrink-0 card-status-badge"
+                                                                style={{
+                                                                    fontSize: 'clamp(0.45rem, 1.2vw, 0.5625rem)',
+                                                                    padding: '0.125rem 0.375rem',
+                                                                    borderRadius: '9999px',
+                                                                    backgroundColor: nextTier.color,
+                                                                    boxShadow: `0 0.125rem 0.4375rem 0 ${nextTier.color}40`,
+                                                                    textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.5)'
+                                                                }}
+                                                            >
+                                                                {nextTier.name}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : nextTier ? (
+                                                // Если следующий тир равен текущему (максимальный уровень), не показываем
+                                                null
+                                            ) : (
+                                                <div className="relative rounded-xl shadow-lg overflow-hidden bg-yellow-500 w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.5rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
+                                                    <div className="absolute inset-0 bg-black/20" />
+                                                    <div className="relative z-10 h-full flex flex-col">
+                                                        <div className="flex items-start card-logo-container" style={{ marginBottom: '0.375rem' }}>
+                                                            <div className="card-logo-wrapper" style={{ padding: '0.125rem', borderRadius: '0.25rem' }}>
+                                                                <Image
+                                                                    src="/images/logo.png"
+                                                                    alt="IMS Savvy"
+                                                                    width={120}
+                                                                    height={26}
+                                                                    className="card-logo"
+                                                                    style={{ width: 'clamp(2.5rem, 8vw, 3.75rem)', height: 'auto' }}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex-1 flex flex-col justify-center">
+                                                            <div className="text-white card-discount-container" style={{ marginBottom: '0.375rem', textShadow: '0 0.0625rem 0.125rem rgba(0,0,0,0.5)' }}>
+                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(1rem, 3vw, 1.125rem)' }}>25%</span>
+                                                                <span className="font-medium card-discount-text" style={{ fontSize: 'clamp(0.6rem, 1.5vw, 0.6875rem)', marginLeft: '0.1875rem' }}>{t("passenger.account.discount")}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex justify-between items-end mt-auto card-bottom-container" style={{ gap: '0.1875rem' }}>
+                                                            <div className="flex-1 min-w-0 card-info-container">
+                                                                <p className="text-white font-medium card-ims-number" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5rem)', marginBottom: '0.0625rem', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                    {user?.imsNumber || "—"}
+                                                                </p>
+                                                                <p className="text-white font-semibold card-owner-name" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.825rem)', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                    {user ? `${user.firstName} ${user.lastName}`.toUpperCase() : mockData.name.toUpperCase()}
+                                                                </p>
+                                                            </div>
+                                                            <span className="text-white italic font-semibold shadow-lg inline-block flex-shrink-0 bg-yellow-600 card-status-badge" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5625rem)', padding: '0.125rem 0.375rem', borderRadius: '9999px', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.5)' }}>
+                                                                {nextStatus}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                        {/* Trips Option */}
+                                        <div className="flex items-center gap-4 mb-4">
+                                            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                                <Plane className="h-6 w-6 text-blue-600" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("passenger.account.trips")}</h3>
+                                                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                                    <div
+                                                        className="h-full bg-blue-600 rounded-full transition-all duration-500"
+                                                        style={{ width: `${tripsData.target > 0 ? Math.min((tripsData.current / tripsData.target) * 100, 100) : 0}%` }}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="flex flex-col items-end gap-1">
+                                                <span className="text-sm font-semibold text-gray-900">
+                                                    {tripsData.current}/{tripsData.target}
+                                                </span>
+                                                <span className="text-sm font-semibold text-gray-700">
+                                                    {tripsData.target > 0 ? Math.round((tripsData.current / tripsData.target) * 100) : 0}%
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* OR Divider */}
+                                        <div className="flex items-center gap-4 my-6">
+                                            <div className="flex-1 h-px bg-gray-300"></div>
+                                            <span className="text-sm font-medium text-gray-500">{t("passenger.account.or")}</span>
+                                            <div className="flex-1 h-px bg-gray-300"></div>
+                                        </div>
+
+                                        {/* Monthly Activity Option */}
+                                        <div className="flex items-center gap-4 mb-4">
+                                            <div className="w-12 h-12 relative flex items-center justify-center">
+                                                <svg width={48} height={48} className="transform -rotate-90">
+                                                    <circle
+                                                        cx={24}
+                                                        cy={24}
+                                                        r={18}
+                                                        stroke="#E5E7EB"
+                                                        strokeWidth="4"
+                                                        fill="none"
+                                                    />
+                                                    {/* Чекпойнты для Monthly Activity */}
+                                                    {Array.from({ length: monthlyActivityGoal }, (_, i) => {
+                                                        const angle = (i * 360 / monthlyActivityGoal);
+                                                        const angleRad = (angle * Math.PI) / 180;
+                                                        const checkpointLength = 4;
+                                                        const checkpointInnerRadius = 18 - checkpointLength;
+                                                        const checkpointOuterRadius = 18;
+                                                        const x1 = 24 + checkpointInnerRadius * Math.cos(angleRad);
+                                                        const y1 = 24 + checkpointInnerRadius * Math.sin(angleRad);
+                                                        const x2 = 24 + checkpointOuterRadius * Math.cos(angleRad);
+                                                        const y2 = 24 + checkpointOuterRadius * Math.sin(angleRad);
+                                                        return (
+                                                            <line
+                                                                key={i}
+                                                                x1={x1}
+                                                                y1={y1}
+                                                                x2={x2}
+                                                                y2={y2}
+                                                                stroke="#9CA3AF"
+                                                                strokeWidth="2"
+                                                            />
+                                                        );
+                                                    })}
+                                                    <circle
+                                                        cx={24}
+                                                        cy={24}
+                                                        r={18}
+                                                        stroke="#3B82F6"
+                                                        strokeWidth="4"
+                                                        fill="none"
+                                                        strokeDasharray={2 * Math.PI * 18}
+                                                        strokeDashoffset={2 * Math.PI * 18 * (1 - Math.min((monthlyActivityCompleted / monthlyActivityGoal), 1))}
+                                                        strokeLinecap="round"
+                                                        className="transition-all duration-500"
+                                                    />
+                                                </svg>
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("passenger.account.monthlyActivity")}</h3>
+                                                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                                    <div
+                                                        className="h-full bg-blue-600 rounded-full transition-all duration-500"
+                                                        style={{
+                                                            width: `${monthlyActivityGoal > 0 ? Math.min((monthlyActivityCompleted / monthlyActivityGoal) * 100, 100) : 0}%`
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="flex flex-col items-end">
+                                                <span className="text-sm font-semibold text-gray-900">
+                                                    {monthlyActivityCompleted}/{monthlyActivityGoal}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* Category Progress Circles */}
+                                        <div className="mt-6">
+                                            <div className="grid grid-cols-3 gap-6">
+                                                {categoriesData.map((category, index) => (
+                                                    <CircularProgress
+                                                        key={index}
+                                                        label={category.name}
+                                                        value={category.value}
+                                                        target={category.target}
+                                                        unit={category.unit}
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                               
+                            </div>
+                        </>
+                    )}
+
+                    {/* Recent Transactions Tab */}
+                    {!isLoading && activeTab === "transactions" && (
+                        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm p-6 border border-white/30">
+                            {loadingTransactions ? (
+                                <div className="text-center py-8">
+                                    <div className="text-gray-500">{t("passenger.account.loadingTransactions")}</div>
+                                </div>
+                            ) : transactions.length === 0 ? (
+                                <div className="text-center py-8">
+                                    <div className="text-gray-500">{t("passenger.account.noTransactions")}</div>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {sortedMonths.map((monthKey) => (
+                                        <div key={monthKey} className="mb-6">
+                                            {/* Month Header */}
+                                            <div className="text-sm font-semibold text-gray-700 mb-3">
+                                                {formatMonthYear(monthKey)}
+                                            </div>
+
+                                            {/* Transactions for this month */}
+                                            <div className="space-y-3">
+                                                {groupedTransactions[monthKey].map((transaction) => {
+                                                    const isExpanded = expandedTransactions.has(transaction.id);
+                                                    const hasDetails = !!transaction.description;
+                                                    const isIncome = transaction.type === "income";
+
+                                                    return (
+                                                        <div
+                                                            key={transaction.id}
+                                                            className={`bg-gray-50 rounded-lg p-4 ${hasDetails ? 'cursor-pointer hover:bg-gray-100 transition-colors' : ''}`}
+                                                            onClick={() => hasDetails && toggleTransaction(transaction.id)}
+                                                        >
+                                                            <div className="flex items-start justify-between">
+                                                                <div className="flex-1">
+                                                                    <div className="flex items-center gap-2 mb-2">
+                                                                        <span className="text-sm text-gray-600">
+                                                                            {formatDate(transaction.date)}
+                                                                        </span>
+                                                                        <span className="text-sm font-medium text-gray-900">
+                                                                            {transaction.category}
+                                                                        </span>
+                                                                    </div>
+
+                                                                    <div className="flex items-center gap-2">
+                                                                        {isIncome ? (
+                                                                            <span className="text-sm font-semibold text-green-600">
+                                                                                +{transaction.miles.toLocaleString()} Miles
+                                                                            </span>
+                                                                        ) : (
+                                                                            <span className="text-sm font-semibold text-red-600">
+                                                                                -{transaction.miles.toLocaleString()} Miles
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+
+                                                                    {/* Expanded details */}
+                                                                    {isExpanded && transaction.description && (
+                                                                        <div className="mt-3 pt-3 border-t border-gray-200">
+                                                                            <p className="text-sm text-gray-600">
+                                                                                {transaction.description}
+                                                                            </p>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+
+                                                                {/* Chevron icon */}
+                                                                {hasDetails && (
+                                                                    <div className="ml-4 flex-shrink-0">
+                                                                        {isExpanded ? (
+                                                                            <ChevronUp className="h-5 w-5 text-gray-400" />
+                                                                        ) : (
+                                                                            <ChevronDown className="h-5 w-5 text-gray-400" />
+                                                                        )}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default AccountPage;

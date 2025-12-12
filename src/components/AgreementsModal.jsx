@@ -32,10 +32,17 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
     }
   }
 
-  const handleNext = () => {
-    // Отмечаем текущее соглашение как прочитанное
-    setReadAgreements(prev => new Set([...prev, currentAgreementIndex]))
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target
+    const scrollPercentage = (scrollTop + clientHeight) / scrollHeight
     
+    // Считаем соглашение прочитанным, если прокручено более 90%
+    if (scrollPercentage >= 0.9) {
+      setReadAgreements(prev => new Set([...prev, currentAgreementIndex]))
+    }
+  }
+
+  const handleNext = () => {
     if (currentAgreementIndex < agreements.length - 1) {
       setCurrentAgreementIndex(prev => prev + 1)
     }
@@ -72,18 +79,6 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
     document.addEventListener('keydown', handleEscape)
     return () => document.removeEventListener('keydown', handleEscape)
   }, [isOpen, onClose])
-
-  // Автоматически отмечаем последний документ как прочитанный при его просмотре
-  useEffect(() => {
-    if (agreements.length > 0 && currentAgreementIndex === agreements.length - 1) {
-      // Если это последний документ, отмечаем его как прочитанный
-      setReadAgreements(prev => {
-        const newSet = new Set(prev)
-        newSet.add(currentAgreementIndex)
-        return newSet
-      })
-    }
-  }, [currentAgreementIndex, agreements.length])
 
   // Блокировка скролла при открытой модалке
   useEffect(() => {
@@ -153,12 +148,13 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
                 onClick={handleNext}
                 disabled={currentAgreementIndex === agreements.length - 1}
               >
-                {currentAgreementIndex === agreements.length - 1 ? 'All documents viewed' : 'Next →'}
+                Next →
               </button>
             </div>
 
             <div 
               className="agreement-content"
+              onScroll={handleScroll}
             >
               <div className="agreement-item">
                 <h3 className="agreement-title">{currentAgreement.title}</h3>
@@ -174,7 +170,7 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
                   {readAgreements.has(currentAgreementIndex) ? (
                     <span className="agreement-read">✓ Read</span>
                   ) : (
-                    <span className="agreement-unread">Click "Next" to continue</span>
+                    <span className="agreement-unread">Scroll to the end to mark as read</span>
                   )}
                 </div>
               </div>

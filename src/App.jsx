@@ -1,16 +1,64 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import HomePage from './pages/HomePage'
+import Header from './components/Header'
+import BackgroundCarousel from './components/BackgroundCarousel'
+import MilesAnimation from './components/MilesAnimation'
+import CollectMiles from './components/CollectMiles'
+import SpendMiles from './components/SpendMiles'
+import AllExtras from './components/AllExtras'
+import StatusBenefits from './components/StatusBenefits'
+import PartnersBenefits from './components/PartnersBenefits'
+import Footer from './components/Footer'
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-        </Routes>
+    <div className="App">
+      <div className="home-page">
+        {/* Hero Section with Carousel */}
+        <section className="hero-section">
+          <BackgroundCarousel />
+          <Header />
+          <div className="hero-content">
+            <div className="landing-content-wrapper">
+              <div className="landing-content">
+                <h1 className="landing-title">
+                  Let our Partners pay<br />
+                  for your Holiday
+                </h1>
+                <MilesAnimation />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Collect Miles Section */}
+        <section className="collect-section">
+          <CollectMiles />
+        </section>
+
+        {/* Spend Miles Section */}
+        <section className="spend-section">
+          <SpendMiles />
+        </section>
+
+        {/* Status Benefits Section */}
+        <section className="status-section">
+          <StatusBenefits />
+        </section>
+
+        {/* All Extras Section */}
+        <section>
+          <AllExtras />
+        </section>
+
+        {/* Partners Benefits Section */}
+        <section className="partners-section">
+          <PartnersBenefits />
+        </section>
+
+        {/* Footer */}
+        <Footer />
       </div>
-    </Router>
+    </div>
   )
 }
 

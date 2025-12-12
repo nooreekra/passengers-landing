@@ -1,14 +1,24 @@
-import { getApiUrl, getAuthHeaders, config } from '../config/env'
-
 class AuthService {
   constructor() {
-    this.baseURL = getApiUrl('')
+    this.baseURL = process.env.NEXT_PUBLIC_API_URL || ''
+  }
+
+  getApiUrl(endpoint) {
+    return `${this.baseURL}${endpoint}`
+  }
+
+  getAuthHeaders(token) {
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json'
+    }
   }
 
   // Login user with email and password
   async login(credentials) {
     try {
-      const response = await fetch(getApiUrl('/api/auth/login'), {
+      const response = await fetch(this.getApiUrl('/api/auth/login'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,11 +53,6 @@ class AuthService {
         localStorage.setItem('token_expires_at', expiresAt)
       }
 
-      // Create session if user data is available (like in ims-frontend)
-      if (data.accessToken && data.user) {
-        await this.createSession(data.accessToken, data.user.role?.type || 'Partnership')
-      }
-
       return data
     } catch (error) {
       console.error('Login error:', error)
@@ -63,7 +68,7 @@ class AuthService {
         throw new Error('No refresh token available')
       }
 
-      const response = await fetch(getApiUrl('/api/auth/refresh'), {
+      const response = await fetch(this.getApiUrl('/api/auth/refresh'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -101,9 +106,9 @@ class AuthService {
       const accessToken = localStorage.getItem('access_token')
       
       if (accessToken) {
-        await fetch(getApiUrl('/api/auth/logout'), {
+        await fetch(this.getApiUrl('/api/auth/logout'), {
           method: 'POST',
-          headers: getAuthHeaders(accessToken)
+          headers: this.getAuthHeaders(accessToken)
         })
       }
     } catch (error) {
@@ -143,52 +148,13 @@ class AuthService {
     return localStorage.getItem('access_token')
   }
 
-  // Create session on dashboard (similar to ims-frontend)
-  // For cross-domain scenarios, we redirect with token in URL for automatic auth
-  async createSession(accessToken, role) {
-    try {
-      // Check if dashboard is on the same origin
-      const dashboardUrl = config.DASHBOARD_URL
-      const currentOrigin = window.location.origin
-      const dashboardOrigin = new URL(dashboardUrl).origin
-      
-      if (currentOrigin === dashboardOrigin) {
-        // Same origin - create session via API route (like in ims-frontend)
-        await fetch('/api/session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ accessToken, role }),
-          credentials: 'include',
-        })
-      }
-      // For different origins, token will be passed via URL parameter
-      // Dashboard will automatically authenticate using the token
-    } catch (error) {
-      console.warn('Session creation skipped (dashboard is on different domain):', error)
-      // This is expected for cross-domain scenarios
-    }
-  }
-
-  // Redirect to dashboard with token for automatic authentication
-  redirectToDashboard(accessToken, role) {
-    const dashboardUrl = new URL(config.DASHBOARD_URL)
-    
-    // Add token and role as URL parameters for automatic authentication
-    dashboardUrl.searchParams.set('token', accessToken)
-    dashboardUrl.searchParams.set('role', role)
-    dashboardUrl.searchParams.set('autoAuth', 'true')
-    
-    // Redirect to dashboard - it will automatically authenticate using the token
-    window.location.href = dashboardUrl.toString()
-  }
-
   // Register new user
   async register(userData) {
     try {
       // Определяем язык из браузера или используем значение по умолчанию
       const language = navigator.language || 'en-US'
       
-      const response = await fetch(getApiUrl('/api/auth/register'), {
+      const response = await fetch(this.getApiUrl('/api/auth/register'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -235,7 +201,7 @@ class AuthService {
       // Определяем язык из браузера или используем значение по умолчанию
       const language = navigator.language || 'en-US'
       
-      const response = await fetch(getApiUrl('/api/auth/confirm'), {
+      const response = await fetch(this.getApiUrl('/api/auth/confirm'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -281,11 +247,6 @@ class AuthService {
       if (data.accessTokenExpiresAt) {
         const expiresAt = new Date(data.accessTokenExpiresAt).getTime()
         localStorage.setItem('token_expires_at', expiresAt)
-      }
-
-      // Create session if user data is available (like in ims-frontend)
-      if (data.accessToken && data.user) {
-        await this.createSession(data.accessToken, data.user.role?.type || 'Partnership')
       }
 
       return data

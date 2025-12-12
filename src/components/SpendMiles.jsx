@@ -1,7 +1,6 @@
+"use client"
+
 import React, { useState, useEffect, useRef } from 'react'
-import istanbulImage from '../assets/images/istanbul_street.png'
-import teamupImage from '../assets/images/teamup.png'
-import maldivesImage from '../assets/images/maldives_room.png'
 
 const SpendMiles = () => {
     const [isVisible, setIsVisible] = useState(false)
@@ -39,7 +38,7 @@ const SpendMiles = () => {
             subtitle: 'ESCAPE',
             miles: '30,000',
             type: 'Weekend Escape',
-            image: istanbulImage
+            image: '/images/landing/istanbul_street.png'
         },
         {
             id: 2,
@@ -47,7 +46,7 @@ const SpendMiles = () => {
             subtitle: 'BUDDIES',
             miles: '100,000',
             type: 'Round Trip',
-            image: teamupImage
+            image: '/images/landing/teamup.png'
         },
         {
             id: 3,
@@ -55,7 +54,7 @@ const SpendMiles = () => {
             subtitle: 'DREAM HOLIDAY',
             miles: '300,000',
             type: 'Holiday Pack',
-            image: maldivesImage
+            image: '/images/landing/maldives_room.png'
         },
     ]
 

@@ -1,5 +1,6 @@
+"use client"
+
 import React, { useState, useEffect, useRef } from 'react'
-import heroFinger from '../assets/images/hero_finger.png'
 
 const AllExtras = () => {
     const [isVisible, setIsVisible] = useState(false)
@@ -91,7 +92,7 @@ const AllExtras = () => {
 
     return (
         <div className="benefits-selection-section" ref={sectionRef}>
-            <div className="benefits-background" style={{ backgroundImage: `url(${heroFinger})` }}>
+            <div className="benefits-background" style={{ backgroundImage: `url(/images/landing/hero_finger.png)` }}>
                 <div className="benefits-overlay"></div>
             </div>
             <div className="benefits-content">

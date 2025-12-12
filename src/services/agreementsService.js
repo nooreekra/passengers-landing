@@ -1,8 +1,10 @@
-import { getApiUrl } from '../config/env'
-
 class AgreementsService {
   constructor() {
-    this.baseURL = getApiUrl('')
+    this.baseURL = process.env.NEXT_PUBLIC_API_URL || ''
+  }
+
+  getApiUrl(endpoint) {
+    return `${this.baseURL}${endpoint}`
   }
 
   // Get agreements by entity type (Business or User)
@@ -11,7 +13,7 @@ class AgreementsService {
       // Определяем язык из браузера или используем значение по умолчанию
       const language = navigator.language || 'en-US'
       
-      const response = await fetch(getApiUrl(`/api/agreements/${entityType}`), {
+      const response = await fetch(this.getApiUrl(`/api/agreements/${entityType}`), {
         method: 'GET',
         headers: {
           'Accept': 'application/json',

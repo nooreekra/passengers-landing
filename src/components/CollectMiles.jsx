@@ -1,5 +1,6 @@
+"use client"
+
 import React, { useState, useEffect, useRef } from 'react'
-import heroImage from '../assets/images/hero_bclass.jpg'
 import PartnersCarousel from './PartnersCarousel'
 
 const CollectMiles = () => {
@@ -80,7 +81,7 @@ const CollectMiles = () => {
             <div className="collect-miles-visualization">
                 <div className="center-hero">
                     <div className="hero-image-wrapper">
-                        <img src={heroImage} alt="Hero" className="hero-image" />
+                        <img src="/images/landing/hero_bclass.jpg" alt="Hero" className="hero-image" />
                     </div>
                 </div>
                 <div className="activities-circle">

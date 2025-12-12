@@ -1,7 +1,6 @@
+"use client"
+
 import React, { useState, useEffect, useRef } from 'react'
-import silverImage from '../assets/images/silver.jpg'
-import goldImage from '../assets/images/gold.jpg'
-import platinumImage from '../assets/images/platinum.jpg'
 
 const StatusBenefits = () => {
   const [isVisible, setIsVisible] = useState(false)
@@ -38,21 +37,21 @@ const StatusBenefits = () => {
       name: 'Silver',
       discount: '-15%',
       description: 'collect just 85% of the trip price to book your flight/hotel',
-      image: silverImage
+      image: '/images/membership/silver.jpg'
     },
     {
       id: 2,
       name: 'Gold',
       discount: '-25%',
       description: 'collect just 75% of the trip to book your flight/hotel',
-      image: goldImage
+      image: '/images/membership/gold.jpg'
     },
     {
       id: 3,
       name: 'Platinum',
       discount: '-35%',
       description: 'collect just 65% of the trip cost to book your hotel/flight',
-      image: platinumImage
+      image: '/images/membership/platinum.jpg'
     },
   ]
 

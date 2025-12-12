@@ -1,12 +1,30 @@
+"use client"
+
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useDispatch } from 'react-redux'
 import LoginForm from './LoginForm'
 import RegistrationForm from './RegistrationForm'
 import ConfirmForm from './ConfirmForm'
 import AgreementsModal from './AgreementsModal'
 import authService from '../services/authService'
-import { config } from '../config/env'
+import { login, getMe } from '@/shared/api/auth'
+import { getCurrentBusiness } from '@/shared/api/business'
+import { setTokens } from '@/store/slices/authSlice'
+import { setUser } from '@/store/slices/userSlice'
+import { setBusiness } from '@/store/slices/businessSlice'
+
+const roleToPath = {
+  TravelAgent: '/dashboard/agent',
+  TravelAgency: '/dashboard/agency',
+  Airline: '/dashboard/airline',
+  Partnership: '/dashboard/partnership',
+  Passenger: '/passenger',
+}
 
 const AuthModal = ({ isOpen, onClose }) => {
+  const router = useRouter()
+  const dispatch = useDispatch()
   const [mode, setMode] = useState('login') // 'login' or 'register'
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -44,34 +62,70 @@ const AuthModal = ({ isOpen, onClose }) => {
     setSuccess('')
     
     try {
-      const response = await authService.login(credentials)
+      // Используем старую логику авторизации с сессией
+      const { accessToken, refreshToken } = await login(credentials.email, credentials.password)
       
-      if (response && response.accessToken) {
-        setSuccess('Login successful! Redirecting...')
-        
-        // Get user role from response
-        const userRole = response.user?.role?.type || 'Partnership'
-        
-        // Redirect to dashboard with token for automatic authentication
-        setTimeout(() => {
-          authService.redirectToDashboard(response.accessToken, userRole)
-        }, 1000)
-      } else {
-        setError('Authorization error. Please try again.')
+      // Сохраняем токены в Redux
+      dispatch(setTokens({ accessToken, refreshToken }))
+      
+      // Получаем данные пользователя
+      const user = await getMe()
+      dispatch(setUser(user))
+      
+      // Пассажиры не имеют бизнеса, пропускаем запрос
+      if (user.role.type !== 'Passenger') {
+        let business = null
+        try {
+          business = await getCurrentBusiness()
+        } catch (_) {
+          if (user.role.type !== 'TravelAgent') {
+            throw _
+          }
+        }
+        if (business) {
+          dispatch(setBusiness(business))
+        }
       }
+      
+      // Сохраняем сессию в cookies через API
+      await fetch('/api/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accessToken, role: user.role.type }),
+        credentials: 'include',
+      })
+      
+      // Перенаправляем на соответствующий дашборд
+      const path = roleToPath[user.role.type] ?? '/'
+      setSuccess('Login successful! Redirecting...')
+      setTimeout(() => {
+        router.replace(path)
+        onClose()
+      }, 1000)
     } catch (err) {
       console.error('Login error:', err)
       
-      if (err.message.includes('401') || err.message.includes('Unauthorized')) {
-        setError('Invalid email or password')
-      } else if (err.message.includes('403') || err.message.includes('Forbidden')) {
-        setError('Access denied. Contact administrator')
-      } else if (err.message.includes('500') || err.message.includes('Internal Server Error')) {
-        setError('Server error. Please try later')
-      } else if (err.message.includes('Network') || err.message.includes('fetch')) {
-        setError('Network error. Check your internet connection')
+      // Обработка ошибок из API
+      const apiError = err?.response?.data
+      if (apiError?.errors) {
+        const firstError = Object.values(apiError.errors)?.[0]?.[0]
+        setError(firstError || 'An error occurred during login')
+      } else if (apiError?.message) {
+        setError(apiError.message)
+      } else if (err.message) {
+        if (err.message.includes('401') || err.message.includes('Unauthorized')) {
+          setError('Invalid email or password')
+        } else if (err.message.includes('403') || err.message.includes('Forbidden')) {
+          setError('Access denied. Contact administrator')
+        } else if (err.message.includes('500') || err.message.includes('Internal Server Error')) {
+          setError('Server error. Please try later')
+        } else if (err.message.includes('Network') || err.message.includes('fetch')) {
+          setError('Network error. Check your internet connection')
+        } else {
+          setError(err.message)
+        }
       } else {
-        setError(err.message || 'An error occurred during login. Please try again.')
+        setError('An error occurred during login. Please try again.')
       }
     } finally {
       setIsLoading(false)
@@ -118,17 +172,49 @@ const AuthModal = ({ isOpen, onClose }) => {
     setSuccess('')
     
     try {
+      // Используем authService для подтверждения, так как это специфичная логика регистрации
       const response = await authService.confirmEmail(confirmData.email, confirmData.code)
       
       if (response && response.accessToken) {
+        // Если после подтверждения получен токен, используем старую логику авторизации
+        const { accessToken, refreshToken } = response
+        
+        // Сохраняем токены в Redux
+        dispatch(setTokens({ accessToken, refreshToken }))
+        
+        // Получаем данные пользователя
+        const user = await getMe()
+        dispatch(setUser(user))
+        
+        // Пассажиры не имеют бизнеса, пропускаем запрос
+        if (user.role.type !== 'Passenger') {
+          let business = null
+          try {
+            business = await getCurrentBusiness()
+          } catch (_) {
+            if (user.role.type !== 'TravelAgent') {
+              throw _
+            }
+          }
+          if (business) {
+            dispatch(setBusiness(business))
+          }
+        }
+        
+        // Сохраняем сессию в cookies через API
+        await fetch('/api/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ accessToken, role: user.role.type }),
+          credentials: 'include',
+        })
+        
+        // Перенаправляем на соответствующий дашборд
+        const path = roleToPath[user.role.type] ?? '/'
         setSuccess('Email successfully confirmed! Redirecting...')
-        
-        // Get user role from response
-        const userRole = response.user?.role?.type || 'Passenger'
-        
-        // Redirect to dashboard with token for automatic authentication
         setTimeout(() => {
-          authService.redirectToDashboard(response.accessToken, userRole)
+          router.replace(path)
+          onClose()
         }, 1500)
       } else {
         setSuccess('Email successfully confirmed!')
@@ -140,16 +226,27 @@ const AuthModal = ({ isOpen, onClose }) => {
     } catch (err) {
       console.error('Confirmation error:', err)
       
-      if (err.message.includes('400') || err.message.includes('Bad Request')) {
-        setError('Invalid confirmation code')
-      } else if (err.message.includes('404') || err.message.includes('Not Found')) {
-        setError('Confirmation code not found or expired')
-      } else if (err.message.includes('500') || err.message.includes('Internal Server Error')) {
-        setError('Server error. Please try later')
-      } else if (err.message.includes('Network') || err.message.includes('fetch')) {
-        setError('Network error. Check your internet connection')
+      // Обработка ошибок
+      const apiError = err?.response?.data
+      if (apiError?.errors) {
+        const firstError = Object.values(apiError.errors)?.[0]?.[0]
+        setError(firstError || 'An error occurred during confirmation')
+      } else if (apiError?.message) {
+        setError(apiError.message)
+      } else if (err.message) {
+        if (err.message.includes('400') || err.message.includes('Bad Request')) {
+          setError('Invalid confirmation code')
+        } else if (err.message.includes('404') || err.message.includes('Not Found')) {
+          setError('Confirmation code not found or expired')
+        } else if (err.message.includes('500') || err.message.includes('Internal Server Error')) {
+          setError('Server error. Please try later')
+        } else if (err.message.includes('Network') || err.message.includes('fetch')) {
+          setError('Network error. Check your internet connection')
+        } else {
+          setError(err.message)
+        }
       } else {
-        setError(err.message || 'An error occurred during confirmation. Please try again.')
+        setError('An error occurred during confirmation. Please try again.')
       }
     } finally {
       setIsLoading(false)

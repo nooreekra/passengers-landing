@@ -1,9 +1,6 @@
+"use client"
+
 import React, { useState, useEffect, useRef } from 'react'
-import bonus3d from '../assets/images/bonus_3d.png'
-import cake3d from '../assets/images/cake_3d.png'
-import checkin3d from '../assets/images/checkin_3d.png'
-import seat3d from '../assets/images/seat_3d.png'
-import dinner3d from '../assets/images/dinner_3d.png'
 
 const PartnersBenefits = () => {
   const [isVisible, setIsVisible] = useState(false)
@@ -34,11 +31,11 @@ const PartnersBenefits = () => {
     }
   }, [])
   const benefits = [
-    { text: 'Welcome Bonus', image: bonus3d },
-    { text: 'Free monthly treat', image: cake3d },
-    { text: 'Priority check in at business class counter', image: checkin3d },
-    { text: 'Advance seat booking', image: seat3d },
-    { text: 'Extended check-in, check out time', image: dinner3d },
+    { text: 'Welcome Bonus', image: '/images/landing/bonus_3d.png' },
+    { text: 'Free monthly treat', image: '/images/landing/cake_3d.png' },
+    { text: 'Priority check in at business class counter', image: '/images/landing/checkin_3d.png' },
+    { text: 'Advance seat booking', image: '/images/landing/seat_3d.png' },
+    { text: 'Extended check-in, check out time', image: '/images/landing/dinner_3d.png' },
   ]
 
   return (
