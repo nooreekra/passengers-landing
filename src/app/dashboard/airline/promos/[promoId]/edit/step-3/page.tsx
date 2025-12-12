@@ -29,7 +29,8 @@ interface Country {
 type Option = { value: string; label: string };
 
 export default function EditPromoStep3() {
-    const { promoId } = useParams();
+    const params = useParams();
+    const promoId = params?.promoId as string | undefined;
     const router = useRouter();
     const { data, setData } = usePromoWizard();
     const businessId = useSelector((state: RootState) => state.business.current?.id);

@@ -47,7 +47,8 @@ import InfoTooltip from "@/shared/ui/InfoTooltip";
 const sx = { ...baseSelectStyles, ...menuOptionStyles };
 
 export default function EditPromoStep4() {
-    const { promoId } = useParams();
+    const params = useParams();
+    const promoId = params?.promoId as string | undefined;
     const { t, i18n } = useTranslation();
     const router = useRouter();
     const { data, setData } = usePromoWizard();

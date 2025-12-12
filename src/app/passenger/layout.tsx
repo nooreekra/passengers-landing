@@ -26,6 +26,7 @@ export default function PassengerMobileLayout({ children }: { children: React.Re
     ];
 
     const isActive = (href: string) => {
+        if (!pathname) return false;
         if (href === "/passenger") {
             return pathname === href;
         }

@@ -17,7 +17,12 @@ const WishlistProgressPage = () => {
     const { t } = useTranslation();
     const router = useRouter();
     const params = useParams();
-    const wishlistId = params.id as string;
+    const wishlistId = params?.id as string | undefined;
+    
+    if (!wishlistId) {
+        router.push("/passenger/wallet");
+        return null;
+    }
     const user = useSelector((state: RootState) => state.user.current);
     const [wishlistData, setWishlistData] = useState<{
         id: string;

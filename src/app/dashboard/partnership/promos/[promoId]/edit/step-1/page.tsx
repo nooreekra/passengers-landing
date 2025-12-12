@@ -29,7 +29,8 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function EditPromoStep1() {
-    const { promoId } = useParams();
+    const params = useParams();
+    const promoId = params?.promoId as string | undefined;
     const router = useRouter();
     const { t } = useTranslation();
     const { upload } = useUploadToBlob();

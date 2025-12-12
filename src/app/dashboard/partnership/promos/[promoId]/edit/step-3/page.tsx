@@ -31,7 +31,8 @@ const valueTypeOptions: { value: RewardValueType; label: string }[] = [
 export default function EditPartnerRewardsStep3() {
     const { t } = useTranslation();
     const router = useRouter();
-    const { promoId } = useParams();
+    const params = useParams();
+    const promoId = params?.promoId as string | undefined;
 
     const { control, handleSubmit } = useForm<FormValues>({
         defaultValues: { rewards: [{ status: "Universal", value: 0, valueType: "Fixed" }] },

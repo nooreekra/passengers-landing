@@ -60,7 +60,8 @@ type SegmentPromo = {
 };
 
 export default function PromoViewPage() {
-    const { promoId } = useParams();
+    const params = useParams();
+    const promoId = params?.promoId as string | undefined;
     const router = useRouter();
     const { i18n, t } = useTranslation();
     const currentLocale = i18n.language === "ru" ? ru : enUS;

@@ -12,7 +12,12 @@ export default function EditPromoLayout({ children }: PropsWithChildren) {
     const { t } = useTranslation();
     const pathname = usePathname();
     const router = useRouter();
-    const { promoId } = useParams();
+    const params = useParams();
+    const promoId = params?.promoId as string | undefined;
+
+    if (!promoId) {
+        return null;
+    }
 
     const steps = [
         { label: t("promo.step_description"), href: `/dashboard/partnership/promos/${promoId}/edit/step-1` },
@@ -23,7 +28,7 @@ export default function EditPromoLayout({ children }: PropsWithChildren) {
     const currentStep = steps.findIndex((s) => pathname === s.href) + 1 || 1;
 
     return (
-        <PromoWizardClientProvider promoId={promoId as string}>
+        <PromoWizardClientProvider promoId={promoId}>
             <EditPromoContent 
                 steps={steps} 
                 currentStep={currentStep} 

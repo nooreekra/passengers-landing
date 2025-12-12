@@ -48,7 +48,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
 
     const { t, i18n } = useTranslation();
     const pathname = usePathname();
-    const basePath = pathname.split("/").slice(0, 3).join("/");
+    const basePath = pathname ? pathname.split("/").slice(0, 3).join("/") : "";
     const dispatch = useDispatch();
     const router = useRouter();
     const refreshToken = useSelector((state: RootState) => state.auth.refreshToken);
@@ -109,7 +109,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
     useEffect(() => {
         setOpenMenus(prev => ({
             ...prev,
-            profile: pathname.startsWith(`${basePath}/profile`)
+            profile: pathname ? pathname.startsWith(`${basePath}/profile`) : false
         }));
     }, [pathname, basePath]);
 
@@ -117,6 +117,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
         setOpenMenus(prev => ({ ...prev, [key]: !prev[key] }));
 
     const isActivePath = (fullPath: string) => {
+        if (!pathname) return false;
         if (fullPath === "/dashboard/airline/documents") {
             // Для documents проверяем, находимся ли мы в любом из подразделов
             return pathname.startsWith("/dashboard/airline/documents");

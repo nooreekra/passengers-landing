@@ -27,7 +27,7 @@ export default function AddPromoStep2() {
     const REQ = t("promo.required");
     const router = useRouter();
     const searchParams = useSearchParams();
-    const promoId = searchParams.get("promoId");
+    const promoId = searchParams?.get("promoId") || undefined;
 
     const schema = z.object({
         startDate: z.string().min(1, REQ),

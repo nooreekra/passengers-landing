@@ -38,6 +38,8 @@ const AutoAuth = () => {
     const [isProcessing, setIsProcessing] = useState(false);
 
     useEffect(() => {
+        if (!searchParams) return;
+        
         const token = searchParams.get("token");
         const role = searchParams.get("role");
         const autoAuth = searchParams.get("autoAuth");

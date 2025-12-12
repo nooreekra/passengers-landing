@@ -16,7 +16,13 @@ const EditWishlistPage = () => {
     const { t } = useTranslation();
     const router = useRouter();
     const params = useParams();
-    const wishlistId = params.id as string;
+    const wishlistId = params?.id as string | undefined;
+    
+    if (!wishlistId) {
+        router.push("/passenger/wallet");
+        return null;
+    }
+    
     const [walletId, setWalletId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);

@@ -25,7 +25,8 @@ type FormValues = z.infer<typeof schema>;
 export default function EditPromoStep2() {
     const { t } = useTranslation();
     const router = useRouter();
-    const { promoId } = useParams();
+    const params = useParams();
+    const promoId = params?.promoId as string | undefined;
     const [countries, setCountries] = useState<Option[]>([]);
 
     const { control, handleSubmit } = useForm<FormValues>({

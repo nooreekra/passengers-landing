@@ -36,7 +36,8 @@ type FormValues = z.infer<typeof audienceSchema>;
 export default function EditPromoStep2() {
     const { t } = useTranslation();
     const router = useRouter();
-    const { promoId } = useParams();
+    const params = useParams();
+    const promoId = params?.promoId as string | undefined;
     const { data, setData } = usePromoWizard();
     const [countries, setCountries] = useState<Option[]>([]);
     const [citiesMap, setCitiesMap] = useState<Record<string, Option[]>>({});
