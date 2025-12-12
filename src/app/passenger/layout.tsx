@@ -10,7 +10,7 @@ import ProfileIcon from "@/shared/icons/ProfileIcon";
 import { useAuthGuard } from "@/shared/lib/useAuthGuard";
 import { Wallet, Plane, MoreHorizontal, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import AutoAuth from "@/app/(landing)/components/AutoAuth";
+import AutoAuth from "@/shared/components/AutoAuth";
 
 export default function PassengerMobileLayout({ children }: { children: React.ReactNode }) {
     useAuthGuard();
