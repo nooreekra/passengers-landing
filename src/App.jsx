@@ -21,7 +21,7 @@ function App() {
             <div className="landing-content-wrapper">
               <div className="landing-content">
                 <h1 className="landing-title">
-                  Let our Partners pay<br />
+                  Our Partners pay<br />
                   for your Holiday
                 </h1>
                 <MilesAnimation />
@@ -30,14 +30,15 @@ function App() {
           </div>
         </section>
 
-        {/* Collect Miles Section */}
-        <section className="collect-section">
-          <CollectMiles />
-        </section>
-
         {/* Spend Miles Section */}
         <section className="spend-section">
           <SpendMiles />
+        </section>
+
+
+        {/* Collect Miles Section */}
+        <section className="collect-section">
+          <CollectMiles />
         </section>
 
         {/* Status Benefits Section */}

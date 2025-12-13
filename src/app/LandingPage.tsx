@@ -22,7 +22,7 @@ const LandingPage = () => {
           <div className="landing-content-wrapper">
             <div className="landing-content">
               <h1 className="landing-title">
-                Let our Partners pay<br />
+                Our Partners pay<br />
                 for your Holiday
               </h1>
               <MilesAnimation />
