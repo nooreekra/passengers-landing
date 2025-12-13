@@ -1266,7 +1266,7 @@
         "spendMiles": {
             "title": "потратить мили",
             "subtitle": "выберите свой следующий отпуск",
-            "bookFor": "Забронировать за",
+            "bookFor": "",
             "options": {
                 "weekendEscape": {
                     "destination": "Запланируйте",
