@@ -1,0 +1,412 @@
+{
+  "auth": {
+    "modal": {
+      "welcome": "Қош келдіңіз",
+      "signInToAccount": "Аккаунтыңызға кіріңіз",
+      "signUp": "Тіркеліңіз",
+      "confirmEmail": "Email-іңізді растаңыз",
+      "signIn": "Кіру",
+      "signUpButton": "Тіркелу",
+      "errors": {
+        "invalidEmailOrPassword": "Жарамсыз email немесе пароль",
+        "accessDenied": "Қол жеткізу тыйым салынған. Администраторға хабарласыңыз",
+        "serverError": "Сервер қатесі. Кейінірек көріңіз",
+        "networkError": "Желі қатесі. Интернет байланысын тексеріңіз",
+        "loginError": "Кіру кезінде қате орын алды. Қайталап көріңіз.",
+        "checkData": "Енгізілген деректердің дұрыстығын тексеріңіз",
+        "userExists": "Осы email-мен пайдаланушы қазірдің өзінде бар",
+        "registrationError": "Тіркелу кезінде қате орын алды. Қайталап көріңіз.",
+        "invalidCode": "Жарамсыз растау коды",
+        "codeNotFound": "Растау коды табылмады немесе мерзімі өткен",
+        "confirmationError": "Растау кезінде қате орын алды. Қайталап көріңіз."
+      },
+      "success": {
+        "loginSuccess": "Кіру сәтті аяқталды! Басқа бетке өту...",
+        "registrationSuccess": "Тіркелу сәтті аяқталды! Растау кодын алу үшін email-іңізді тексеріңіз.",
+        "emailConfirmed": "Email сәтті расталды! Басқа бетке өту...",
+        "emailConfirmedSimple": "Email сәтті расталды!"
+      }
+    },
+    "loginForm": {
+      "email": "Email",
+      "password": "Пароль",
+      "enterEmail": "Email-іңізді енгізіңіз",
+      "enterPassword": "Парольдіңізді енгізіңіз",
+      "signIn": "Кіру",
+      "signingIn": "Кіру...",
+      "forgotPassword": "Парольді ұмыттыңыз ба?",
+      "errors": {
+        "emailRequired": "Email міндетті",
+        "emailInvalid": "Жарамды email енгізіңіз",
+        "passwordRequired": "Пароль міндетті",
+        "passwordMinLength": "Пароль кемінде 6 таңбадан тұруы керек"
+      }
+    },
+    "registrationForm": {
+      "firstName": "Аты",
+      "lastName": "Тегі",
+      "email": "Email",
+      "password": "Пароль",
+      "enterFirstName": "Атыңызды енгізіңіз",
+      "enterLastName": "Тегіңізді енгізіңіз",
+      "enterEmail": "Email-іңізді енгізіңіз",
+      "enterPassword": "Парольдіңізді енгізіңіз",
+      "signUp": "Тіркелу",
+      "registering": "Тіркелу...",
+      "errors": {
+        "firstNameRequired": "Аты міндетті",
+        "lastNameRequired": "Тегі міндетті",
+        "emailRequired": "Email міндетті",
+        "emailInvalid": "Жарамды email енгізіңіз",
+        "passwordRequired": "Пароль міндетті",
+        "passwordMinLength": "Пароль кемінде 6 таңбадан тұруы керек"
+      }
+    },
+    "confirmForm": {
+      "confirmationCode": "Растау коды",
+      "enterCode": "Email-ден коды енгізіңіз",
+      "codeSentTo": "Код жіберілді",
+      "confirm": "Растау",
+      "confirming": "Растау...",
+      "back": "Артқа",
+      "errors": {
+        "codeRequired": "Растау коды міндетті",
+        "codeMinLength": "Код кемінде 4 таңбадан тұруы керек"
+      }
+    },
+    "agreementsModal": {
+      "title": "Келісімдер",
+      "subtitle": "Тіркелу алдында келісімдермен танысыңыз",
+      "loading": "Келісімдерді жүктеу...",
+      "loadError": "Келісімдерді жүктеу сәтсіз аяқталды. Кейінірек көріңіз.",
+      "noAgreements": "Келісімдер табылмады",
+      "continueRegistration": "Тіркелуді жалғастыру",
+      "document": "Құжат",
+      "of": "ішінен",
+      "previous": "Алдыңғы",
+      "next": "Келесі",
+      "version": "Нұсқа",
+      "updated": "Жаңартылған",
+      "read": "Оқылған",
+      "scrollToEnd": "Оқылған деп белгілеу үшін соңына дейін айналдырыңыз",
+      "readProgress": "Оқылған",
+      "acceptAndContinue": "Қабылдау және тіркелуді жалғастыру",
+      "pleaseReadAll": "Барлық келісімдерді оқыңыз"
+    }
+  },
+  "landing": {
+    "header": {
+      "signIn": "Кіру",
+      "menu": {
+        "collectMiles": "Миль жинау",
+        "spendMiles": "Миль жұмсау",
+        "membership": "Мүшелік"
+      }
+    },
+    "hero": {
+      "title": "Біздің серіктестер\nсіздің демалысыңызды төлейді"
+    },
+    "collectMiles": {
+      "title": "миль жинау",
+      "subtitle": "күнделікті белсенділігіңіз\nкелесі демалысыңызға айналады",
+      "activities": {
+        "banking": "Банкинг",
+        "bankingDesc": "Ай сайын карта бойынша төлемдер",
+        "gasStation": "АЗС",
+        "gasStationDesc": "Бакты толтыру",
+        "restaurant": "Ресторан",
+        "restaurantDinner": "Отбасымен кешкі ас",
+        "restaurantLunch": "Серіктеспен түскі ас",
+        "flight": "Рейс",
+        "flightDesc": "Бизнес саяхат",
+        "gym": "Спортзал",
+        "gymDesc": "Ай сайын төлем",
+        "hotel": "Қонақ үй",
+        "hotelDesc": "Бизнес саяхат",
+        "coffee": "Кофейня",
+        "coffeeDesc": "Достармен",
+        "miles": "Миль"
+      }
+    },
+    "spendMiles": {
+      "title": "миль жұмсау",
+      "subtitle": "келесі демалысыңызды таңдаңыз",
+      "bookFor": "Брондау үшін",
+      "options": {
+        "weekendEscape": {
+          "destination": "Демалыс күндерін",
+          "subtitle": "ІСКЕ АСЫРУ",
+          "type": "Демалыс күндері"
+        },
+        "teamUp": {
+          "destination": "Достарыңызбен",
+          "subtitle": "БІРЛЕСУ",
+          "type": "Бар-келу"
+        },
+        "dreamHoliday": {
+          "destination": "Армандаған",
+          "subtitle": "ДЕМАЛЫС",
+          "type": "Демалыс пакеті"
+        }
+      }
+    },
+    "statusBenefits": {
+      "title": "мәртебе артықшылықтары",
+      "subtitle": "IMS Savvy сіздің орныңызда саяхаттың бір бөлігін төлейді",
+      "statuses": {
+        "silver": {
+          "name": "Күміс",
+          "description": "рейс/қонақ үйді брондау үшін саяхат бағасының тек 85% жинаңыз"
+        },
+        "gold": {
+          "name": "Алтын",
+          "description": "рейс/қонақ үйді брондау үшін саяхаттың тек 75% жинаңыз"
+        },
+        "platinum": {
+          "name": "Платина",
+          "description": "қонақ үй/рейсті брондау үшін саяхат құнының тек 65% жинаңыз"
+        }
+      }
+    },
+    "allExtras": {
+      "subtitle": "барлық қосымшалар қолыңызда",
+      "benefits": {
+        "freeWifi": "Тегін Wi-Fi",
+        "priorityCheckIn": "Басымдық тіркеу",
+        "priorityCheckInDesc": "бизнес-класс стойкасында",
+        "loungeAccess": "Лаунжке кіру",
+        "loungeAccessDesc": "бизнес-класс лаунжіне",
+        "foodBeverages": "Тағам мен сусындар",
+        "foodBeveragesDesc": "ұшақта",
+        "additionalLuggage": "Қосымша жүк",
+        "upgrade": "Жақсарту",
+        "upgradeDesc": "Супер Эконом немесе Бизнес классқа"
+      }
+    },
+    "partnersBenefits": {
+      "title": "серіктес артықшылықтары",
+      "subtitle": "эксклюзивті артықшылықтар",
+      "benefits": {
+        "welcomeBonus": "Қош келдіңіз бонусы",
+        "freeMonthlyTreat": "Тегін ай сайын сыйлық",
+        "priorityCheckIn": "Бизнес-класс стойкасында басымдық тіркеу",
+        "advanceSeatBooking": "Алдын ала орын брондау",
+        "extendedCheckIn": "Кеңейтілген кіру және шығу уақыты"
+      }
+    },
+    "footer": {
+      "copyright": "Барлық құқықтар қорғалған"
+    },
+    "milesAnimation": {
+      "milesTotal": "Миль, барлығы",
+      "operations": {
+        "airlineAlmatyAstana": "Авиакомпания Алматы - Астана",
+        "hotel": "Қонақ үй",
+        "restaurant": "Ресторан",
+        "airlineAstanaLondon": "Авиакомпания Астана - Лондон",
+        "coffeeShop": "Кофехана",
+        "banking": "Банкинг",
+        "flightAlmatyDubai": "Рейс Алматы - Дубай"
+      }
+    }
+  },
+  "passenger": {
+    "nav": {
+      "home": "Басты",
+      "wallet": "Қалта",
+      "trips": "Саяхаттар",
+      "account": "Аккаунтым",
+      "more": "Қосымша"
+    },
+    "home": {
+      "loading": "Жүктелуде...",
+      "noStories": "Қолжетімді әңгімелер жоқ",
+      "myAccount": "Аккаунтым",
+      "bookATrip": "Саяхат брондау",
+      "categoryDescription": "Бұл {{name}} категориясы. Мұнда сіз осы категориядағы барлық қолжетімді ұсыныстар мен серіктестерді таба аласыз.",
+      "partnerDescription": "Бұл {{name}} серіктесі. Біздің арнайы ұсыныстар мен акциялар туралы көбірек біліңіз.",
+      "categories": {
+        "airline": "Авиакомпания",
+        "hotel": "Қонақ үйлер",
+        "gym": "Спортзалдар",
+        "bank": "Банктер",
+        "restaurant": "Ресторандар",
+        "coffee": "Кофеханалар"
+      }
+    },
+    "account": {
+      "title": "Аккаунтым",
+      "accountDetails": "Аккаунт мәліметтері",
+      "recentTransactions": "Соңғы транзакциялар",
+      "imsSavvyMember": "IMS Savvy мүшесі",
+      "totalMiles": "Барлық миль",
+      "totalMilesTooltip": "Лоялдылық бағдарламасына қатысу кезеңінде жинақталған жалпы миль саны",
+      "pending": "Күтуде",
+      "pendingTooltip": "Начисление процесіндегі және растаудан кейін балансыңызға қосылатын миль",
+      "loyaltyRewards": "Лоялдылық сыйлықтары",
+      "completeTicketTransactions": "Цифрлық картаңызды сканерлеу арқылы билет транзакцияларын жылдам аяқтаңыз.",
+      "copyMembershipId": "Мүшелік ID-сын көшіру",
+      "loadingTierHistories": "Мәртебе тарихын жүктеу...",
+      "noTierData": "Мәртебе деректері жоқ",
+      "active": "Белсенді",
+      "subscription": "Жазылым",
+      "discount": "жеңілдік",
+      "trips": "Саяхаттар",
+      "or": "НЕМЕСЕ",
+      "monthlyActivity": "Айлық белсенділік",
+      "contactInformation": "Байланыс ақпараты",
+      "email": "Email",
+      "phone": "Телефон",
+      "loadingTransactions": "Транзакцияларды жүктеу...",
+      "noTransactions": "Транзакциялар жоқ",
+      "copyToClipboard": "Алмасу буферіне көшіру",
+      "copied": "Көшірілді",
+      "loading": "Жүктелуде...",
+      "membership": "Мүшелік"
+    },
+    "more": {
+      "title": "Қосымша",
+      "subtitle": "Қосымша мүмкіндіктер",
+      "profile": "Профиль",
+      "settings": "Баптаулар",
+      "help": "Көмек",
+      "language": "Тіл",
+      "userAgreement": "Пайдаланушы келісімі",
+      "chat": "Чат",
+      "logout": "Шығу",
+      "loadingAgreements": "Келісімдерді жүктеу...",
+      "noAgreements": "Келісімдер қолжетімсіз",
+      "agreementTitle": "Пайдаланушы келісімі",
+      "version": "Нұсқа",
+      "updatedAt": "Жаңартылған"
+    },
+    "profile": {
+      "title": "Профиль",
+      "subtitle": "Аккаунтыңыз туралы ақпарат",
+      "personalInformation": "Жеке ақпарат",
+      "fullName": "Толық аты",
+      "email": "Email",
+      "phone": "Телефон",
+      "country": "Ел",
+      "imsNumber": "IMS нөмірі",
+      "extensionPhoneNumber": "Қосымша телефон нөмірі",
+      "ain": "AIN",
+      "userId": "Пайдаланушы ID",
+      "failedToLoad": "Профиль ақпаратын жүктеу сәтсіз аяқталды",
+      "userNotFound": "Пайдаланушы табылмады",
+      "goBack": "Артқа"
+    },
+    "wallet": {
+      "title": "Қалта",
+      "subtitle": "Баланс және төлем басқаруы",
+      "balance": "Баланс",
+      "transactionHistory": "Транзакциялар тарихы",
+      "noTransactions": "Транзакциялар жоқ",
+      "transfer": "Аудару",
+      "transferMiles": "Миль аудару",
+      "wishlist": "Тілектер тізімі",
+      "noWishlistItems": "Тілектер тізімінде элементтер жоқ",
+      "progress": "Прогресс",
+      "from": "Қайдан",
+      "to": "Қайда",
+      "selectSource": "Көзді таңдаңыз",
+      "selectDestination": "Тағайындауды таңдаңыз",
+      "amount": "Сома",
+      "enterAmount": "Соманы енгізіңіз",
+      "name": "Атауы",
+      "selectName": "Атауды таңдаңыз",
+      "typeIn": "Енгізіңіз",
+      "typeNumber": "Санды енгізіңіз",
+      "max15Letters": "максимум 15 әріп",
+      "destination": "Бағыт",
+      "countryOrCity": "Ел немесе қала",
+      "targetTrip": "Мақсатты саяхат",
+      "setMilesAmountRequired": "осы саяхат үшін қажетті миль сомасын орнату",
+      "setRules": "Ережелерді орнату",
+      "percentOfTransactions": "осы суб-қалтаға ауысатын барлық транзакциялардың %",
+      "selectRule": "Ережені таңдаңыз",
+      "percentOfEachTransaction": "әр транзакцияның %",
+      "create": "Жасау",
+      "target": "Мақсат",
+      "complete": "аяқталды",
+      "rulesSet": "Ережелер орнатылды",
+      "ffCard": "FF картасы",
+      "member": "Мүше",
+      "allTimeMiles": "Барлық уақыттағы миль",
+      "allTimeMilesTooltip": "Уақыт бойы жинақталған жалпы миль",
+      "availableToRedeem": "Айырбастауға қолжетімді",
+      "pending": "Күтуде",
+      "pendingTooltip": "авиакомпаниялар мен серіктестерден",
+      "accounts": "Есептер",
+      "history": "Тарих",
+      "loading": "Жүктелуде...",
+      "transferError": "Миль аудару сәтсіз аяқталды",
+      "transferring": "Аудару...",
+      "noRulesSet": "Ережелер орнатылмаған",
+      "deleteError": "Тілектер тізімін жою сәтсіз аяқталды",
+      "transferBeforeDelete": "Жою алдында қаражатты аударыңыз",
+      "transferFundsMessage": "Бұл тілектер тізімінде {{amount}} миль бар. Оларды қайда аударғыңыз келеді?",
+      "transferTo": "Аудару",
+      "confirmDelete": "Жоюды растау",
+      "confirmDeleteMessage": "Сіз бұл тілектер тізімін жойғыңыз келеді ме? Бұл әрекетті болдырмау мүмкін емес.",
+      "cancel": "Болдырмау",
+      "deleting": "Жою...",
+      "delete": "Жою",
+      "createError": "Тілектер тізімін жасау сәтсіз аяқталды",
+      "creating": "Жасау...",
+      "country": "Ел",
+      "selectCountry": "Елді таңдаңыз",
+      "city": "Қала",
+      "optional": "міндетті емес",
+      "selectCity": "Қаланы таңдаңыз",
+      "updateError": "Тілектер тізімін жаңарту сәтсіз аяқталды",
+      "editWishlist": "Тілектер тізімін өңдеу",
+      "saving": "Сақтау...",
+      "save": "Сақтау",
+      "transactionTypes": {
+        "credit": "Начисление",
+        "debit": "Списание"
+      },
+      "transactionStatuses": {
+        "confirmed": "Расталды",
+        "pending": "Күтуде",
+        "cancelled": "Болдырылды"
+      },
+      "transactionCategories": {
+        "restaurant": "Ресторан",
+        "hotel": "Қонақ үй",
+        "airline": "Авиакомпания",
+        "flight": "Рейс",
+        "banking": "Банкинг",
+        "gasStation": "АЗС",
+        "gym": "Спортзал",
+        "coffee": "Кофехана"
+      }
+    },
+    "trips": {
+      "title": "Саяхаттар",
+      "subtitle": "Саяхаттарды басқару",
+      "myTrips": "Менің саяхаттарым",
+      "bookATrip": "Саяхат брондау",
+      "noTripsYet": "Саяхаттар әлі жоқ",
+      "tripHistoryDescription": "Саяхаттарыңыздың тарихы осы жерде пайда болады",
+      "upcoming": "Алдағы",
+      "completed": "Аяқталған",
+      "flights": "Рейстер",
+      "hotels": "Қонақ үйлер",
+      "from": "ҚАЙДАН",
+      "to": "ҚАЙДА",
+      "departureDate": "ЖОЛҒА ШЫҒУ КҮНІ",
+      "returnDate": "ҚАЙТУ КҮНІ",
+      "checkIn": "КІРУ",
+      "checkOut": "ШЫҒУ",
+      "select": "Таңдау",
+      "done": "Дайын",
+      "oneWay": "БІР БАҒЫТ",
+      "roundTrip": "БАР-КЕЛУ",
+      "bookAFlight": "РЕЙС БРОНДАУ",
+      "cancel": "Болдырмау"
+    }
+  }
+}
+

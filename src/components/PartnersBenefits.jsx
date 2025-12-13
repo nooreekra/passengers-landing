@@ -1,8 +1,10 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const PartnersBenefits = () => {
+  const { t } = useTranslation()
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef(null)
 
@@ -31,19 +33,19 @@ const PartnersBenefits = () => {
     }
   }, [])
   const benefits = [
-    { text: 'Welcome Bonus', image: '/images/landing/bonus_3d.png' },
-    { text: 'Free monthly treat', image: '/images/landing/cake_3d.png' },
-    { text: 'Priority check in at business class counter', image: '/images/landing/checkin_3d.png' },
-    { text: 'Advance seat booking', image: '/images/landing/seat_3d.png' },
-    { text: 'Extended check-in, check out time', image: '/images/landing/dinner_3d.png' },
+    { text: t('landing.partnersBenefits.benefits.welcomeBonus'), image: '/images/landing/bonus_3d.png' },
+    { text: t('landing.partnersBenefits.benefits.freeMonthlyTreat'), image: '/images/landing/cake_3d.png' },
+    { text: t('landing.partnersBenefits.benefits.priorityCheckIn'), image: '/images/landing/checkin_3d.png' },
+    { text: t('landing.partnersBenefits.benefits.advanceSeatBooking'), image: '/images/landing/seat_3d.png' },
+    { text: t('landing.partnersBenefits.benefits.extendedCheckIn'), image: '/images/landing/dinner_3d.png' },
   ]
 
   return (
     <div className="partners-benefits-section" ref={sectionRef}>
         <div className="partners-benefits-section-title">
-            <p className="section-title">partners benefit</p>
+            <p className="section-title">{t('landing.partnersBenefits.title')}</p>
         </div>
-      <h2 className="section-subtitle">exclusive Perks</h2>
+      <h2 className="section-subtitle">{t('landing.partnersBenefits.subtitle')}</h2>
       <div className="partners-benefits-container">
         <div className="partners-center-content">
           <ul className="partners-benefits-list">

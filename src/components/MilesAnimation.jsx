@@ -1,8 +1,10 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const MilesAnimation = () => {
+  const { t } = useTranslation()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [displayTotal, setDisplayTotal] = useState(52000)
   const [hasCompletedCycle, setHasCompletedCycle] = useState(false)
@@ -11,13 +13,13 @@ const MilesAnimation = () => {
 
   // Операции в порядке по нумерации (против часовой стрелки)
   const operations = [
-    { id: 1, text: 'Airline Almaty - Astana', amount: +500, type: 'earning' },
-    { id: 2, text: 'Hotel', amount: +500, type: 'earning' },
-    { id: 3, text: 'Restaurant', amount: +147, type: 'earning' },
-    { id: 4, text: 'Airline Astana - London', amount: +1500, type: 'earning' },
-    { id: 5, text: 'Coffee Shop', amount: +15, type: 'earning' },
-    { id: 6, text: 'Banking', amount: +1960, type: 'earning' },
-    { id: 7, text: 'Flight Almaty - Dubai', amount: -23500, type: 'deduction' },
+    { id: 1, textKey: 'airlineAlmatyAstana', amount: +500, type: 'earning' },
+    { id: 2, textKey: 'hotel', amount: +500, type: 'earning' },
+    { id: 3, textKey: 'restaurant', amount: +147, type: 'earning' },
+    { id: 4, textKey: 'airlineAstanaLondon', amount: +1500, type: 'earning' },
+    { id: 5, textKey: 'coffeeShop', amount: +15, type: 'earning' },
+    { id: 6, textKey: 'banking', amount: +1960, type: 'earning' },
+    { id: 7, textKey: 'flightAlmatyDubai', amount: -23500, type: 'deduction' },
   ]
 
   const baseTotal = 52000
@@ -111,7 +113,7 @@ const MilesAnimation = () => {
     <div className="miles-animation-container">
       <div className="miles-balance">
         <div className="miles-balance-content">
-          <div className="miles-label">Miles, total</div>
+          <div className="miles-label">{t('landing.milesAnimation.milesTotal')}</div>
           <div className="miles-total">{displayTotal.toLocaleString()}</div>
         </div>
       </div>
@@ -157,7 +159,7 @@ const MilesAnimation = () => {
                 }}
               >
                 <div className="operation-content">
-                  <div className="operation-text">{operation.text}</div>
+                  <div className="operation-text">{t(`landing.milesAnimation.operations.${operation.textKey}`)}</div>
                   <div className={`operation-amount ${operation.type}`}>
                     {operation.amount > 0 ? '+' : ''}{operation.amount.toLocaleString()}
                   </div>

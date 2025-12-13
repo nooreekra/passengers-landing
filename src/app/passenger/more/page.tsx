@@ -76,6 +76,7 @@ const MorePage = () => {
     const languages = [
         { code: "en", label: "English", nativeLabel: "English" },
         { code: "ru", label: "Русский", nativeLabel: "Русский" },
+        { code: "kk", label: "Қазақша", nativeLabel: "Қазақша" },
     ];
 
     const menuItems = [

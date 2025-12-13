@@ -1,9 +1,11 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import PartnersCarousel from './PartnersCarousel'
 
 const CollectMiles = () => {
+    const { t } = useTranslation()
     const [radius, setRadius] = useState(160)
     const [isVisible, setIsVisible] = useState(false)
     const sectionRef = useRef(null)
@@ -56,15 +58,15 @@ const CollectMiles = () => {
     const angleStep = 360 / totalCards // 40 градусов между карточками
 
     const activities = [
-        { id: 1, title: 'Banking', description: 'Monthly card payments', miles: '1960 Miles' },
-        { id: 2, title: 'Gas Station', description: 'Filled the tank', miles: '30 Miles' },
-        { id: 3, title: 'Restaurant', description: 'Dinner with family', miles: '300 Miles' },
-        { id: 4, title: 'Flight', description: 'Business trip', miles: '1500 Miles' },
-        { id: 5, title: 'Restaurant', description: 'Lunch with partner', miles: '400 Miles' },
-        { id: 6, title: 'Gym', description: 'Monthly fee', miles: '200 Miles' },
-        { id: 7, title: 'Hotel', description: 'Business trip', miles: '500 Miles' },
-        { id: 8, title: 'Coffee', description: 'With friends', miles: '50 Miles' },
-        { id: 9, title: 'Flight', description: 'Business trip', miles: '800 Miles' },
+        { id: 1, title: t('landing.collectMiles.activities.banking'), description: t('landing.collectMiles.activities.bankingDesc'), miles: `1960 ${t('landing.collectMiles.activities.miles')}` },
+        { id: 2, title: t('landing.collectMiles.activities.gasStation'), description: t('landing.collectMiles.activities.gasStationDesc'), miles: `30 ${t('landing.collectMiles.activities.miles')}` },
+        { id: 3, title: t('landing.collectMiles.activities.restaurant'), description: t('landing.collectMiles.activities.restaurantDinner'), miles: `300 ${t('landing.collectMiles.activities.miles')}` },
+        { id: 4, title: t('landing.collectMiles.activities.flight'), description: t('landing.collectMiles.activities.flightDesc'), miles: `1500 ${t('landing.collectMiles.activities.miles')}` },
+        { id: 5, title: t('landing.collectMiles.activities.restaurant'), description: t('landing.collectMiles.activities.restaurantLunch'), miles: `400 ${t('landing.collectMiles.activities.miles')}` },
+        { id: 6, title: t('landing.collectMiles.activities.gym'), description: t('landing.collectMiles.activities.gymDesc'), miles: `200 ${t('landing.collectMiles.activities.miles')}` },
+        { id: 7, title: t('landing.collectMiles.activities.hotel'), description: t('landing.collectMiles.activities.hotelDesc'), miles: `500 ${t('landing.collectMiles.activities.miles')}` },
+        { id: 8, title: t('landing.collectMiles.activities.coffee'), description: t('landing.collectMiles.activities.coffeeDesc'), miles: `50 ${t('landing.collectMiles.activities.miles')}` },
+        { id: 9, title: t('landing.collectMiles.activities.flight'), description: t('landing.collectMiles.activities.flightDesc'), miles: `800 ${t('landing.collectMiles.activities.miles')}` },
     ].map((activity, index) => ({
         ...activity,
         angle: index * angleStep, // Равномерное распределение по кругу
@@ -74,10 +76,18 @@ const CollectMiles = () => {
     return (
         <div className="collect-miles-section" ref={sectionRef}>
             <div className="collect-miles-section-title">
-                <p className="section-title">collect miles</p>
+                <p className="section-title">{t('landing.collectMiles.title')}</p>
             </div>
             <PartnersCarousel />
-            <h2 className="section-subtitle">your daily activity turns into <br />  your next Holiday</h2>
+            <h2 className="section-subtitle">{(() => {
+                const subtitleLines = t('landing.collectMiles.subtitle').split('\n')
+                return subtitleLines.map((line, i) => (
+                    <React.Fragment key={i}>
+                        {line}
+                        {i < subtitleLines.length - 1 && <br />}
+                    </React.Fragment>
+                ))
+            })()}</h2>
             <div className="collect-miles-visualization">
                 <div className="center-hero">
                     <div className="hero-image-wrapper">

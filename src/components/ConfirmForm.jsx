@@ -1,6 +1,10 @@
+"use client"
+
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const ConfirmForm = ({ email, onSubmit, isLoading, onBack }) => {
+  const { t } = useTranslation()
   const [formData, setFormData] = useState({
     code: ''
   })
@@ -26,9 +30,9 @@ const ConfirmForm = ({ email, onSubmit, isLoading, onBack }) => {
     const newErrors = {}
     
     if (!formData.code.trim()) {
-      newErrors.code = 'Confirmation code is required'
+      newErrors.code = t('auth.confirmForm.errors.codeRequired')
     } else if (formData.code.trim().length < 4) {
-      newErrors.code = 'Code must contain at least 4 characters'
+      newErrors.code = t('auth.confirmForm.errors.codeMinLength')
     }
     
     setErrors(newErrors)
@@ -50,7 +54,7 @@ const ConfirmForm = ({ email, onSubmit, isLoading, onBack }) => {
     <form onSubmit={handleSubmit} className="login-form">
       <div className="form-group">
         <label htmlFor="code" className="form-label">
-          Confirmation Code
+          {t('auth.confirmForm.confirmationCode')}
         </label>
         <input
           type="text"
@@ -59,7 +63,7 @@ const ConfirmForm = ({ email, onSubmit, isLoading, onBack }) => {
           value={formData.code}
           onChange={handleChange}
           className={`form-input ${errors.code ? 'error' : ''}`}
-          placeholder="Enter code from email"
+          placeholder={t('auth.confirmForm.enterCode')}
           disabled={isLoading}
           maxLength="10"
         />
@@ -67,7 +71,7 @@ const ConfirmForm = ({ email, onSubmit, isLoading, onBack }) => {
           <div className="field-error">{errors.code}</div>
         )}
         <div style={{ marginTop: '8px', fontSize: '12px', color: '#718096' }}>
-          Code sent to {email}
+          {t('auth.confirmForm.codeSentTo')} {email}
         </div>
       </div>
 
@@ -79,10 +83,10 @@ const ConfirmForm = ({ email, onSubmit, isLoading, onBack }) => {
         {isLoading ? (
           <>
             <span className="loading-spinner"></span>
-            Confirming...
+            {t('auth.confirmForm.confirming')}
           </> 
         ) : (
-          'Confirm'
+          t('auth.confirmForm.confirm')
         )}
       </button>
 
@@ -93,7 +97,7 @@ const ConfirmForm = ({ email, onSubmit, isLoading, onBack }) => {
           onClick={onBack}
           disabled={isLoading}
         >
-          Back
+          {t('auth.confirmForm.back')}
         </button>
       )}
     </form>

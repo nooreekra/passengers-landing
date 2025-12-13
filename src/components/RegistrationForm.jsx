@@ -1,6 +1,10 @@
+"use client"
+
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const RegistrationForm = ({ onSubmit, isLoading }) => {
+  const { t } = useTranslation()
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -30,23 +34,23 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
     const newErrors = {}
     
     if (!formData.firstName.trim()) {
-      newErrors.firstName = 'First name is required'
+      newErrors.firstName = t('auth.registrationForm.errors.firstNameRequired')
     }
     
     if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Last name is required'
+      newErrors.lastName = t('auth.registrationForm.errors.lastNameRequired')
     }
     
     if (!formData.email) {
-      newErrors.email = 'Email is required'
+      newErrors.email = t('auth.registrationForm.errors.emailRequired')
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Enter a valid email'
+      newErrors.email = t('auth.registrationForm.errors.emailInvalid')
     }
     
     if (!formData.password) {
-      newErrors.password = 'Password is required'
+      newErrors.password = t('auth.registrationForm.errors.passwordRequired')
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must contain at least 6 characters'
+      newErrors.password = t('auth.registrationForm.errors.passwordMinLength')
     }
     
     setErrors(newErrors)
@@ -69,7 +73,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
     <form onSubmit={handleSubmit} className="login-form">
       <div className="form-group">
         <label htmlFor="firstName" className="form-label">
-          First Name
+          {t('auth.registrationForm.firstName')}
         </label>
         <input
           type="text"
@@ -78,7 +82,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
           value={formData.firstName}
           onChange={handleChange}
           className={`form-input ${errors.firstName ? 'error' : ''}`}
-          placeholder="Enter your first name"
+          placeholder={t('auth.registrationForm.enterFirstName')}
           disabled={isLoading}
         />
         {errors.firstName && (
@@ -88,7 +92,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
 
       <div className="form-group">
         <label htmlFor="lastName" className="form-label">
-          Last Name
+          {t('auth.registrationForm.lastName')}
         </label>
         <input
           type="text"
@@ -97,7 +101,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
           value={formData.lastName}
           onChange={handleChange}
           className={`form-input ${errors.lastName ? 'error' : ''}`}
-          placeholder="Enter your last name"
+          placeholder={t('auth.registrationForm.enterLastName')}
           disabled={isLoading}
         />
         {errors.lastName && (
@@ -107,7 +111,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
 
       <div className="form-group">
         <label htmlFor="email" className="form-label">
-          Email
+          {t('auth.registrationForm.email')}
         </label>
         <input
           type="email"
@@ -116,7 +120,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
           value={formData.email}
           onChange={handleChange}
           className={`form-input ${errors.email ? 'error' : ''}`}
-          placeholder="Enter your email"
+          placeholder={t('auth.registrationForm.enterEmail')}
           disabled={isLoading}
         />
         {errors.email && (
@@ -126,7 +130,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
 
       <div className="form-group">
         <label htmlFor="password" className="form-label">
-          Password
+          {t('auth.registrationForm.password')}
         </label>
         <div className="password-container">
           <input
@@ -136,7 +140,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
             value={formData.password}
             onChange={handleChange}
             className={`form-input ${errors.password ? 'error' : ''}`}
-            placeholder="Enter your password"
+            placeholder={t('auth.registrationForm.enterPassword')}
             disabled={isLoading}
           />
           <button
@@ -161,10 +165,10 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
         {isLoading ? (
           <>
             <span className="loading-spinner"></span>
-            Registering...
+            {t('auth.registrationForm.registering')}
           </> 
         ) : (
-          'Sign Up'
+          t('auth.registrationForm.signUp')
         )}
       </button>
     </form>

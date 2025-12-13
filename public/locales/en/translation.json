@@ -293,6 +293,99 @@
     "registerSuccess": "Registration successful",
     "registerFail": "Registration failed",
     "passwordShort": "Password must be at least 6 characters",
+    "modal": {
+      "welcome": "Welcome",
+      "signInToAccount": "Sign in to your account",
+      "signUp": "Sign up",
+      "confirmEmail": "Confirm your email",
+      "signIn": "Sign In",
+      "signUpButton": "Sign Up",
+      "errors": {
+        "invalidEmailOrPassword": "Invalid email or password",
+        "accessDenied": "Access denied. Contact administrator",
+        "serverError": "Server error. Please try later",
+        "networkError": "Network error. Check your internet connection",
+        "loginError": "An error occurred during login. Please try again.",
+        "checkData": "Check the correctness of the entered data",
+        "userExists": "User with this email already exists",
+        "registrationError": "An error occurred during registration. Please try again.",
+        "invalidCode": "Invalid confirmation code",
+        "codeNotFound": "Confirmation code not found or expired",
+        "confirmationError": "An error occurred during confirmation. Please try again."
+      },
+      "success": {
+        "loginSuccess": "Login successful! Redirecting...",
+        "registrationSuccess": "Registration successful! Check your email for the confirmation code.",
+        "emailConfirmed": "Email successfully confirmed! Redirecting...",
+        "emailConfirmedSimple": "Email successfully confirmed!"
+      }
+    },
+    "loginForm": {
+      "email": "Email",
+      "password": "Password",
+      "enterEmail": "Enter your email",
+      "enterPassword": "Enter your password",
+      "signIn": "Sign In",
+      "signingIn": "Signing in...",
+      "forgotPassword": "Forgot password?",
+      "errors": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Enter a valid email",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Password must contain at least 6 characters"
+      }
+    },
+    "registrationForm": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "password": "Password",
+      "enterFirstName": "Enter your first name",
+      "enterLastName": "Enter your last name",
+      "enterEmail": "Enter your email",
+      "enterPassword": "Enter your password",
+      "signUp": "Sign Up",
+      "registering": "Registering...",
+      "errors": {
+        "firstNameRequired": "First name is required",
+        "lastNameRequired": "Last name is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Enter a valid email",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Password must contain at least 6 characters"
+      }
+    },
+    "confirmForm": {
+      "confirmationCode": "Confirmation Code",
+      "enterCode": "Enter code from email",
+      "codeSentTo": "Code sent to",
+      "confirm": "Confirm",
+      "confirming": "Confirming...",
+      "back": "Back",
+      "errors": {
+        "codeRequired": "Confirmation code is required",
+        "codeMinLength": "Code must contain at least 4 characters"
+      }
+    },
+    "agreementsModal": {
+      "title": "Agreements",
+      "subtitle": "Please review the agreements before registration",
+      "loading": "Loading agreements...",
+      "loadError": "Failed to load agreements. Please try again later.",
+      "noAgreements": "No agreements found",
+      "continueRegistration": "Continue Registration",
+      "document": "Document",
+      "of": "of",
+      "previous": "Previous",
+      "next": "Next",
+      "version": "Version",
+      "updated": "Updated",
+      "read": "Read",
+      "scrollToEnd": "Scroll to the end to mark as read",
+      "readProgress": "Read",
+      "acceptAndContinue": "Accept and Continue Registration",
+      "pleaseReadAll": "Please read all agreements"
+    },
     "changePassword": {
       "title": "Change Password",
       "successTitle": "Password Successfully Changed",
@@ -1063,7 +1156,26 @@
             "updateError": "Failed to update wishlist",
             "editWishlist": "Edit Wishlist",
             "saving": "Saving...",
-            "save": "Save"
+            "save": "Save",
+            "transactionTypes": {
+                "credit": "Credit",
+                "debit": "Debit"
+            },
+            "transactionStatuses": {
+                "confirmed": "Confirmed",
+                "pending": "Pending",
+                "cancelled": "Cancelled"
+            },
+            "transactionCategories": {
+                "restaurant": "Restaurant",
+                "hotel": "Hotel",
+                "airline": "Airline",
+                "flight": "Flight",
+                "banking": "Banking",
+                "gasStation": "Gas Station",
+                "gym": "Gym",
+                "coffee": "Coffee"
+            }
         },
         "trips": {
             "title": "Trips",
@@ -1088,6 +1200,122 @@
             "roundTrip": "ROUND TRIP",
             "bookAFlight": "BOOK A FLIGHT",
             "cancel": "Cancel"
+        }
+    },
+    "landing": {
+        "header": {
+            "signIn": "Sign in",
+            "menu": {
+                "collectMiles": "Collect Miles",
+                "spendMiles": "Spend Miles",
+                "membership": "Membership"
+            }
+        },
+        "hero": {
+            "title": "Our Partners pay\nfor your Holiday"
+        },
+        "collectMiles": {
+            "title": "collect miles",
+            "subtitle": "your daily activity turns into\nyour next Holiday",
+            "activities": {
+                "banking": "Banking",
+                "bankingDesc": "Monthly card payments",
+                "gasStation": "Gas Station",
+                "gasStationDesc": "Filled the tank",
+                "restaurant": "Restaurant",
+                "restaurantDinner": "Dinner with family",
+                "restaurantLunch": "Lunch with partner",
+                "flight": "Flight",
+                "flightDesc": "Business trip",
+                "gym": "Gym",
+                "gymDesc": "Monthly fee",
+                "hotel": "Hotel",
+                "hotelDesc": "Business trip",
+                "coffee": "Coffee",
+                "coffeeDesc": "With friends",
+                "miles": "Miles"
+            }
+        },
+        "spendMiles": {
+            "title": "spend miles",
+            "subtitle": "choose your next getaway",
+            "bookFor": "Book for",
+            "options": {
+                "weekendEscape": {
+                    "destination": "Book your weekend",
+                    "subtitle": "ESCAPE",
+                    "type": "Weekend Escape"
+                },
+                "teamUp": {
+                    "destination": "Team Up with your",
+                    "subtitle": "BUDDIES",
+                    "type": "Round Trip"
+                },
+                "dreamHoliday": {
+                    "destination": "Save up for your",
+                    "subtitle": "DREAM HOLIDAY",
+                    "type": "Holiday Pack"
+                }
+            }
+        },
+        "statusBenefits": {
+            "title": "status benefits",
+            "subtitle": "IMS Savvy pays part of the trip on your behalf",
+            "statuses": {
+                "silver": {
+                    "name": "Silver",
+                    "description": "collect just 85% of the trip price to book your flight/hotel"
+                },
+                "gold": {
+                    "name": "Gold",
+                    "description": "collect just 75% of the trip to book your flight/hotel"
+                },
+                "platinum": {
+                    "name": "Platinum",
+                    "description": "collect just 65% of the trip cost to book your hotel/flight"
+                }
+            }
+        },
+        "allExtras": {
+            "subtitle": "all extras at your finger point",
+            "benefits": {
+                "freeWifi": "Free Wifi",
+                "priorityCheckIn": "Priority Check in",
+                "priorityCheckInDesc": "at Business counter",
+                "loungeAccess": "Lounge Access",
+                "loungeAccessDesc": "to Business class Lounge",
+                "foodBeverages": "Food & Beverages",
+                "foodBeveragesDesc": "on flight",
+                "additionalLuggage": "Additional luggage",
+                "upgrade": "Upgrade",
+                "upgradeDesc": "to Super Econ or Business class"
+            }
+        },
+        "partnersBenefits": {
+            "title": "partners benefit",
+            "subtitle": "exclusive Perks",
+            "benefits": {
+                "welcomeBonus": "Welcome Bonus",
+                "freeMonthlyTreat": "Free monthly treat",
+                "priorityCheckIn": "Priority check in at business class counter",
+                "advanceSeatBooking": "Advance seat booking",
+                "extendedCheckIn": "Extended check-in, check out time"
+            }
+        },
+        "footer": {
+            "copyright": "All rights reserved"
+        },
+        "milesAnimation": {
+            "milesTotal": "Miles, total",
+            "operations": {
+                "airlineAlmatyAstana": "Airline Almaty - Astana",
+                "hotel": "Hotel",
+                "restaurant": "Restaurant",
+                "airlineAstanaLondon": "Airline Astana - London",
+                "coffeeShop": "Coffee Shop",
+                "banking": "Banking",
+                "flightAlmatyDubai": "Flight Almaty - Dubai"
+            }
         }
     }
 }

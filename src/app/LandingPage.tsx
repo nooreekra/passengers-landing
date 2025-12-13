@@ -1,6 +1,7 @@
 "use client"
 
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import Header from '../components/Header'
 import BackgroundCarousel from '../components/BackgroundCarousel'
 import MilesAnimation from '../components/MilesAnimation'
@@ -12,6 +13,8 @@ import PartnersBenefits from '../components/PartnersBenefits'
 import Footer from '../components/Footer'
 
 const LandingPage = () => {
+  const { t } = useTranslation()
+  
   return (
     <div className="home-page">
       {/* Hero Section with Carousel */}
@@ -22,8 +25,15 @@ const LandingPage = () => {
           <div className="landing-content-wrapper">
             <div className="landing-content">
               <h1 className="landing-title">
-                Our Partners pay<br />
-                for your Holiday
+                {(() => {
+                  const titleLines = t('landing.hero.title').split('\n')
+                  return titleLines.map((line, i) => (
+                    <React.Fragment key={i}>
+                      {line}
+                      {i < titleLines.length - 1 && <br />}
+                    </React.Fragment>
+                  ))
+                })()}
               </h1>
               <MilesAnimation />
             </div>

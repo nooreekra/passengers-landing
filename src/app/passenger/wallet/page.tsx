@@ -70,7 +70,7 @@ const CircularProgress = ({
 };
 
 const WalletPage = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<"accounts" | "history">("accounts");
     const [wallet, setWallet] = useState<{ id: string; allTimeBalance: number; availableBalance: number; pendingBalance: number } | null>(null);
@@ -339,11 +339,19 @@ const WalletPage = () => {
                                                 <div className="flex items-start justify-between mb-2">
                                                     <div className="flex-1">
                                                         <p className="font-semibold text-sm text-gray-900">
-                                                            {transaction.description || transaction.category}
+                                                            {transaction.description || (transaction.category ? (() => {
+                                                                const categoryKey = transaction.category.toLowerCase().replace(/\s+/g, '');
+                                                                const translated = t(`passenger.wallet.transactionCategories.${categoryKey}`, { defaultValue: transaction.category });
+                                                                return translated !== `passenger.wallet.transactionCategories.${categoryKey}` ? translated : transaction.category;
+                                                            })() : '')}
                                                         </p>
                                                         {transaction.category && (
                                                             <p className="text-xs text-gray-500 mt-1">
-                                                                {transaction.category}
+                                                                {(() => {
+                                                                    const categoryKey = transaction.category.toLowerCase().replace(/\s+/g, '');
+                                                                    const translated = t(`passenger.wallet.transactionCategories.${categoryKey}`, { defaultValue: transaction.category });
+                                                                    return translated !== `passenger.wallet.transactionCategories.${categoryKey}` ? translated : transaction.category;
+                                                                })()}
                                                             </p>
                                                         )}
                                                     </div>
@@ -361,18 +369,26 @@ const WalletPage = () => {
                                                                 ? "text-green-600"
                                                                 : "text-yellow-600"
                                                         }`}>
-                                                            {transaction.status}
+                                                            {(() => {
+                                                                const statusKey = transaction.status.toLowerCase();
+                                                                const translated = t(`passenger.wallet.transactionStatuses.${statusKey}`, { defaultValue: transaction.status });
+                                                                return translated !== `passenger.wallet.transactionStatuses.${statusKey}` ? translated : transaction.status;
+                                                            })()}
                                                         </p>
                                                     </div>
                                                 </div>
                                                 <p className="text-xs text-gray-400 mt-2">
-                                                    {new Date(transaction.createdAt).toLocaleDateString("ru-RU", {
-                                                        year: "numeric",
-                                                        month: "long",
-                                                        day: "numeric",
-                                                        hour: "2-digit",
-                                                        minute: "2-digit",
-                                                    })}
+                                                    {new Date(transaction.createdAt).toLocaleDateString(
+                                                        i18n.language === 'ru' ? 'ru-RU' : 
+                                                        i18n.language === 'kk' ? 'kk-KZ' : 'en-US',
+                                                        {
+                                                            year: "numeric",
+                                                            month: "long",
+                                                            day: "numeric",
+                                                            hour: "2-digit",
+                                                            minute: "2-digit",
+                                                        }
+                                                    )}
                                                 </p>
                                             </div>
                                         ))}

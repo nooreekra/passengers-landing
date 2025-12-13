@@ -1,7 +1,11 @@
+"use client"
+
 import React, { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import agreementsService from '../services/agreementsService'
 
 const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' }) => {
+  const { t } = useTranslation()
   const [agreements, setAgreements] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -26,7 +30,7 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
       setAgreements(data || [])
     } catch (err) {
       console.error('Error loading agreements:', err)
-      setError('Failed to load agreements. Please try again later.')
+      setError(t('auth.agreementsModal.loadError'))
     } finally {
       setIsLoading(false)
     }
@@ -104,16 +108,16 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
         </button>
         
         <div className="auth-modal-header">
-          <h2 className="auth-modal-title">Agreements</h2>
+          <h2 className="auth-modal-title">{t('auth.agreementsModal.title')}</h2>
           <p className="auth-modal-subtitle">
-            Please review the agreements before registration
+            {t('auth.agreementsModal.subtitle')}
           </p>
         </div>
 
         {isLoading ? (
           <div className="agreements-loading">
             <span className="loading-spinner"></span>
-            <p>Loading agreements...</p>
+            <p>{t('auth.agreementsModal.loading')}</p>
           </div>
         ) : error ? (
           <div className="error-message">
@@ -121,18 +125,18 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
           </div>
         ) : agreements.length === 0 ? (
           <div className="agreements-empty">
-            <p>No agreements found</p>
+            <p>{t('auth.agreementsModal.noAgreements')}</p>
             <button
               className="login-button"
               onClick={handleAccept}
             >
-              Continue Registration
+              {t('auth.agreementsModal.continueRegistration')}
             </button>
           </div>
         ) : (
           <>
             <div className="agreements-counter">
-              Document {currentAgreementIndex + 1} of {agreements.length}
+              {t('auth.agreementsModal.document')} {currentAgreementIndex + 1} {t('auth.agreementsModal.of')} {agreements.length}
             </div>
 
             <div className="agreements-navigation">
@@ -141,14 +145,14 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
                 onClick={handlePrevious}
                 disabled={currentAgreementIndex === 0}
               >
-                ← Previous
+                ← {t('auth.agreementsModal.previous')}
               </button>
               <button
                 className="agreement-nav-button"
                 onClick={handleNext}
                 disabled={currentAgreementIndex === agreements.length - 1}
               >
-                Next →
+                {t('auth.agreementsModal.next')} →
               </button>
             </div>
 
@@ -159,8 +163,8 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
               <div className="agreement-item">
                 <h3 className="agreement-title">{currentAgreement.title}</h3>
                 <div className="agreement-meta">
-                  <span>Version: {currentAgreement.version}</span>
-                  <span>Updated: {new Date(currentAgreement.updatedAt).toLocaleDateString('en-US')}</span>
+                  <span>{t('auth.agreementsModal.version')}: {currentAgreement.version}</span>
+                  <span>{t('auth.agreementsModal.updated')}: {new Date(currentAgreement.updatedAt).toLocaleDateString()}</span>
                 </div>
                 <div 
                   className="agreement-text"
@@ -168,9 +172,9 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
                 />
                 <div className="agreement-status">
                   {readAgreements.has(currentAgreementIndex) ? (
-                    <span className="agreement-read">✓ Read</span>
+                    <span className="agreement-read">✓ {t('auth.agreementsModal.read')}</span>
                   ) : (
-                    <span className="agreement-unread">Scroll to the end to mark as read</span>
+                    <span className="agreement-unread">{t('auth.agreementsModal.scrollToEnd')}</span>
                   )}
                 </div>
               </div>
@@ -184,7 +188,7 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
                 />
               </div>
               <p className="progress-text">
-                Read: {readAgreements.size} of {agreements.length}
+                {t('auth.agreementsModal.readProgress')}: {readAgreements.size} {t('auth.agreementsModal.of')} {agreements.length}
               </p>
             </div>
 
@@ -193,7 +197,7 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
               onClick={handleAccept}
               disabled={!allAgreementsRead}
             >
-              {allAgreementsRead ? 'Accept and Continue Registration' : 'Please read all agreements'}
+              {allAgreementsRead ? t('auth.agreementsModal.acceptAndContinue') : t('auth.agreementsModal.pleaseReadAll')}
             </button>
           </>
         )}

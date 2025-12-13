@@ -1,6 +1,10 @@
+"use client"
+
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const LoginForm = ({ onSubmit, isLoading }) => {
+  const { t } = useTranslation()
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -28,15 +32,15 @@ const LoginForm = ({ onSubmit, isLoading }) => {
     const newErrors = {}
     
     if (!formData.email) {
-      newErrors.email = 'Email is required'
+      newErrors.email = t('auth.loginForm.errors.emailRequired')
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Enter a valid email'
+      newErrors.email = t('auth.loginForm.errors.emailInvalid')
     }
     
     if (!formData.password) {
-      newErrors.password = 'Password is required'
+      newErrors.password = t('auth.loginForm.errors.passwordRequired')
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must contain at least 6 characters'
+      newErrors.password = t('auth.loginForm.errors.passwordMinLength')
     }
     
     setErrors(newErrors)
@@ -59,7 +63,7 @@ const LoginForm = ({ onSubmit, isLoading }) => {
     <form onSubmit={handleSubmit} className="login-form">
       <div className="form-group">
         <label htmlFor="email" className="form-label">
-          Email
+          {t('auth.loginForm.email')}
         </label>
         <input
           type="email"
@@ -68,7 +72,7 @@ const LoginForm = ({ onSubmit, isLoading }) => {
           value={formData.email}
           onChange={handleChange}
           className={`form-input ${errors.email ? 'error' : ''}`}
-          placeholder="Enter your email"
+          placeholder={t('auth.loginForm.enterEmail')}
           disabled={isLoading}
         />
         {errors.email && (
@@ -78,7 +82,7 @@ const LoginForm = ({ onSubmit, isLoading }) => {
 
       <div className="form-group">
         <label htmlFor="password" className="form-label">
-          Password
+          {t('auth.loginForm.password')}
         </label>
         <div className="password-container">
           <input
@@ -88,7 +92,7 @@ const LoginForm = ({ onSubmit, isLoading }) => {
             value={formData.password}
             onChange={handleChange}
             className={`form-input ${errors.password ? 'error' : ''}`}
-            placeholder="Enter your password"
+            placeholder={t('auth.loginForm.enterPassword')}
             disabled={isLoading}
           />
           <button
@@ -113,16 +117,16 @@ const LoginForm = ({ onSubmit, isLoading }) => {
         {isLoading ? (
           <>
             <span className="loading-spinner"></span>
-            Signing in...
+            {t('auth.loginForm.signingIn')}
           </> 
         ) : (
-          'Sign In'
+          t('auth.loginForm.signIn')
         )}
       </button>
 
       <div className="forgot-password">
         <a href="#" onClick={(e) => e.preventDefault()}>
-          Forgot password?
+          {t('auth.loginForm.forgotPassword')}
         </a>
       </div>
     </form>

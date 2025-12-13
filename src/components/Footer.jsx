@@ -1,6 +1,10 @@
+"use client"
+
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 const Footer = () => {
+  const { t } = useTranslation()
   const currentYear = new Date().getFullYear()
 
   return (
@@ -8,7 +12,7 @@ const Footer = () => {
       <div className="footer-container">
         <div className="footer-content">
           <p className="footer-copyright">
-            © {currentYear} All rights reserved
+            © {currentYear} {t('landing.footer.copyright')}
           </p>
         </div>
       </div>

@@ -1,8 +1,10 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const StatusBenefits = () => {
+  const { t } = useTranslation()
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef(null)
 
@@ -34,23 +36,23 @@ const StatusBenefits = () => {
   const statuses = [
     {
       id: 1,
-      name: 'Silver',
+      name: t('landing.statusBenefits.statuses.silver.name'),
       discount: '-15%',
-      description: 'collect just 85% of the trip price to book your flight/hotel',
+      description: t('landing.statusBenefits.statuses.silver.description'),
       image: '/images/membership/silver.jpg'
     },
     {
       id: 2,
-      name: 'Gold',
+      name: t('landing.statusBenefits.statuses.gold.name'),
       discount: '-25%',
-      description: 'collect just 75% of the trip to book your flight/hotel',
+      description: t('landing.statusBenefits.statuses.gold.description'),
       image: '/images/membership/gold.jpg'
     },
     {
       id: 3,
-      name: 'Platinum',
+      name: t('landing.statusBenefits.statuses.platinum.name'),
       discount: '-35%',
-      description: 'collect just 65% of the trip cost to book your hotel/flight',
+      description: t('landing.statusBenefits.statuses.platinum.description'),
       image: '/images/membership/platinum.jpg'
     },
   ]
@@ -58,9 +60,9 @@ const StatusBenefits = () => {
   return (
     <div className="status-benefits-section" ref={sectionRef}>
         <div className="status-benefits-section-title">
-            <p className="section-title">status benefits</p>
+            <p className="section-title">{t('landing.statusBenefits.title')}</p>
         </div>
-      <h2 className="section-subtitle">IMS Savvy pays part of the trip on your behalf</h2>
+      <h2 className="section-subtitle">{t('landing.statusBenefits.subtitle')}</h2>
       <div className="status-cards-container">
         {statuses.map((status, index) => (
           <div 

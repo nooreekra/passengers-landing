@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import LoginForm from './LoginForm'
 import RegistrationForm from './RegistrationForm'
 import ConfirmForm from './ConfirmForm'
@@ -23,6 +24,7 @@ const roleToPath = {
 }
 
 const AuthModal = ({ isOpen, onClose }) => {
+  const { t } = useTranslation()
   const router = useRouter()
   const dispatch = useDispatch()
   const [mode, setMode] = useState('login') // 'login' or 'register'
@@ -97,7 +99,7 @@ const AuthModal = ({ isOpen, onClose }) => {
       
       // Перенаправляем на соответствующий дашборд
       const path = roleToPath[user.role.type] ?? '/'
-      setSuccess('Login successful! Redirecting...')
+      setSuccess(t('auth.modal.success.loginSuccess'))
       setTimeout(() => {
         router.replace(path)
         onClose()
@@ -114,18 +116,18 @@ const AuthModal = ({ isOpen, onClose }) => {
         setError(apiError.message)
       } else if (err.message) {
         if (err.message.includes('401') || err.message.includes('Unauthorized')) {
-          setError('Invalid email or password')
+          setError(t('auth.modal.errors.invalidEmailOrPassword'))
         } else if (err.message.includes('403') || err.message.includes('Forbidden')) {
-          setError('Access denied. Contact administrator')
+          setError(t('auth.modal.errors.accessDenied'))
         } else if (err.message.includes('500') || err.message.includes('Internal Server Error')) {
-          setError('Server error. Please try later')
+          setError(t('auth.modal.errors.serverError'))
         } else if (err.message.includes('Network') || err.message.includes('fetch')) {
-          setError('Network error. Check your internet connection')
+          setError(t('auth.modal.errors.networkError'))
         } else {
           setError(err.message)
         }
       } else {
-        setError('An error occurred during login. Please try again.')
+        setError(t('auth.modal.errors.loginError'))
       }
     } finally {
       setIsLoading(false)
@@ -141,7 +143,7 @@ const AuthModal = ({ isOpen, onClose }) => {
       await authService.register(userData)
       setRegistrationEmail(userData.email)
       setShowConfirm(true)
-      setSuccess('Registration successful! Check your email for the confirmation code.')
+      setSuccess(t('auth.modal.success.registrationSuccess'))
       
       // Автоматически скрываем сообщение об успехе через 5 секунд
       setTimeout(() => {
@@ -151,15 +153,15 @@ const AuthModal = ({ isOpen, onClose }) => {
       console.error('Registration error:', err)
       
       if (err.message.includes('400') || err.message.includes('Bad Request')) {
-        setError('Check the correctness of the entered data')
+        setError(t('auth.modal.errors.checkData'))
       } else if (err.message.includes('409') || err.message.includes('Conflict')) {
-        setError('User with this email already exists')
+        setError(t('auth.modal.errors.userExists'))
       } else if (err.message.includes('500') || err.message.includes('Internal Server Error')) {
-        setError('Server error. Please try later')
+        setError(t('auth.modal.errors.serverError'))
       } else if (err.message.includes('Network') || err.message.includes('fetch')) {
-        setError('Network error. Check your internet connection')
+        setError(t('auth.modal.errors.networkError'))
       } else {
-        setError(err.message || 'An error occurred during registration. Please try again.')
+        setError(err.message || t('auth.modal.errors.registrationError'))
       }
     } finally {
       setIsLoading(false)
@@ -211,13 +213,13 @@ const AuthModal = ({ isOpen, onClose }) => {
         
         // Перенаправляем на соответствующий дашборд
         const path = roleToPath[user.role.type] ?? '/'
-        setSuccess('Email successfully confirmed! Redirecting...')
+        setSuccess(t('auth.modal.success.emailConfirmed'))
         setTimeout(() => {
           router.replace(path)
           onClose()
         }, 1500)
       } else {
-        setSuccess('Email successfully confirmed!')
+        setSuccess(t('auth.modal.success.emailConfirmedSimple'))
         setTimeout(() => {
           setShowConfirm(false)
           setMode('login')
@@ -235,18 +237,18 @@ const AuthModal = ({ isOpen, onClose }) => {
         setError(apiError.message)
       } else if (err.message) {
         if (err.message.includes('400') || err.message.includes('Bad Request')) {
-          setError('Invalid confirmation code')
+          setError(t('auth.modal.errors.invalidCode'))
         } else if (err.message.includes('404') || err.message.includes('Not Found')) {
-          setError('Confirmation code not found or expired')
+          setError(t('auth.modal.errors.codeNotFound'))
         } else if (err.message.includes('500') || err.message.includes('Internal Server Error')) {
-          setError('Server error. Please try later')
+          setError(t('auth.modal.errors.serverError'))
         } else if (err.message.includes('Network') || err.message.includes('fetch')) {
-          setError('Network error. Check your internet connection')
+          setError(t('auth.modal.errors.networkError'))
         } else {
           setError(err.message)
         }
       } else {
-        setError('An error occurred during confirmation. Please try again.')
+        setError(t('auth.modal.errors.confirmationError'))
       }
     } finally {
       setIsLoading(false)
@@ -313,13 +315,13 @@ const AuthModal = ({ isOpen, onClose }) => {
         </button>
         
         <div className="auth-modal-header">
-          <h2 className="auth-modal-title">Welcome</h2>
+          <h2 className="auth-modal-title">{t('auth.modal.welcome')}</h2>
           <p className="auth-modal-subtitle">
             {showConfirm 
-              ? 'Confirm your email' 
+              ? t('auth.modal.confirmEmail')
               : mode === 'login'
-                ? 'Sign in to your account'
-                : 'Sign up'}
+                ? t('auth.modal.signInToAccount')
+                : t('auth.modal.signUp')}
           </p>
         </div>
 
@@ -330,14 +332,14 @@ const AuthModal = ({ isOpen, onClose }) => {
               onClick={() => handleModeChange('login')}
               disabled={isLoading}
             >
-              Sign In
+              {t('auth.modal.signIn')}
             </button>
             <button
               className={`tab-button ${mode === 'register' ? 'active' : ''}`}
               onClick={() => handleModeChange('register')}
               disabled={isLoading}
             >
-              Sign Up
+              {t('auth.modal.signUpButton')}
             </button>
           </div>
         )}

@@ -10,7 +10,7 @@ if (!i18n.isInitialized) {
         .use(initReactI18next)
         .init({
             fallbackLng: "en",
-            supportedLngs: ["en", "ru"],
+            supportedLngs: ["en", "ru", "kk"],
             detection: {
                 order: ["localStorage", "navigator"],
                 caches: ["localStorage"],

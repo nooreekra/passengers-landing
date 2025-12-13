@@ -1,8 +1,10 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const AllExtras = () => {
+    const { t } = useTranslation()
     const [isVisible, setIsVisible] = useState(false)
     const sectionRef = useRef(null)
 
@@ -82,12 +84,12 @@ const AllExtras = () => {
     )
 
     const benefits = [
-        { id: 1, title: 'Free Wifi', icon: IconWifi },
-        { id: 2, title: 'Priority Check in', description: 'at Business counter', icon: IconTicket },
-        { id: 3, title: 'Lounge Access', description: 'to Business class Lounge', icon: IconBuilding },
-        { id: 4, title: 'Food & Beverages', description: 'on flight', icon: IconWine },
-        { id: 5, title: 'Additional luggage', icon: IconLuggage },
-        { id: 6, title: 'Upgrade', description: 'to Super Econ or Business class', icon: IconArrowUp },
+        { id: 1, title: t('landing.allExtras.benefits.freeWifi'), icon: IconWifi },
+        { id: 2, title: t('landing.allExtras.benefits.priorityCheckIn'), description: t('landing.allExtras.benefits.priorityCheckInDesc'), icon: IconTicket },
+        { id: 3, title: t('landing.allExtras.benefits.loungeAccess'), description: t('landing.allExtras.benefits.loungeAccessDesc'), icon: IconBuilding },
+        { id: 4, title: t('landing.allExtras.benefits.foodBeverages'), description: t('landing.allExtras.benefits.foodBeveragesDesc'), icon: IconWine },
+        { id: 5, title: t('landing.allExtras.benefits.additionalLuggage'), icon: IconLuggage },
+        { id: 6, title: t('landing.allExtras.benefits.upgrade'), description: t('landing.allExtras.benefits.upgradeDesc'), icon: IconArrowUp },
     ]
 
     return (
@@ -96,7 +98,7 @@ const AllExtras = () => {
                 <div className="benefits-overlay"></div>
             </div>
             <div className="benefits-content">
-                <p className="section-subtitle">all extras at your finger point</p>
+                <p className="section-subtitle">{t('landing.allExtras.subtitle')}</p>
                 <div className="benefits-grid">
                     {benefits.map((benefit, index) => {
                         const row = Math.floor(index / 3)

@@ -1,8 +1,10 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const SpendMiles = () => {
+    const { t } = useTranslation()
     const [isVisible, setIsVisible] = useState(false)
     const sectionRef = useRef(null)
 
@@ -34,26 +36,26 @@ const SpendMiles = () => {
     const options = [
         {
             id: 1,
-            destination: 'Book your weekend',
-            subtitle: 'ESCAPE',
+            destination: t('landing.spendMiles.options.weekendEscape.destination'),
+            subtitle: t('landing.spendMiles.options.weekendEscape.subtitle'),
             miles: '30,000',
-            type: 'Weekend Escape',
+            type: t('landing.spendMiles.options.weekendEscape.type'),
             image: '/images/landing/istanbul_street.png'
         },
         {
             id: 2,
-            destination: 'Team Up with your',
-            subtitle: 'BUDDIES',
+            destination: t('landing.spendMiles.options.teamUp.destination'),
+            subtitle: t('landing.spendMiles.options.teamUp.subtitle'),
             miles: '100,000',
-            type: 'Round Trip',
+            type: t('landing.spendMiles.options.teamUp.type'),
             image: '/images/landing/teamup.png'
         },
         {
             id: 3,
-            destination: 'Save up for your',
-            subtitle: 'DREAM HOLIDAY',
+            destination: t('landing.spendMiles.options.dreamHoliday.destination'),
+            subtitle: t('landing.spendMiles.options.dreamHoliday.subtitle'),
             miles: '300,000',
-            type: 'Holiday Pack',
+            type: t('landing.spendMiles.options.dreamHoliday.type'),
             image: '/images/landing/maldives_room.png'
         },
     ]
@@ -62,9 +64,9 @@ const SpendMiles = () => {
     return (
         <div className="spend-miles-section" ref={sectionRef}>
             <div className="spend-miles-section-title">
-                <p className="section-title">spend miles</p>
+                <p className="section-title">{t('landing.spendMiles.title')}</p>
             </div>
-            <h2 className="section-subtitle">choose your next getaway</h2>
+            <h2 className="section-subtitle">{t('landing.spendMiles.subtitle')}</h2>
             <div className="spend-options-container">
                 {options.map((option, index) => (
                     <div 
@@ -85,10 +87,10 @@ const SpendMiles = () => {
                             </div>
                             <div className="price-tag">
                                 <div className="spend-option-miles">
-                                    <span className="price-text-medium">Book for </span>
+                                    <span className="price-text-medium">{t('landing.spendMiles.bookFor')} </span>
                                     <div className="price-amount-container">
                                         <span className="price-amount">{option.miles}</span>
-                                        <span className="price-text-small"> Miles</span>
+                                        <span className="price-text-small"> {t('landing.collectMiles.activities.miles')}</span>
                                     </div>
                                 </div>
                             </div>

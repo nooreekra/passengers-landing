@@ -292,6 +292,99 @@
     "registerSuccess": "Регистрация прошла успешно",
     "registerFail": "Ошибка регистрации",
     "passwordShort": "Пароль должен содержать не менее 6 символов",
+    "modal": {
+      "welcome": "Добро пожаловать",
+      "signInToAccount": "Войдите в свой аккаунт",
+      "signUp": "Зарегистрируйтесь",
+      "confirmEmail": "Подтвердите ваш email",
+      "signIn": "Войти",
+      "signUpButton": "Регистрация",
+      "errors": {
+        "invalidEmailOrPassword": "Неверный email или пароль",
+        "accessDenied": "Доступ запрещен. Обратитесь к администратору",
+        "serverError": "Ошибка сервера. Попробуйте позже",
+        "networkError": "Ошибка сети. Проверьте подключение к интернету",
+        "loginError": "Произошла ошибка при входе. Попробуйте снова.",
+        "checkData": "Проверьте правильность введенных данных",
+        "userExists": "Пользователь с таким email уже существует",
+        "registrationError": "Произошла ошибка при регистрации. Попробуйте снова.",
+        "invalidCode": "Неверный код подтверждения",
+        "codeNotFound": "Код подтверждения не найден или истек",
+        "confirmationError": "Произошла ошибка при подтверждении. Попробуйте снова."
+      },
+      "success": {
+        "loginSuccess": "Вход выполнен успешно! Перенаправление...",
+        "registrationSuccess": "Регистрация прошла успешно! Проверьте email для получения кода подтверждения.",
+        "emailConfirmed": "Email успешно подтвержден! Перенаправление...",
+        "emailConfirmedSimple": "Email успешно подтвержден!"
+      }
+    },
+    "loginForm": {
+      "email": "Email",
+      "password": "Пароль",
+      "enterEmail": "Введите ваш email",
+      "enterPassword": "Введите ваш пароль",
+      "signIn": "Войти",
+      "signingIn": "Вход...",
+      "forgotPassword": "Забыли пароль?",
+      "errors": {
+        "emailRequired": "Email обязателен",
+        "emailInvalid": "Введите корректный email",
+        "passwordRequired": "Пароль обязателен",
+        "passwordMinLength": "Пароль должен содержать не менее 6 символов"
+      }
+    },
+    "registrationForm": {
+      "firstName": "Имя",
+      "lastName": "Фамилия",
+      "email": "Email",
+      "password": "Пароль",
+      "enterFirstName": "Введите ваше имя",
+      "enterLastName": "Введите вашу фамилию",
+      "enterEmail": "Введите ваш email",
+      "enterPassword": "Введите ваш пароль",
+      "signUp": "Зарегистрироваться",
+      "registering": "Регистрация...",
+      "errors": {
+        "firstNameRequired": "Имя обязательно",
+        "lastNameRequired": "Фамилия обязательна",
+        "emailRequired": "Email обязателен",
+        "emailInvalid": "Введите корректный email",
+        "passwordRequired": "Пароль обязателен",
+        "passwordMinLength": "Пароль должен содержать не менее 6 символов"
+      }
+    },
+    "confirmForm": {
+      "confirmationCode": "Код подтверждения",
+      "enterCode": "Введите код из email",
+      "codeSentTo": "Код отправлен на",
+      "confirm": "Подтвердить",
+      "confirming": "Подтверждение...",
+      "back": "Назад",
+      "errors": {
+        "codeRequired": "Код подтверждения обязателен",
+        "codeMinLength": "Код должен содержать не менее 4 символов"
+      }
+    },
+    "agreementsModal": {
+      "title": "Соглашения",
+      "subtitle": "Пожалуйста, ознакомьтесь с соглашениями перед регистрацией",
+      "loading": "Загрузка соглашений...",
+      "loadError": "Не удалось загрузить соглашения. Попробуйте позже.",
+      "noAgreements": "Соглашения не найдены",
+      "continueRegistration": "Продолжить регистрацию",
+      "document": "Документ",
+      "of": "из",
+      "previous": "Назад",
+      "next": "Далее",
+      "version": "Версия",
+      "updated": "Обновлено",
+      "read": "Прочитано",
+      "scrollToEnd": "Прокрутите до конца, чтобы отметить как прочитанное",
+      "readProgress": "Прочитано",
+      "acceptAndContinue": "Принять и продолжить регистрацию",
+      "pleaseReadAll": "Пожалуйста, прочитайте все соглашения"
+    },
     "changePassword": {
       "title": "Смена Пароля",
       "successTitle": "Пароль успешно изменен",
@@ -1090,7 +1183,26 @@
             "updateError": "Не удалось обновить список желаний",
             "editWishlist": "Редактировать список желаний",
             "saving": "Сохранение...",
-            "save": "Сохранить"
+            "save": "Сохранить",
+            "transactionTypes": {
+                "credit": "Начисление",
+                "debit": "Списание"
+            },
+            "transactionStatuses": {
+                "confirmed": "Подтверждено",
+                "pending": "В ожидании",
+                "cancelled": "Отменено"
+            },
+            "transactionCategories": {
+                "restaurant": "Ресторан",
+                "hotel": "Отель",
+                "airline": "Авиакомпания",
+                "flight": "Рейс",
+                "banking": "Банкинг",
+                "gasStation": "АЗС",
+                "gym": "Спортзал",
+                "coffee": "Кофейня"
+            }
         },
         "trips": {
             "title": "Поездки",
@@ -1115,6 +1227,122 @@
             "roundTrip": "ТУДА И ОБРАТНО",
             "bookAFlight": "ЗАБРОНИРОВАТЬ РЕЙС",
             "cancel": "Отмена"
+        }
+    },
+    "landing": {
+        "header": {
+            "signIn": "Войти",
+            "menu": {
+                "collectMiles": "Накопить мили",
+                "spendMiles": "Потратить мили",
+                "membership": "Членство"
+            }
+        },
+        "hero": {
+            "title": "Наши партнеры платят\nза ваш отпуск"
+        },
+        "collectMiles": {
+            "title": "накопить мили",
+            "subtitle": "ваша ежедневная активность превращается\nв ваш следующий отпуск",
+            "activities": {
+                "banking": "Банкинг",
+                "bankingDesc": "Ежемесячные платежи по карте",
+                "gasStation": "АЗС",
+                "gasStationDesc": "Заправка бака",
+                "restaurant": "Ресторан",
+                "restaurantDinner": "Ужин с семьей",
+                "restaurantLunch": "Обед с партнером",
+                "flight": "Рейс",
+                "flightDesc": "Деловая поездка",
+                "gym": "Спортзал",
+                "gymDesc": "Ежемесячная плата",
+                "hotel": "Отель",
+                "hotelDesc": "Деловая поездка",
+                "coffee": "Кофейня",
+                "coffeeDesc": "С друзьями",
+                "miles": "Мили"
+            }
+        },
+        "spendMiles": {
+            "title": "потратить мили",
+            "subtitle": "выберите свой следующий отпуск",
+            "bookFor": "Забронировать за",
+            "options": {
+                "weekendEscape": {
+                    "destination": "Запланируйте",
+                    "subtitle": "УИКЕНД",
+                    "type": "Выходной отдых"
+                },
+                "teamUp": {
+                    "destination": "Объединитесь с",
+                    "subtitle": "ДРУЗЬЯМИ",
+                    "type": "Туда и обратно"
+                },
+                "dreamHoliday": {
+                    "destination": "Накопите на",
+                    "subtitle": "ОТПУСК МЕЧТЫ",
+                    "type": "Пакет отдыха"
+                }
+            }
+        },
+        "statusBenefits": {
+            "title": "привилегии статуса",
+            "subtitle": "IMS Savvy оплачивает часть поездки за вас",
+            "statuses": {
+                "silver": {
+                    "name": "Серебро",
+                    "description": "соберите всего 85% от стоимости поездки, чтобы забронировать рейс/отель"
+                },
+                "gold": {
+                    "name": "Золото",
+                    "description": "соберите всего 75% от стоимости поездки, чтобы забронировать рейс/отель"
+                },
+                "platinum": {
+                    "name": "Платина",
+                    "description": "соберите всего 65% от стоимости поездки, чтобы забронировать отель/рейс"
+                }
+            }
+        },
+        "allExtras": {
+            "subtitle": "все дополнения у вас под рукой",
+            "benefits": {
+                "freeWifi": "Бесплатный Wi-Fi",
+                "priorityCheckIn": "Приоритетная регистрация",
+                "priorityCheckInDesc": "на стойке бизнес-класса",
+                "loungeAccess": "Доступ в лаунж",
+                "loungeAccessDesc": "в лаунж бизнес-класса",
+                "foodBeverages": "Еда и напитки",
+                "foodBeveragesDesc": "на борту",
+                "additionalLuggage": "Дополнительный багаж",
+                "upgrade": "Апгрейд",
+                "upgradeDesc": "в Супер Эконом или Бизнес класс"
+            }
+        },
+        "partnersBenefits": {
+            "title": "привилегии партнеров",
+            "subtitle": "эксклюзивные преимущества",
+            "benefits": {
+                "welcomeBonus": "Приветственный бонус",
+                "freeMonthlyTreat": "Бесплатное ежемесячное угощение",
+                "priorityCheckIn": "Приоритетная регистрация на стойке бизнес-класса",
+                "advanceSeatBooking": "Предварительное бронирование места",
+                "extendedCheckIn": "Расширенное время заезда и выезда"
+            }
+        },
+        "footer": {
+            "copyright": "Все права защищены"
+        },
+        "milesAnimation": {
+            "milesTotal": "Миль, всего",
+            "operations": {
+                "airlineAlmatyAstana": "Авиакомпания Алматы - Астана",
+                "hotel": "Отель",
+                "restaurant": "Ресторан",
+                "airlineAstanaLondon": "Авиакомпания Астана - Лондон",
+                "coffeeShop": "Кофейня",
+                "banking": "Банкинг",
+                "flightAlmatyDubai": "Рейс Алматы - Дубай"
+            }
         }
     }
 }
