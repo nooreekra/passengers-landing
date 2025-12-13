@@ -205,7 +205,7 @@ const TripsPage = () => {
 
     return (
         <div className="relative min-h-screen">
-            {/* Header с логотипом и табами */}
+            {/* Header с логотипом */}
             <header className="bg-background-dark px-4 pt-3 pb-3">
                 <div className="flex justify-between items-center">
                     <Link href="/passenger" className="flex items-center gap-2 cursor-pointer">
@@ -217,108 +217,55 @@ const TripsPage = () => {
                             priority
                         />
                     </Link>
-                    {/* Tabs внутри хедера на одном уровне с логотипом */}
-                    <div className="relative flex gap-4 items-center flex-1 justify-end">
-                        <button
-                            ref={bookTripTabRef}
-                            onClick={() => setActiveTab("book-trip")}
-                            className={`pb-2 px-2 text-sm font-medium transition-colors ${
-                                activeTab === "book-trip"
-                                    ? "text-blue-600"
-                                    : "text-gray-500"
-                            }`}
-                        >
-                            {t("passenger.trips.bookATrip")}
-                        </button>
-                        <button
-                            ref={myTripsTabRef}
-                            onClick={() => setActiveTab("my-trips")}
-                            className={`pb-2 px-2 text-sm font-medium transition-colors flex items-center gap-2 ${
-                                activeTab === "my-trips"
-                                    ? "text-blue-600"
-                                    : "text-gray-500"
-                            }`}
-                        >
-                            {t("passenger.trips.myTrips")}
-                            {upcomingTripsCount > 0 && (
-                                <span className="bg-blue-600 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center min-w-[20px]">
-                                    {upcomingTripsCount}
-                                </span>
-                            )}
-                        </button>
-                        {/* Анимированный индикатор для главных табов */}
-                        <motion.div
-                            className="absolute bottom-0 h-0.5 bg-blue-600"
-                            initial={false}
-                            animate={{
-                                left: activeTab === "book-trip" 
-                                    ? bookTripTabRef.current?.offsetLeft || 0 
-                                    : myTripsTabRef.current?.offsetLeft || 0,
-                                width: activeTab === "book-trip"
-                                    ? bookTripTabRef.current?.offsetWidth || 0
-                                    : myTripsTabRef.current?.offsetWidth || 0,
-                            }}
-                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        />
-                    </div>
                 </div>
             </header>
 
-            {/* Разделы Flights и Hotels - сразу после хедера */}
-            {activeTab === "book-trip" && (
-                <div className="bg-background-dark px-4 py-2">
-                    <div className="relative flex justify-center gap-4">
-                        <button
-                            ref={flightsTabRef}
-                            onClick={() => {
-                                setBookingType("Flights");
-                                // Сбрасываем даты при переключении типа бронирования
-                                setDepartureDate(undefined);
-                                setReturnDate(undefined);
-                                setActiveDateField("departure");
-                            }}
-                            className={`flex-1 text-center text-sm font-medium pb-1 ${
-                                bookingType === "Flights"
-                                    ? "text-blue-600"
-                                    : "text-gray-500"
-                            }`}
-                        >
-                            {t("passenger.trips.flights")}
-                        </button>
-                        <button
-                            ref={hotelsTabRef}
-                            onClick={() => {
-                                setBookingType("Hotels");
-                                // Сбрасываем даты при переключении типа бронирования
-                                setDepartureDate(undefined);
-                                setReturnDate(undefined);
-                                setActiveDateField("departure");
-                            }}
-                            className={`flex-1 text-center text-sm font-medium pb-1 ${
-                                bookingType === "Hotels"
-                                    ? "text-blue-600"
-                                    : "text-gray-500"
-                            }`}
-                        >
-                            {t("passenger.trips.hotels")}
-                        </button>
-                        {/* Анимированный индикатор для подтабов Flights/Hotels */}
-                        <motion.div
-                            className="absolute bottom-0 h-0.5 bg-blue-600"
-                            initial={false}
-                            animate={{
-                                left: bookingType === "Flights" 
-                                    ? flightsTabRef.current?.offsetLeft || 0 
-                                    : hotelsTabRef.current?.offsetLeft || 0,
-                                width: bookingType === "Flights"
-                                    ? flightsTabRef.current?.offsetWidth || 0
-                                    : hotelsTabRef.current?.offsetWidth || 0,
-                            }}
-                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        />
-                    </div>
+            {/* Book a Trip и My Trips - сразу после хедера */}
+            <div className="bg-background-dark px-4 py-2">
+                <div className="relative flex justify-center gap-4">
+                    <button
+                        ref={bookTripTabRef}
+                        onClick={() => setActiveTab("book-trip")}
+                        className={`flex-1 text-center text-sm font-medium pb-1 ${
+                            activeTab === "book-trip"
+                                ? "text-blue-600"
+                                : "text-gray-500"
+                        }`}
+                    >
+                        {t("passenger.trips.bookATrip")}
+                    </button>
+                    <button
+                        ref={myTripsTabRef}
+                        onClick={() => setActiveTab("my-trips")}
+                        className={`flex-1 text-center text-sm font-medium pb-1 flex items-center justify-center gap-2 ${
+                            activeTab === "my-trips"
+                                ? "text-blue-600"
+                                : "text-gray-500"
+                        }`}
+                    >
+                        {t("passenger.trips.myTrips")}
+                        {upcomingTripsCount > 0 && (
+                            <span className="bg-blue-600 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center min-w-[20px]">
+                                {upcomingTripsCount}
+                            </span>
+                        )}
+                    </button>
+                    {/* Анимированный индикатор для главных табов */}
+                    <motion.div
+                        className="absolute bottom-0 h-0.5 bg-blue-600"
+                        initial={false}
+                        animate={{
+                            left: activeTab === "book-trip" 
+                                ? bookTripTabRef.current?.offsetLeft || 0 
+                                : myTripsTabRef.current?.offsetLeft || 0,
+                            width: activeTab === "book-trip"
+                                ? bookTripTabRef.current?.offsetWidth || 0
+                                : myTripsTabRef.current?.offsetWidth || 0,
+                        }}
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
                 </div>
-            )}
+            </div>
 
             {/* Фоновое изображение */}
             <div className="absolute inset-0 -z-10">
@@ -403,213 +350,267 @@ const TripsPage = () => {
                         </div>
                     ) : (
                         <>
-
-                    {/* From and To Section - только для Flights */}
-                    {bookingType === "Flights" && (
-                        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 mb-6 border border-white/30">
-                            <div className="flex items-center gap-4">
-                                {/* FROM */}
-                                <div className="flex-1">
-                                    <label className="text-xs text-gray-500 mb-1 block">{t("passenger.trips.from")}</label>
-                                    <div className="bg-white/60 backdrop-blur-sm rounded-lg p-4 border border-white/30">
-                                        <div className="text-2xl font-bold text-gray-900 mb-1">{from.code}</div>
-                                        <div className="text-xs text-gray-600">{from.name}</div>
-                                    </div>
-                                </div>
-
-                                {/* Swap Icon */}
-                                <button
-                                    onClick={handleSwapAirports}
-                                    className="flex-shrink-0 mt-6 bg-white/60 backdrop-blur-sm rounded-full p-2 hover:bg-white/80 transition-colors border border-white/30"
-                                >
-                                    <ArrowLeftRight className="h-5 w-5 text-action-primary" />
-                                </button>
-
-                                {/* TO */}
-                                <div className="flex-1">
-                                    <label className="text-xs text-gray-500 mb-1 block">{t("passenger.trips.to")}</label>
-                                    <div className="bg-white/60 backdrop-blur-sm rounded-lg p-4 border border-white/30">
-                                        <div className="text-2xl font-bold text-gray-900 mb-1">{to.code}</div>
-                                        <div className="text-xs text-gray-600">{to.name}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Date Selection */}
-                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 mb-6 border border-white/30">
-                        <div className="flex gap-4">
-                            {/* Departure Date */}
-                            <div className="flex-1">
-                                <label className="text-xs text-gray-500 mb-1 block">
-                                    {bookingType === "Flights" ? t("passenger.trips.departureDate") : t("passenger.trips.checkIn")}
-                                </label>
-                                <div className="relative">
-                                    <button
-                                        onClick={() => setActiveDateField("departure")}
-                                        className={`w-full bg-white/60 backdrop-blur-sm rounded-lg p-4 text-left border border-white/30 pr-10 ${
-                                            activeDateField === "departure" ? "ring-2 ring-action-primary" : ""
-                                        }`}
-                                    >
-                                        <span className={departureDate ? "text-gray-900" : "text-action-primary"}>
-                                            {formatDate(departureDate) || t("passenger.trips.select")}
-                                        </span>
-                                    </button>
-                                    {departureDate && (
+                            {/* Весь контент в одном блоке с фоном */}
+                            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-white/30">
+                                {/* Разделы Flights и Hotels - внутри контента */}
+                                <div className="mb-6">
+                                    <div className="relative flex justify-center gap-4">
                                         <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
+                                            ref={flightsTabRef}
+                                            onClick={() => {
+                                                setBookingType("Flights");
+                                                // Сбрасываем даты при переключении типа бронирования
                                                 setDepartureDate(undefined);
-                                            }}
-                                            className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 hover:bg-white/40 rounded-full transition-colors"
-                                        >
-                                            <X className="h-4 w-4 text-gray-600" />
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* Return Date - показываем для Flights и Hotels */}
-                            <div className="flex-1">
-                                <label className="text-xs text-gray-500 mb-1 block">
-                                    {bookingType === "Flights" ? t("passenger.trips.returnDate") : t("passenger.trips.checkOut")}
-                                </label>
-                                <div className="relative">
-                                    <button
-                                        onClick={() => setActiveDateField("return")}
-                                        className={`w-full bg-white/60 backdrop-blur-sm rounded-lg p-4 text-left border border-white/30 pr-10 ${
-                                            activeDateField === "return" ? "ring-2 ring-action-primary" : ""
-                                        }`}
-                                    >
-                                        <span className={returnDate ? "text-gray-900" : "text-gray-500"}>
-                                            {formatDate(returnDate) || t("passenger.trips.select")}
-                                        </span>
-                                    </button>
-                                    {returnDate && (
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
                                                 setReturnDate(undefined);
+                                                setActiveDateField("departure");
                                             }}
-                                            className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 hover:bg-white/40 rounded-full transition-colors"
+                                            className={`flex-1 text-center text-sm font-medium pb-1 ${
+                                                bookingType === "Flights"
+                                                    ? "text-blue-600"
+                                                    : "text-gray-500"
+                                            }`}
                                         >
-                                            <X className="h-4 w-4 text-gray-600" />
+                                            {t("passenger.trips.flights")}
                                         </button>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Calendar - всегда видимый */}
-                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 mb-6 border border-white/30">
-                        <div className="pb-4">
-                            <div className="flex flex-col space-y-6 items-center">
-                                {/* Первый месяц */}
-                                <div className="w-full flex flex-col items-center">
-                                    <MonthSelector 
-                                        month={currentMonth} 
-                                        monthIndex={0} 
-                                    />
-                                    <div className="flex justify-center w-full">
-                                    <DayPicker
-                                        mode="single"
-                                        selected={getSelectedDateForCalendar()}
-                                        onSelect={handleDateSelect}
-                                        disabled={(date) => date < today}
-                                        numberOfMonths={1}
-                                        fromDate={today}
-                                        month={currentMonth}
-                                        onMonthChange={setCurrentMonth}
-                                        modifiers={{
-                                            departure: departureDate,
-                                            return: returnDate
-                                        }}
-                                        modifiersClassNames={{
-                                            departure: 'bg-blue-600 text-white font-bold',
-                                            return: 'bg-blue-600 text-white font-bold'
-                                        }}
-                                        classNames={{
-                                            months: 'flex flex-col',
-                                            month: 'space-y-3',
-                                            caption: 'hidden',
-                                            nav: 'hidden',
-                                            button: 'hidden',
-                                            button_previous: 'hidden',
-                                            button_next: 'hidden',
-                                            month_caption: 'hidden',
-                                            table: 'border-collapse',
-                                            head_row: 'flex mb-2',
-                                            head_cell: 'text-gray-600 rounded-md w-10 font-normal text-xs py-2',
-                                            row: 'flex w-full mt-1',
-                                            cell: 'text-center text-sm p-0 relative w-10',
-                                            day: 'h-10 w-10 p-0 font-normal rounded-md hover:bg-white/40 text-sm transition-colors text-gray-900',
-                                            day_selected: 'bg-blue-600 text-white hover:bg-blue-700 hover:text-white focus:bg-blue-600 focus:text-white font-bold',
-                                            day_today: 'bg-white/40 text-gray-900 font-semibold',
-                                            day_outside: 'text-gray-500 opacity-50',
-                                            day_disabled: 'text-gray-400 cursor-not-allowed opacity-50',
-                                            day_hidden: 'invisible',
-                                        }}
-                                    />
+                                        <button
+                                            ref={hotelsTabRef}
+                                            onClick={() => {
+                                                setBookingType("Hotels");
+                                                // Сбрасываем даты при переключении типа бронирования
+                                                setDepartureDate(undefined);
+                                                setReturnDate(undefined);
+                                                setActiveDateField("departure");
+                                            }}
+                                            className={`flex-1 text-center text-sm font-medium pb-1 ${
+                                                bookingType === "Hotels"
+                                                    ? "text-blue-600"
+                                                    : "text-gray-500"
+                                            }`}
+                                        >
+                                            {t("passenger.trips.hotels")}
+                                        </button>
+                                        {/* Анимированный индикатор для подтабов Flights/Hotels */}
+                                        <motion.div
+                                            className="absolute bottom-0 h-0.5 bg-blue-600"
+                                            initial={false}
+                                            animate={{
+                                                left: bookingType === "Flights" 
+                                                    ? flightsTabRef.current?.offsetLeft || 0 
+                                                    : hotelsTabRef.current?.offsetLeft || 0,
+                                                width: bookingType === "Flights"
+                                                    ? flightsTabRef.current?.offsetWidth || 0
+                                                    : hotelsTabRef.current?.offsetWidth || 0,
+                                            }}
+                                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                        />
                                     </div>
                                 </div>
-                                {/* Второй месяц */}
-                                <div className="w-full flex flex-col items-center">
-                                    <MonthSelector 
-                                        month={new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)} 
-                                        monthIndex={1} 
-                                    />
-                                    <div className="flex justify-center w-full">
-                                    <DayPicker
-                                        mode="single"
-                                        selected={getSelectedDateForCalendar()}
-                                        onSelect={handleDateSelect}
-                                        disabled={(date) => date < today}
-                                        numberOfMonths={1}
-                                        fromDate={today}
-                                        month={new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)}
-                                        modifiers={{
-                                            departure: departureDate,
-                                            return: returnDate
-                                        }}
-                                        modifiersClassNames={{
-                                            departure: 'bg-blue-600 text-white font-bold',
-                                            return: 'bg-blue-600 text-white font-bold'
-                                        }}
-                                        classNames={{
-                                            months: 'flex flex-col',
-                                            month: 'space-y-3',
-                                            caption: 'hidden',
-                                            nav: 'hidden',
-                                            button: 'hidden',
-                                            button_previous: 'hidden',
-                                            button_next: 'hidden',
-                                            month_caption: 'hidden',
-                                            table: 'border-collapse',
-                                            head_row: 'flex mb-2',
-                                            head_cell: 'text-gray-600 rounded-md w-10 font-normal text-xs py-2',
-                                            row: 'flex w-full mt-1',
-                                            cell: 'text-center text-sm p-0 relative w-10',
-                                            day: 'h-10 w-10 p-0 font-normal rounded-md hover:bg-white/40 text-sm transition-colors text-gray-900',
-                                            day_selected: 'bg-blue-600 text-white hover:bg-blue-700 hover:text-white focus:bg-blue-600 focus:text-white font-bold',
-                                            day_today: 'bg-white/40 text-gray-900 font-semibold',
-                                            day_outside: 'text-gray-500 opacity-50',
-                                            day_disabled: 'text-gray-400 cursor-not-allowed opacity-50',
-                                            day_hidden: 'invisible',
-                                        }}
-                                    />
+
+                                {/* From and To Section - только для Flights */}
+                                {bookingType === "Flights" && (
+                                    <div className="mb-6">
+                                        <div className="flex items-center gap-4">
+                                            {/* FROM */}
+                                            <div className="flex-1">
+                                                <label className="text-xs text-gray-500 mb-1 block">{t("passenger.trips.from")}</label>
+                                                <div className="bg-white/60 backdrop-blur-sm rounded-lg p-4 border border-white/30">
+                                                    <div className="text-2xl font-bold text-gray-900 mb-1">{from.code}</div>
+                                                    <div className="text-xs text-gray-600">{from.name}</div>
+                                                </div>
+                                            </div>
+
+                                            {/* Swap Icon */}
+                                            <button
+                                                onClick={handleSwapAirports}
+                                                className="flex-shrink-0 mt-6 bg-white/60 backdrop-blur-sm rounded-full p-2 hover:bg-white/80 transition-colors border border-white/30"
+                                            >
+                                                <ArrowLeftRight className="h-5 w-5 text-action-primary" />
+                                            </button>
+
+                                            {/* TO */}
+                                            <div className="flex-1">
+                                                <label className="text-xs text-gray-500 mb-1 block">{t("passenger.trips.to")}</label>
+                                                <div className="bg-white/60 backdrop-blur-sm rounded-lg p-4 border border-white/30">
+                                                    <div className="text-2xl font-bold text-gray-900 mb-1">{to.code}</div>
+                                                    <div className="text-xs text-gray-600">{to.name}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Date Selection */}
+                                <div className="mb-6">
+                                    <div className="flex gap-4">
+                                        {/* Departure Date */}
+                                        <div className="flex-1">
+                                            <label className="text-xs text-gray-500 mb-1 block">
+                                                {bookingType === "Flights" ? t("passenger.trips.departureDate") : t("passenger.trips.checkIn")}
+                                            </label>
+                                            <div className="relative">
+                                                <button
+                                                    onClick={() => setActiveDateField("departure")}
+                                                    className={`w-full bg-white/60 backdrop-blur-sm rounded-lg p-4 text-left border border-white/30 pr-10 ${
+                                                        activeDateField === "departure" ? "ring-2 ring-action-primary" : ""
+                                                    }`}
+                                                >
+                                                    <span className={departureDate ? "text-gray-900" : "text-action-primary"}>
+                                                        {formatDate(departureDate) || t("passenger.trips.select")}
+                                                    </span>
+                                                </button>
+                                                {departureDate && (
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setDepartureDate(undefined);
+                                                        }}
+                                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 hover:bg-white/40 rounded-full transition-colors"
+                                                    >
+                                                        <X className="h-4 w-4 text-gray-600" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Return Date - показываем для Flights и Hotels */}
+                                        <div className="flex-1">
+                                            <label className="text-xs text-gray-500 mb-1 block">
+                                                {bookingType === "Flights" ? t("passenger.trips.returnDate") : t("passenger.trips.checkOut")}
+                                            </label>
+                                            <div className="relative">
+                                                <button
+                                                    onClick={() => setActiveDateField("return")}
+                                                    className={`w-full bg-white/60 backdrop-blur-sm rounded-lg p-4 text-left border border-white/30 pr-10 ${
+                                                        activeDateField === "return" ? "ring-2 ring-action-primary" : ""
+                                                    }`}
+                                                >
+                                                    <span className={returnDate ? "text-gray-900" : "text-gray-500"}>
+                                                        {formatDate(returnDate) || t("passenger.trips.select")}
+                                                    </span>
+                                                </button>
+                                                {returnDate && (
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setReturnDate(undefined);
+                                                        }}
+                                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 hover:bg-white/40 rounded-full transition-colors"
+                                                    >
+                                                        <X className="h-4 w-4 text-gray-600" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <button
-                            className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold mt-4 hover:bg-blue-700 transition-colors shadow-lg"
-                        >
-                            {t("passenger.trips.done")}
-                        </button>
-                </div>
+                                {/* Calendar - всегда видимый */}
+                                <div className="pb-4">
+                                    <div className="flex flex-col space-y-6 items-center">
+                                        {/* Первый месяц */}
+                                        <div className="w-full flex flex-col items-center">
+                                            <MonthSelector 
+                                                month={currentMonth} 
+                                                monthIndex={0} 
+                                            />
+                                            <div className="flex justify-center w-full">
+                                            <DayPicker
+                                                mode="single"
+                                                selected={getSelectedDateForCalendar()}
+                                                onSelect={handleDateSelect}
+                                                disabled={(date) => date < today}
+                                                numberOfMonths={1}
+                                                fromDate={today}
+                                                month={currentMonth}
+                                                onMonthChange={setCurrentMonth}
+                                                modifiers={{
+                                                    departure: departureDate,
+                                                    return: returnDate
+                                                }}
+                                                modifiersClassNames={{
+                                                    departure: 'bg-blue-600 text-white font-bold',
+                                                    return: 'bg-blue-600 text-white font-bold'
+                                                }}
+                                                classNames={{
+                                                    months: 'flex flex-col',
+                                                    month: 'space-y-3',
+                                                    caption: 'hidden',
+                                                    nav: 'hidden',
+                                                    button: 'hidden',
+                                                    button_previous: 'hidden',
+                                                    button_next: 'hidden',
+                                                    month_caption: 'hidden',
+                                                    table: 'border-collapse',
+                                                    head_row: 'flex mb-2',
+                                                    head_cell: 'text-gray-600 rounded-md w-10 font-normal text-xs py-2',
+                                                    row: 'flex w-full mt-1',
+                                                    cell: 'text-center text-sm p-0 relative w-10',
+                                                    day: 'h-10 w-10 p-0 font-normal rounded-md hover:bg-white/40 text-sm transition-colors text-gray-900',
+                                                    day_selected: 'bg-blue-600 text-white hover:bg-blue-700 hover:text-white focus:bg-blue-600 focus:text-white font-bold',
+                                                    day_today: 'bg-white/40 text-gray-900 font-semibold',
+                                                    day_outside: 'text-gray-500 opacity-50',
+                                                    day_disabled: 'text-gray-400 cursor-not-allowed opacity-50',
+                                                    day_hidden: 'invisible',
+                                                }}
+                                            />
+                                            </div>
+                                        </div>
+                                        {/* Второй месяц */}
+                                        <div className="w-full flex flex-col items-center">
+                                            <MonthSelector 
+                                                month={new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)} 
+                                                monthIndex={1} 
+                                            />
+                                            <div className="flex justify-center w-full">
+                                            <DayPicker
+                                                mode="single"
+                                                selected={getSelectedDateForCalendar()}
+                                                onSelect={handleDateSelect}
+                                                disabled={(date) => date < today}
+                                                numberOfMonths={1}
+                                                fromDate={today}
+                                                month={new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)}
+                                                modifiers={{
+                                                    departure: departureDate,
+                                                    return: returnDate
+                                                }}
+                                                modifiersClassNames={{
+                                                    departure: 'bg-blue-600 text-white font-bold',
+                                                    return: 'bg-blue-600 text-white font-bold'
+                                                }}
+                                                classNames={{
+                                                    months: 'flex flex-col',
+                                                    month: 'space-y-3',
+                                                    caption: 'hidden',
+                                                    nav: 'hidden',
+                                                    button: 'hidden',
+                                                    button_previous: 'hidden',
+                                                    button_next: 'hidden',
+                                                    month_caption: 'hidden',
+                                                    table: 'border-collapse',
+                                                    head_row: 'flex mb-2',
+                                                    head_cell: 'text-gray-600 rounded-md w-10 font-normal text-xs py-2',
+                                                    row: 'flex w-full mt-1',
+                                                    cell: 'text-center text-sm p-0 relative w-10',
+                                                    day: 'h-10 w-10 p-0 font-normal rounded-md hover:bg-white/40 text-sm transition-colors text-gray-900',
+                                                    day_selected: 'bg-blue-600 text-white hover:bg-blue-700 hover:text-white focus:bg-blue-600 focus:text-white font-bold',
+                                                    day_today: 'bg-white/40 text-gray-900 font-semibold',
+                                                    day_outside: 'text-gray-500 opacity-50',
+                                                    day_disabled: 'text-gray-400 cursor-not-allowed opacity-50',
+                                                    day_hidden: 'invisible',
+                                                }}
+                                            />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button
+                                    className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold mt-4 hover:bg-blue-700 transition-colors shadow-lg"
+                                >
+                                    {t("passenger.trips.done")}
+                                </button>
+                            </div>
                         </>
                     )}
                 </div>

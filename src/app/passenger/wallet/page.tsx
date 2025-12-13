@@ -240,7 +240,7 @@ const WalletPage = () => {
                                                 </div>
 
                                                 {/* Available to redeem - снизу, первая колонка */}
-                                                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/30 flex items-center justify-between gap-3">
+                                                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/30 justify-between flex flex-col gap-2">
                                                     <p className="text-sm text-gray-600">{t("passenger.wallet.availableToRedeem")}</p>
                                                     <p className="text-xl font-bold text-gray-900">
                                                         {availableToRedeem.toLocaleString()}
@@ -248,7 +248,7 @@ const WalletPage = () => {
                                                 </div>
 
                                                 {/* Pending - снизу, вторая колонка */}
-                                                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/30 flex items-center justify-between gap-3">
+                                                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/30 justify-between flex flex-col gap-2">
                                                     <div className="flex items-center gap-1">
                                                         <p className="text-sm text-gray-600">{t("passenger.wallet.pending")}</p>
                                                         <InfoTooltip 

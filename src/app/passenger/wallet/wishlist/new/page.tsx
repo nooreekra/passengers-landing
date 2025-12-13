@@ -133,7 +133,7 @@ const NewWishlistPage = () => {
                 title: finalName,
                 destination: destination,
                 targetAmount: parseInt(target),
-                rule: rules === "no rules set" ? "None" : rules,
+                rule: rules === "no rules set" ? "None" : rules === "% of each transaction" ? "Percent" : rules,
                 rulePercent: rules === "% of each transaction" ? parseInt(percentage) : 0,
             });
             
