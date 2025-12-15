@@ -23,6 +23,10 @@ body:has(.home-page) {
   background: #ffffff;
 }
 
+body {
+  overflow-x: hidden;
+}
+
 #root {
   min-height: 100vh;
 }
