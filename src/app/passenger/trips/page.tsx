@@ -273,7 +273,7 @@ const TripsPage = () => {
                     src="/images/passengersbg.png"
                     alt="Background"
                     fill
-                    className="object-cover blur-[2px]"
+                    className="object-cover"
                     priority
                 />
                 {/* Затемняющий overlay для читаемости */}

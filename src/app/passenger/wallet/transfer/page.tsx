@@ -119,7 +119,7 @@ const TransferPage = () => {
                     src="/images/passengersbg.png"
                     alt="Background"
                     fill
-                    className="object-cover blur-[2px]"
+                    className="object-cover"
                     priority
                 />
                 <div className="absolute inset-0 bg-black/45" />
