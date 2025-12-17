@@ -82,8 +82,8 @@ export async function getTransactionsSummary(from?: string, to?: string): Promis
 /**
  * История операции с милями
  */
-export async function getMilesTransactions(): Promise<any> {
-    const { data } = await axiosInstance.get('/api/miles/me/transactions');
+export async function getMilesTransactions(walletId: string): Promise<any> {
+    const { data } = await axiosInstance.get(`/api/wallets/${walletId}/transactions`);
     return data;
 }
 
@@ -98,8 +98,13 @@ export interface MilesSummary {
  * Сводка по милям пользователя
  */
 export async function getMilesSummary(): Promise<MilesSummary> {
-    const { data } = await axiosInstance.get('/api/miles/me/summary');
-    return data;
+    const wallet = await getWallet();
+    return {
+        userId: wallet.userId,
+        totalMiles: wallet.allTimeBalance,
+        confirmed: wallet.balance,
+        unconfirmed: wallet.pendingBalance,
+    };
 }
 
 export interface PromoCountry {
@@ -149,11 +154,30 @@ export interface TransactionsResponse {
 /**
  * Получение транзакций пользователя
  */
-export async function getTransactions(offset = 0, limit = 100): Promise<TransactionsResponse> {
-    const { data } = await axiosInstance.get('/api/miles/me/transactions', {
+export async function getTransactions(walletId: string, offset = 0, limit = 100): Promise<TransactionsResponse> {
+    const { data } = await axiosInstance.get<WalletTransaction[]>(`/api/wallets/${walletId}/transactions`, {
         params: { offset, limit }
     });
-    return data;
+    
+    // Преобразуем WalletTransaction[] в TransactionItem[]
+    const items: TransactionItem[] = (data || []).map((tx: WalletTransaction) => ({
+        id: tx.id,
+        userId: tx.userId,
+        transactionId: tx.sourceId,
+        category: tx.category,
+        description: tx.description,
+        miles: tx.amount,
+        type: tx.type === "Credit" ? "Earn" : "Spend",
+        status: tx.status === "Confirmed" ? "Confirmed" : "Pending",
+        createdAt: tx.createdAt,
+    }));
+    
+    return {
+        items,
+        total: items.length,
+        offset,
+        limit,
+    };
 }
 
 /**

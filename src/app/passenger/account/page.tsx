@@ -10,7 +10,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import InfoTooltip from "@/shared/ui/InfoTooltip";
 import Loader from "@/shared/ui/Loader";
-import { getTransactions, TransactionItem, getTierHistories, TierHistory, getTransactionsSummary, TransactionsSummary, getMilesSummary, MilesSummary, getTiers, Tier } from "@/shared/api/passenger";
+import { getTransactions, TransactionItem, getTierHistories, TierHistory, getTransactionsSummary, TransactionsSummary, getMilesSummary, MilesSummary, getTiers, Tier, getWallet } from "@/shared/api/passenger";
 import { useTranslation } from "react-i18next";
 
 // Transaction types
@@ -245,7 +245,8 @@ const AccountPage = () => {
         const fetchTransactions = async () => {
             try {
                 setLoadingTransactions(true);
-                const response = await getTransactions(0, 100);
+                const wallet = await getWallet();
+                const response = await getTransactions(wallet.id, 0, 100);
                 setTransactionsData(response.items);
                 // Разворачиваем первые несколько транзакций по умолчанию
                 if (response.items.length > 0) {
@@ -434,7 +435,7 @@ const AccountPage = () => {
     }, [transactionsSummary, categoriesData]);
 
     // Преобразование данных API в формат компонента для транзакций
-    const transactions: Transaction[] = transactionsData.map(item => ({
+    const transactions: Transaction[] = (transactionsData || []).map(item => ({
         id: item.id,
         date: new Date(item.createdAt),
         type: item.type === "Earn" ? "income" : "expense",

@@ -62,18 +62,18 @@ const AuthModal = ({ isOpen, onClose }) => {
     setIsLoading(true)
     setError('')
     setSuccess('')
-
+    
     try {
       // Используем старую логику авторизации с сессией
       const { accessToken, refreshToken } = await login(credentials.email, credentials.password)
-
+      
       // Сохраняем токены в Redux
       dispatch(setTokens({ accessToken, refreshToken }))
-
+      
       // Получаем данные пользователя
       const user = await getMe()
       dispatch(setUser(user))
-
+      
       // Пассажиры не имеют бизнеса, пропускаем запрос
       if (user.role.type !== 'Passenger') {
         let business = null
@@ -88,7 +88,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           dispatch(setBusiness(business))
         }
       }
-
+      
       // Сохраняем сессию в cookies через API
       await fetch('/api/session', {
         method: 'POST',
@@ -96,7 +96,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         body: JSON.stringify({ accessToken, role: user.role.type }),
         credentials: 'include',
       })
-
+      
       // Перенаправляем на соответствующий дашборд
       const path = roleToPath[user.role.type] ?? '/'
       setSuccess(t('auth.modal.success.loginSuccess'))
@@ -106,11 +106,11 @@ const AuthModal = ({ isOpen, onClose }) => {
       }, 1000)
     } catch (err) {
       console.error('Login error:', err)
-
+      
       // Обработка ошибок из API
       const apiError = err?.response?.data
       const statusCode = err?.response?.status
-
+      
       // Проверяем детальное сообщение об ошибке (приоритет)
       if (apiError?.detail) {
         // Если это ошибка неверных учетных данных, показываем локализованное сообщение
@@ -157,20 +157,20 @@ const AuthModal = ({ isOpen, onClose }) => {
     setIsLoading(true)
     setError('')
     setSuccess('')
-
+    
     try {
       await authService.register(userData)
       setRegistrationEmail(userData.email)
       setShowConfirm(true)
       setSuccess(t('auth.modal.success.registrationSuccess'))
-
+      
       // Автоматически скрываем сообщение об успехе через 5 секунд
       setTimeout(() => {
         setSuccess('')
       }, 5000)
     } catch (err) {
       console.error('Registration error:', err)
-
+      
       if (err.message.includes('400') || err.message.includes('Bad Request')) {
         setError(t('auth.modal.errors.checkData'))
       } else if (err.message.includes('409') || err.message.includes('Conflict')) {
@@ -191,22 +191,22 @@ const AuthModal = ({ isOpen, onClose }) => {
     setIsLoading(true)
     setError('')
     setSuccess('')
-
+    
     try {
       // Используем authService для подтверждения, так как это специфичная логика регистрации
       const response = await authService.confirmEmail(confirmData.email, confirmData.code)
-
+      
       if (response && response.accessToken) {
         // Если после подтверждения получен токен, используем старую логику авторизации
         const { accessToken, refreshToken } = response
-
+        
         // Сохраняем токены в Redux
         dispatch(setTokens({ accessToken, refreshToken }))
-
+        
         // Получаем данные пользователя
         const user = await getMe()
         dispatch(setUser(user))
-
+        
         // Пассажиры не имеют бизнеса, пропускаем запрос
         if (user.role.type !== 'Passenger') {
           let business = null
@@ -221,7 +221,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             dispatch(setBusiness(business))
           }
         }
-
+        
         // Сохраняем сессию в cookies через API
         await fetch('/api/session', {
           method: 'POST',
@@ -229,7 +229,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           body: JSON.stringify({ accessToken, role: user.role.type }),
           credentials: 'include',
         })
-
+        
         // Перенаправляем на соответствующий дашборд
         const path = roleToPath[user.role.type] ?? '/'
         setSuccess(t('auth.modal.success.emailConfirmed'))
@@ -246,7 +246,7 @@ const AuthModal = ({ isOpen, onClose }) => {
       }
     } catch (err) {
       console.error('Confirmation error:', err)
-
+      
       // Обработка ошибок
       const apiError = err?.response?.data
       if (apiError?.errors) {
@@ -287,7 +287,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     setShowConfirm(false)
     setShowAgreements(false)
     setRegistrationEmail('')
-
+    
     // Если переключаемся на регистрацию, показываем модалку соглашений
     if (newMode === 'register') {
       setShowAgreements(true)
@@ -314,88 +314,95 @@ const AuthModal = ({ isOpen, onClose }) => {
   // Если нужно показать модалку соглашений, показываем её
   if (showAgreements && mode === 'register') {
     return (
-        <AgreementsModal
-            isOpen={true}
-            onClose={() => {
-              setShowAgreements(false)
-              setMode('login')
-            }}
-            onAccept={handleAgreementsAccept}
-            entityType="Business"
-        />
+      <AgreementsModal
+        isOpen={true}
+        onClose={() => {
+          setShowAgreements(false)
+          setMode('login')
+        }}
+        onAccept={handleAgreementsAccept}
+        entityType="Business"
+      />
     )
   }
 
   return (
-      <div className="auth-modal-overlay" onClick={handleClose}>
-        <div className="auth-modal-content" onClick={(e) => e.stopPropagation()}>
-          <button className="auth-modal-close" onClick={handleClose} aria-label="Close">
-            ×
-          </button>
-
-          <div className="auth-modal-header">
-            <h2 className="auth-modal-title">{t('auth.modal.welcome')}</h2>
-            <p className="auth-modal-subtitle">
-              {showConfirm
-                  ? t('auth.modal.confirmEmail')
-                  : mode === 'login'
-                      ? t('auth.modal.signInToAccount')
-                      : t('auth.modal.signUp')}
-            </p>
-          </div>
-
-          {!showConfirm && (
-              <div className="tabs-container">
-                <button
-                    className={`tab-button ${mode === 'login' ? 'active' : ''}`}
-                    onClick={() => handleModeChange('login')}
-                    disabled={isLoading}
-                >
-                  {t('auth.modal.signIn')}
-                </button>
-                <button
-                    className={`tab-button ${mode === 'register' ? 'active' : ''}`}
-                    onClick={() => handleModeChange('register')}
-                    disabled={isLoading}
-                >
-                  {t('auth.modal.signUpButton')}
-                </button>
-              </div>
-          )}
-
-          {error && (
-              <div className="error-message">
-                {error}
-              </div>
-          )}
-
-          {success && (
-              <div className="success-message">
-                {success}
-              </div>
-          )}
-
-          {showConfirm ? (
-              <ConfirmForm
-                  email={registrationEmail}
-                  onSubmit={handleConfirm}
-                  isLoading={isLoading}
-                  onBack={handleBackToRegistration}
-              />
-          ) : mode === 'login' ? (
-              <LoginForm
-                  onSubmit={handleLogin}
-                  isLoading={isLoading}
-              />
-          ) : (
-              <RegistrationForm
-                  onSubmit={handleRegister}
-                  isLoading={isLoading}
-              />
-          )}
+    <div className="auth-modal-overlay" onClick={handleClose}>
+      <div className="auth-modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="auth-modal-close" onClick={handleClose} aria-label="Close">
+          ×
+        </button>
+        
+        <div className="auth-modal-header">
+          <h2 className="auth-modal-title">{t('auth.modal.welcome')}</h2>
+          <p className="auth-modal-subtitle">
+            {showConfirm 
+              ? t('auth.modal.confirmEmail')
+              : mode === 'login'
+                ? t('auth.modal.signInToAccount')
+                : t('auth.modal.signUp')}
+          </p>
         </div>
+
+        {!showConfirm && (
+          <div className="tabs-container">
+            <button
+              className={`tab-button ${mode === 'login' ? 'active' : ''}`}
+              onClick={() => handleModeChange('login')}
+              disabled={isLoading}
+            >
+              {t('auth.modal.signIn')}
+            </button>
+            <button
+              className={`tab-button ${mode === 'register' ? 'active' : ''}`}
+              onClick={() => handleModeChange('register')}
+              disabled={isLoading}
+            >
+              {t('auth.modal.signUpButton')}
+            </button>
+          </div>
+        )}
+        
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="success-message">
+            {success}
+          </div>
+        )}
+        
+        {showConfirm ? (
+          <ConfirmForm
+            email={registrationEmail}
+            onSubmit={handleConfirm}
+            isLoading={isLoading}
+            onBack={handleBackToRegistration}
+          />
+        ) : mode === 'login' ? (
+          <LoginForm 
+            onSubmit={handleLogin}
+            isLoading={isLoading}
+          />
+        ) : (
+          <RegistrationForm
+            onSubmit={handleRegister}
+            isLoading={isLoading}
+          />
+        )}
       </div>
+    </div>
   )
 }
 
 export default AuthModal
+
+
+
+
+
+
+
