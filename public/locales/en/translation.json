@@ -314,9 +314,9 @@
         "confirmationError": "An error occurred during confirmation. Please try again."
       },
       "success": {
-        "loginSuccess": "Login successful! Redirecting...",
+        "loginSuccess": "Login successful!",
         "registrationSuccess": "Registration successful! Check your email for the confirmation code.",
-        "emailConfirmed": "Email successfully confirmed! Redirecting...",
+        "emailConfirmed": "Email successfully confirmed!",
         "emailConfirmedSimple": "Email successfully confirmed!"
       }
     },
