@@ -88,6 +88,7 @@ const CollectMiles = () => {
                     </React.Fragment>
                 ))
             })()}</h2>
+            <p className="section-description">{t('landing.collectMiles.description')}</p>
             <div className="collect-miles-visualization">
                 <div className="center-hero">
                     <div className="hero-image-wrapper">

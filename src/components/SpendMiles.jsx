@@ -67,6 +67,7 @@ const SpendMiles = () => {
                 <p className="section-title">{t('landing.spendMiles.title')}</p>
             </div>
             <h2 className="section-subtitle">{t('landing.spendMiles.subtitle')}</h2>
+            <p className="section-description">{t('landing.spendMiles.description')}</p>
             <div className="spend-options-container">
                 {options.map((option, index) => (
                     <div 

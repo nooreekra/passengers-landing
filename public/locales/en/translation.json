@@ -1216,7 +1216,8 @@
         },
         "collectMiles": {
             "title": "collect miles",
-            "subtitle": "your daily activity turns into\nyour next Holiday",
+            "subtitle": "your daily activity turns\ninto your next Holiday",
+            "description": "every time you take your business trip flight, stay at hotel, pay for a dinner with your partners or family, and even grab your takeaway coffee, you collect miles from our partners",
             "activities": {
                 "banking": "Banking",
                 "bankingDesc": "Monthly card payments",
@@ -1239,6 +1240,7 @@
         "spendMiles": {
             "title": "spend miles",
             "subtitle": "choose your next getaway",
+            "description": "spend collected miles to book your weekend trip, annual family vacation or that exclusive dream holiday you've been thinking about for some time. All paid by miles from our partners!!!",
             "bookFor": "Book for",
             "options": {
                 "weekendEscape": {

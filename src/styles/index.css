@@ -1489,15 +1489,27 @@ body {
 .section-subtitle {
   font-size: 32px;
   text-align: center;
-  margin-bottom: 36px;
   font-weight: 400;
   font-family: var(--font-play), sans-serif;
 }
 
+.section-description {
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 36px;
+  font-weight: 400;
+  line-height: 1.6;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .collect-section .section-title,
 .collect-section .section-subtitle,
+.collect-section .section-description,
 .spend-section .section-title,
 .spend-section .section-subtitle,
+.spend-section .section-description,
 .partners-section .section-title,
 .partners-section .section-subtitle {
   color: #2d3748;
@@ -1699,7 +1711,7 @@ body {
   width: 100%;
   margin: 0 auto;
   padding: 40px 0 0 0;
-  background: #2d3748;
+  background: linear-gradient(135deg, #4a6fa5 0%, #3d5a8f 50%, #2e4a7a 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1721,7 +1733,8 @@ body {
 }
 
 .spend-miles-section .section-title,
-.spend-miles-section .section-subtitle {
+.spend-miles-section .section-subtitle,
+.spend-miles-section .section-description {
   color: #fff;
 }
 
@@ -2580,7 +2593,12 @@ body {
 
   .section-subtitle {
     font-size: 35px;
-    margin-bottom: 60px;
+  }
+
+  .section-description {
+    font-size: 14px;
+    margin-bottom: 40px;
+    padding: 0 20px;
   }
 
   .collect-miles-visualization {
@@ -2784,7 +2802,13 @@ body {
 
   .section-subtitle {
     font-size: 26px;
-    margin-bottom: 40px;
+    margin-bottom: 12px;
+  }
+
+  .section-description {
+    font-size: 13px;
+    margin-bottom: 30px;
+    padding: 0 15px;
   }
 
   .collect-miles-visualization {
