@@ -1262,24 +1262,26 @@
         },
         "statusBenefits": {
             "title": "status benefits",
-            "subtitle": "IMS Savvy pays part of the trip on your behalf",
+            "subtitle": "Hit monthly targets\nto achive higher status",
             "statuses": {
                 "silver": {
                     "name": "Silver",
-                    "description": "collect just 85% of the trip price to book your flight/hotel"
+                    "description": "all you need is 85% of the trip cost to book your flight/hotel"
                 },
                 "gold": {
                     "name": "Gold",
-                    "description": "collect just 75% of the trip to book your flight/hotel"
+                    "description": "all you need is 75% of the trip cost to book your flight/hotel"
                 },
                 "platinum": {
                     "name": "Platinum",
-                    "description": "collect just 65% of the trip cost to book your hotel/flight"
+                    "description": "all you need is 65% of the trip cost to book your flight/hotel"
                 }
             }
         },
         "allExtras": {
-            "subtitle": "all extras at your finger point",
+            "title": "extras",
+            "subtitle": "all extras at your fingertip",
+            "description": "redeem miles for your favorite Extras while on business trip, even if it's out of company policy",
             "benefits": {
                 "freeWifi": "Free Wifi",
                 "priorityCheckIn": "Priority Check in",
@@ -1294,14 +1296,15 @@
             }
         },
         "partnersBenefits": {
-            "title": "partners benefit",
-            "subtitle": "exclusive Perks",
+            "title": "perks from partners",
+            "subtitle": "exclusive perks based on your status",
+            "description": "receive welcome bonus, access to business class lounge in the airport or an monthly treat from our partners",
             "benefits": {
                 "welcomeBonus": "Welcome Bonus",
                 "freeMonthlyTreat": "Free monthly treat",
                 "priorityCheckIn": "Priority check in at business class counter",
                 "advanceSeatBooking": "Advance seat booking",
-                "extendedCheckIn": "Extended check-in, check out time"
+                "extendedCheckIn": "Early check-in, late checkout"
             }
         },
         "footer": {

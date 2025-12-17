@@ -46,6 +46,7 @@ const PartnersBenefits = () => {
             <p className="section-title">{t('landing.partnersBenefits.title')}</p>
         </div>
       <h2 className="section-subtitle">{t('landing.partnersBenefits.subtitle')}</h2>
+      <p className="section-description">{t('landing.partnersBenefits.description')}</p>
       <div className="partners-benefits-container">
         <div className="partners-center-content">
           <ul className="partners-benefits-list">

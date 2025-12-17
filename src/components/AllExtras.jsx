@@ -98,31 +98,35 @@ const AllExtras = () => {
                 <div className="benefits-overlay"></div>
             </div>
             <div className="benefits-content">
+            <div className="benefits-section-title">
+                <p className="section-title">{t('landing.allExtras.title')}</p>
+            </div>
                 <p className="section-subtitle">{t('landing.allExtras.subtitle')}</p>
+                <p className="section-description">{t('landing.allExtras.description')}</p>
                 <div className="benefits-grid">
                     {benefits.map((benefit, index) => {
                         const row = Math.floor(index / 3)
                         const col = index % 3
                         const delay = row * 0.2 + col * 0.15
-                        
+
                         return (
-                        <div
-                            key={benefit.id}
-                            className={`benefit-card ${isVisible ? 'animate-card' : ''}`}
-                            style={{
-                                animationDelay: `${delay}s`,
-                            }}
-                        >
-                            <div className="benefit-icon">
-                                {benefit.icon && React.createElement(benefit.icon)}
+                            <div
+                                key={benefit.id}
+                                className={`benefit-card ${isVisible ? 'animate-card' : ''}`}
+                                style={{
+                                    animationDelay: `${delay}s`,
+                                }}
+                            >
+                                <div className="benefit-icon">
+                                    {benefit.icon && React.createElement(benefit.icon)}
+                                </div>
+                                <div className="benefit-content">
+                                    <div className="benefit-title">{benefit.title}</div>
+                                    {benefit.description && (
+                                        <div className="benefit-description">{benefit.description}</div>
+                                    )}
+                                </div>
                             </div>
-                            <div className="benefit-content">
-                                <div className="benefit-title">{benefit.title}</div>
-                                {benefit.description && (
-                                    <div className="benefit-description">{benefit.description}</div>
-                                )}
-                            </div>
-                        </div>
                         )
                     })}
                 </div>

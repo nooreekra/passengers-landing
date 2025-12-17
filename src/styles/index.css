@@ -1512,7 +1512,8 @@ body {
 .spend-section .section-subtitle,
 .spend-section .section-description,
 .partners-section .section-title,
-.partners-section .section-subtitle {
+.partners-section .section-subtitle,
+.partners-section .section-description {
   color: #2d3748;
 }
 
@@ -1720,7 +1721,7 @@ body {
   padding: 40px 0;
 }
 
-.spend-miles-section-title {
+.spend-miles-section-title, .benefits-section-title {
   width: fit-content;
   padding: 6px 14px;
   border: 1px solid #fff;
@@ -1729,8 +1730,9 @@ body {
 }
 
 
-.spend-miles-section-title p {
+.spend-miles-section-title p, .benefits-section-title p {
   margin-bottom: 0;
+  color: #fff;
 }
 
 .spend-miles-section .section-title,
@@ -1985,13 +1987,19 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
 
 .benefits-content .section-subtitle {
   color: white;
   text-align: center;
   font-weight: 500;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.benefits-content .section-description {
+  color: white;
+  text-align: center;
+  font-weight: 400;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
@@ -2140,8 +2148,16 @@ body {
   margin-bottom: 0;
 }
 
+.status-benefits-section-title h2 {
+  margin-bottom: 18px;
+}
+
 .status-section .section-subtitle {
   color: #2d3748;
+}
+
+.status-benefits-section .section-subtitle {
+  white-space: pre-line;
 }
 
 .status-cards-container {
@@ -2234,9 +2250,7 @@ body {
   text-align: center;
 }
 
-.status-card-body .status-discount {
-  margin-bottom: 12px;
-}
+
 
 .status-card-name {
   position: absolute;
@@ -2249,13 +2263,28 @@ body {
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
+.status-discount-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
 .status-discount {
   font-size: 36px;
   font-weight: 700;
   color: white;
   text-align: center;
   font-family: var(--font-inter), sans-serif;
-  margin-bottom: 12px;
+}
+
+.status-discount-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  text-align: center;
+  font-family: var(--font-inter), sans-serif;
+  opacity: 0.8;
 }
 
 .status-description {

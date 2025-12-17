@@ -37,21 +37,21 @@ const StatusBenefits = () => {
     {
       id: 1,
       name: t('landing.statusBenefits.statuses.silver.name'),
-      discount: '-15%',
+      discount: '15%',
       description: t('landing.statusBenefits.statuses.silver.description'),
       image: '/images/membership/silver.jpg'
     },
     {
       id: 2,
       name: t('landing.statusBenefits.statuses.gold.name'),
-      discount: '-25%',
+      discount: '25%',
       description: t('landing.statusBenefits.statuses.gold.description'),
       image: '/images/membership/gold.jpg'
     },
     {
       id: 3,
       name: t('landing.statusBenefits.statuses.platinum.name'),
-      discount: '-35%',
+      discount: '35%',
       description: t('landing.statusBenefits.statuses.platinum.description'),
       image: '/images/membership/platinum.jpg'
     },
@@ -82,7 +82,10 @@ const StatusBenefits = () => {
                   <div className="status-card-name">{status.name}</div>
                 </div>
                 <div className="status-card-body">
-                  <div className="status-discount">{status.discount}</div>
+                  <div className="status-discount-container">
+                    <div className="status-discount">{status.discount}</div>
+                    <div className="status-discount-label">DISCOUNT</div>
+                  </div>
                   <p className="status-description">{status.description}</p>
                 </div>
               </div>
