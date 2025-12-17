@@ -2228,17 +2228,6 @@ body {
   justify-content: center;
 }
 
-.status-card-header-peel {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 8px;
-  background: rgba(0, 0, 0, 0.3);
-  clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
-  z-index: 2;
-}
-
 .status-card-body {
   padding: 24px 20px;
   background: #2d3748;

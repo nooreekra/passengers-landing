@@ -79,7 +79,6 @@ const StatusBenefits = () => {
                   className="status-card-header"
                   style={{ backgroundImage: `url(${status.image})` }}
                 >
-                  <div className="status-card-header-peel"></div>
                   <div className="status-card-name">{status.name}</div>
                 </div>
                 <div className="status-card-body">
