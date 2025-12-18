@@ -67,7 +67,7 @@ const CircularProgress = ({
 
     return (
         <div className="flex flex-col items-center gap-2">
-            <div className="relative" style={{ width: size, height: size }}>
+            <div className="relative bg-white/70 rounded-full" style={{ width: size, height: size }}>
                 <svg width={size} height={size} className="transform -rotate-90">
                     <circle
                         cx={size / 2}
@@ -106,12 +106,12 @@ const CircularProgress = ({
                     {label === "Gym" ? (
                         <>
                             <div className="text-xs font-semibold text-brand-blue">{t("passenger.account.active")}</div>
-                            <div className="text-[10px] text-white">{t("passenger.account.subscription")}</div>
+                            <div className="text-[10px] text-brand-blue">{t("passenger.account.subscription")}</div>
                         </>
                     ) : (
                         <>
                             <div className="text-xs font-semibold text-brand-blue">{value}</div>
-                            {unit && <div className="text-[10px] text-white">{unit}</div>}
+                            {unit && <div className="text-[10px] text-brand-blue">{unit}</div>}
                         </>
                     )}
                 </div>
@@ -547,22 +547,20 @@ const AccountPage = () => {
                     <button
                         ref={detailsTabRef}
                         onClick={() => setActiveTab("details")}
-                        className={`flex-1 text-center text-sm font-medium pb-1 ${
-                            activeTab === "details"
+                        className={`flex-1 text-center text-sm font-medium pb-1 ${activeTab === "details"
                                 ? "text-blue-600"
                                 : "text-gray-500"
-                        }`}
+                            }`}
                     >
                         {t("passenger.account.accountDetails")}
                     </button>
                     <button
                         ref={transactionsTabRef}
                         onClick={() => setActiveTab("transactions")}
-                        className={`flex-1 text-center text-sm font-medium pb-1 ${
-                            activeTab === "transactions"
+                        className={`flex-1 text-center text-sm font-medium pb-1 ${activeTab === "transactions"
                                 ? "text-blue-600"
                                 : "text-gray-500"
-                        }`}
+                            }`}
                     >
                         {t("passenger.account.recentTransactions")}
                     </button>
@@ -571,8 +569,8 @@ const AccountPage = () => {
                         className="absolute bottom-0 h-0.5 bg-blue-600"
                         initial={false}
                         animate={{
-                            left: activeTab === "details" 
-                                ? detailsTabRef.current?.offsetLeft || 0 
+                            left: activeTab === "details"
+                                ? detailsTabRef.current?.offsetLeft || 0
                                 : transactionsTabRef.current?.offsetLeft || 0,
                             width: activeTab === "details"
                                 ? detailsTabRef.current?.offsetWidth || 0
@@ -607,92 +605,80 @@ const AccountPage = () => {
                     {!isLoading && activeTab === "details" && (
                         <>
                             {/* User Info Section */}
-                            <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-6 border border-white/20 mb-6">
-                                <div className="flex flex-col items-center mb-4">
-                                    <div className="text-center">
-                                        <h2 className="text-xl font-semibold mb-2 text-white">
-                                            {user ? `${user.firstName} ${user.lastName}` : mockData.name}
-                                        </h2>
-                                        {currentTier && (
-                                            <div
-                                                className="inline-block px-3 py-1 rounded-md text-white text-sm font-medium"
-                                                style={{ backgroundColor: currentTier.color }}
-                                            >
-                                                {currentTier.name}
+                            <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] border border-white/20 mb-6">
+                                <div className="p-6">
+                                    <div className="flex flex-col items-center mb-4">
+                                        <div className="text-center">
+                                            <h2 className="text-xl font-semibold mb-2 text-white">
+                                                {user ? `${user.firstName} ${user.lastName}` : mockData.name}
+                                            </h2>
+                                            {currentTier && (
+                                                <div
+                                                    className="inline-block px-3 py-1 rounded-md text-white text-sm font-medium"
+                                                    style={{ backgroundColor: currentTier.color }}
+                                                >
+                                                    {currentTier.name}
+                                                </div>
+                                            )}
+                                            <div className="mt-3">
+                                                <p className="text-xs text-gray-200">{t("passenger.account.imsSavvyMember")}</p>
+                                                <p className="text-sm font-medium text-white">
+                                                    {user?.imsNumber || "—"}
+                                                </p>
                                             </div>
-                                        )}
-                                        <div className="mt-3">
-                                            <p className="text-xs text-gray-200">{t("passenger.account.imsSavvyMember")}</p>
-                                            <p className="text-sm font-medium text-white">
-                                                {user?.imsNumber || "—"}
+                                        </div>
+                                    </div>
+
+                                    {/* Miles Info */}
+                                    <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-6">
+                                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-2 sm:p-4 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] flex items-center justify-between gap-1 sm:gap-3">
+                                            <div className="flex items-center gap-1">
+                                                <p className="text-xs sm:text-sm text-gray-200">{t("passenger.account.totalMiles")}</p>
+                                                <InfoTooltip
+                                                    text={t("passenger.account.totalMilesTooltip")}
+                                                    position="top"
+                                                />
+                                            </div>
+                                            <p className="text-base sm:text-xl font-bold text-white">
+                                                {milesSummary ? milesSummary.totalMiles.toLocaleString() : mockData.totalMiles.toLocaleString()}
+                                            </p>
+                                        </div>
+                                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-2 sm:p-4 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] flex items-center justify-between gap-1 sm:gap-3">
+                                            <div className="flex items-center gap-1">
+                                                <p className="text-xs sm:text-sm text-gray-200">{t("passenger.account.pending")}</p>
+                                                <InfoTooltip
+                                                    text={t("passenger.account.pendingTooltip")}
+                                                    position="top"
+                                                />
+                                            </div>
+                                            <p className="text-base sm:text-xl font-bold text-white">
+                                                {milesSummary ? milesSummary.unconfirmed.toLocaleString() : mockData.pendingMiles.toLocaleString()}
                                             </p>
                                         </div>
                                     </div>
-                                </div>
 
-                                {/* Miles Info */}
-                                <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-6">
-                                    <div className="bg-white/10 backdrop-blur-md rounded-xl p-2 sm:p-4 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] flex items-center justify-between gap-1 sm:gap-3">
-                                        <div className="flex items-center gap-1">
-                                            <p className="text-xs sm:text-sm text-gray-200">{t("passenger.account.totalMiles")}</p>
-                                            <InfoTooltip
-                                                text={t("passenger.account.totalMilesTooltip")}
-                                                position="top"
-                                            />
-                                        </div>
-                                        <p className="text-base sm:text-xl font-bold text-white">
-                                            {milesSummary ? milesSummary.totalMiles.toLocaleString() : mockData.totalMiles.toLocaleString()}
-                                        </p>
-                                    </div>
-                                    <div className="bg-white/10 backdrop-blur-md rounded-xl p-2 sm:p-4 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] flex items-center justify-between gap-1 sm:gap-3">
-                                        <div className="flex items-center gap-1">
-                                            <p className="text-xs sm:text-sm text-gray-200">{t("passenger.account.pending")}</p>
-                                            <InfoTooltip
-                                                text={t("passenger.account.pendingTooltip")}
-                                                position="top"
-                                            />
-                                        </div>
-                                        <p className="text-base sm:text-xl font-bold text-white">
-                                            {milesSummary ? milesSummary.unconfirmed.toLocaleString() : mockData.pendingMiles.toLocaleString()}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* QR Code Section */}
-                                <div className="flex flex-col items-center mb-12">
-                                    <div className="relative">
-                                        <div className="bg-white rounded-lg p-4 shadow-sm">
-                                            <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center">
-                                                <QrCode className="h-16 w-16 text-gray-400" />
+                                    {/* QR Code Section */}
+                                    <div className="flex flex-col items-center mb-12">
+                                        <div className="relative">
+                                            <div className="bg-white rounded-lg p-4 shadow-sm">
+                                                <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center">
+                                                    <QrCode className="h-16 w-16 text-gray-400" />
+                                                </div>
                                             </div>
+
+                                            {/* Resize button */}
+                                            <button
+                                                onClick={() => setIsQrExpanded(true)}
+                                                className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-white rounded-full p-2 shadow-lg border-2 border-gray-200 hover:border-blue-500 transition-colors"
+                                            >
+                                                <Maximize2 className="h-5 w-5 text-gray-600" />
+                                            </button>
                                         </div>
-
-                                        {/* Resize button */}
-                                        <button
-                                            onClick={() => setIsQrExpanded(true)}
-                                            className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-white rounded-full p-2 shadow-lg border-2 border-gray-200 hover:border-blue-500 transition-colors"
-                                        >
-                                            <Maximize2 className="h-5 w-5 text-gray-600" />
-                                        </button>
                                     </div>
-                                </div>
 
-                                {/* Digital Card Modal */}
-                                <Transition appear show={isQrExpanded} as={Fragment}>
-                                    <Dialog as="div" className="relative z-50" onClose={() => setIsQrExpanded(false)}>
-                                        <Transition.Child
-                                            as={Fragment}
-                                            enter="ease-out duration-300"
-                                            enterFrom="opacity-0"
-                                            enterTo="opacity-100"
-                                            leave="ease-in duration-200"
-                                            leaveFrom="opacity-100"
-                                            leaveTo="opacity-0"
-                                        >
-                                            <div className="fixed inset-0 bg-black/50" />
-                                        </Transition.Child>
-
-                                        <div className="fixed inset-0 overflow-y-auto">
+                                    {/* Digital Card Modal */}
+                                    <Transition appear show={isQrExpanded} as={Fragment}>
+                                        <Dialog as="div" className="relative z-50" onClose={() => setIsQrExpanded(false)}>
                                             <Transition.Child
                                                 as={Fragment}
                                                 enter="ease-out duration-300"
@@ -702,218 +688,246 @@ const AccountPage = () => {
                                                 leaveFrom="opacity-100"
                                                 leaveTo="opacity-0"
                                             >
-                                                <Dialog.Panel className="w-full h-full bg-gray-100 flex flex-col overflow-hidden">
-                                                    {/* Close button */}
-                                                    <div className="flex justify-end p-4 flex-shrink-0">
-                                                        <button
-                                                            onClick={() => setIsQrExpanded(false)}
-                                                            className="text-gray-500 hover:text-gray-700 transition-colors"
-                                                        >
-                                                            <X className="h-6 w-6" />
-                                                        </button>
-                                                    </div>
-
-                                                    <div className="flex-1 overflow-y-auto flex flex-col items-center px-6 pb-6 pt-4 gap-6 min-h-0">
-                                                        {/* Digital Card */}
-                                                        <div className="relative rounded-xl p-6 shadow-lg overflow-hidden flex-shrink-0" style={{ width: '320px', height: '500px' }}>
-                                                            {/* Background image based on tier */}
-                                                            <div className="absolute inset-0">
-                                                                <Image
-                                                                    src={getCardBackground()}
-                                                                    alt="Membership card background"
-                                                                    fill
-                                                                    className="object-cover"
-                                                                />
-                                                            </div>
-
-                                                            {/* Overlay for better text readability */}
-                                                            <div className="absolute inset-0 bg-black/20" />
-
-                                                            {/* Decorative lines */}
-                                                            <div className="absolute inset-0 opacity-10">
-                                                                <div className="absolute top-0 left-0 w-full h-full" style={{
-                                                                    backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)'
-                                                                }} />
-                                                            </div>
-
-                                                            <div className="relative z-10 h-full flex flex-col">
-                                                                {/* Logo */}
-                                                                <div className="flex items-start mb-6">
-                                                                    <div className="rounded-lg p-2">
-                                                                        <Image
-                                                                            src="/images/logo.png"
-                                                                            alt="IMS Savvy"
-                                                                            width={120}
-                                                                            height={26}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-
-                                                                {/* Loyalty Rewards text */}
-                                                                <h2 className="text-2xl font-bold text-white mb-auto mt-4">{t("passenger.account.loyaltyRewards")}</h2>
-
-                                                                {/* Membership ID and Name */}
-                                                                <div className="mt-auto">
-                                                                    {currentTier && (
-                                                                        <div className="mb-4">
-                                                                            <span
-                                                                                className="text-white text-lg italic font-semibold px-4 py-2 rounded-full shadow-lg inline-block"
-                                                                                style={{
-                                                                                    backgroundColor: currentTier.color,
-                                                                                    boxShadow: `0 4px 14px 0 ${currentTier.color}40`
-                                                                                }}
-                                                                            >
-                                                                                {currentTier.name}
-                                                                            </span>
-                                                                        </div>
-                                                                    )}
-                                                                    <div>
-                                                                        <p className="text-white text-sm font-semibold mb-1">
-                                                                            {user ? `${user.firstName} ${user.lastName}`.toUpperCase() : mockData.name.toUpperCase()}
-                                                                        </p>
-                                                                        <p className="text-white text-xs font-medium">
-                                                                            {t("passenger.account.membership")} {user?.imsNumber || "—"}
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* QR Code */}
-                                                        <div className="flex justify-center flex-shrink-0">
-                                                            <div className="bg-white rounded-lg p-4 shadow-md">
-                                                                <div className="w-64 h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-                                                                    <QrCode className="h-48 w-48 text-gray-400" />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Instruction text */}
-                                                        <p className="text-sm text-gray-600 text-center">
-                                                            {t("passenger.account.completeTicketTransactions")}
-                                                        </p>
-
-                                                        {/* Copy to clipboard button */}
-                                                        {user?.imsNumber && (
-                                                            <button
-                                                                onClick={handleCopyMembershipId}
-                                                                className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium"
-                                                                title={t("passenger.account.copyMembershipId")}
-                                                            >
-                                                                <Copy className="h-4 w-4" />
-                                                                <span>{t("passenger.account.copyToClipboard")}</span>
-                                                            </button>
-                                                        )}
-
-                                                        {/* Membership ID with copy */}
-                                                        {user?.imsNumber && (
-                                                            <div className="flex items-center justify-center gap-2 p-3 border-2 border-dashed border-blue-500 rounded-lg bg-blue-50">
-                                                                <span className="text-sm font-semibold text-blue-600">
-                                                                    {user.imsNumber}
-                                                                </span>
-                                                                <button
-                                                                    onClick={handleCopyMembershipId}
-                                                                    className="p-1 hover:bg-blue-100 rounded transition-colors"
-                                                                    title={t("passenger.account.copyMembershipId")}
-                                                                >
-                                                                    <Copy className="h-4 w-4 text-blue-600" />
-                                                                </button>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </Dialog.Panel>
+                                                <div className="fixed inset-0 bg-black/50" />
                                             </Transition.Child>
-                                        </div>
-                                    </Dialog>
-                                </Transition>
 
-                                {/* Status Timeline - Last 3 Months */}
-                                <div className="py-8 mb-6 border-t border-white">
-                                    <h2 className="text-lg font-semibold text-white mb-2 text-center">Your progess</h2>
-                                    
-                                    <div className="flex items-center gap-1 mb-2">
-                                        <h4 className="text-sm text-white text-left">Last 3 months</h4>
-                                        <InfoTooltip
-                                            text={t("passenger.account.lastThreeMonthsTooltip") || "Shows your tier status for the last 3 months"}
-                                            position="top"
-                                        />
-                                    </div>
-                                    <div className="relative">
-                                        {loadingTierHistories ? (
-                                            <div className="text-center py-4 text-gray-500 text-sm">{t("passenger.account.loadingTierHistories")}</div>
-                                        ) : lastThreeMonths.length === 0 ? (
-                                            <div className="text-center py-4 text-gray-500 text-sm">{t("passenger.account.noTierData")}</div>
-                                        ) : (
-                                            <>
-                                                <div className="h-8 overflow-visible flex gap-1">
-                                                    {lastThreeMonths.map((monthData, index) => {
-                                                        // Получаем фон из тира
-                                                        const getTierBackground = () => {
-                                                            if (monthData.tier) {
-                                                                const tierCode = monthData.tier.code.toLowerCase();
-                                                                const validTiers = ["bronze", "silver", "gold", "platinum"];
-                                                                if (validTiers.includes(tierCode)) {
-                                                                    return `/images/membership/${tierCode}.jpg`;
-                                                                }
-                                                            }
-                                                            // Fallback на основе статуса
-                                                            const statusCode = monthData.status.toLowerCase();
-                                                            if (["bronze", "silver", "gold", "platinum"].includes(statusCode)) {
-                                                                return `/images/membership/${statusCode}.jpg`;
-                                                            }
-                                                            return "/images/membership/bronze.jpg";
-                                                        };
-                                                        const isFirst = index === 0;
-                                                        const isLast = index === lastThreeMonths.length - 1;
-                                                        return (
-                                                            <div
-                                                                key={index}
-                                                                className={`h-full flex-1 relative overflow-hidden ${isFirst ? 'rounded-l-full' : ''
-                                                                    } ${isLast ? 'rounded-r-full' : ''
-                                                                    }`}
+                                            <div className="fixed inset-0 overflow-y-auto">
+                                                <Transition.Child
+                                                    as={Fragment}
+                                                    enter="ease-out duration-300"
+                                                    enterFrom="opacity-0"
+                                                    enterTo="opacity-100"
+                                                    leave="ease-in duration-200"
+                                                    leaveFrom="opacity-100"
+                                                    leaveTo="opacity-0"
+                                                >
+                                                    <Dialog.Panel className="w-full h-full bg-gray-100 flex flex-col overflow-hidden">
+                                                        {/* Close button */}
+                                                        <div className="flex justify-end p-4 flex-shrink-0">
+                                                            <button
+                                                                onClick={() => setIsQrExpanded(false)}
+                                                                className="text-gray-500 hover:text-gray-700 transition-colors"
                                                             >
-                                                                {/* Background image */}
+                                                                <X className="h-6 w-6" />
+                                                            </button>
+                                                        </div>
+
+                                                        <div className="flex-1 overflow-y-auto flex flex-col items-center px-6 pb-6 pt-4 gap-6 min-h-0">
+                                                            {/* Digital Card */}
+                                                            <div className="relative rounded-xl p-6 shadow-lg overflow-hidden flex-shrink-0" style={{ width: '320px', height: '500px' }}>
+                                                                {/* Background image based on tier */}
                                                                 <div className="absolute inset-0">
                                                                     <Image
-                                                                        src={getTierBackground()}
-                                                                        alt={`${monthData.status} tier background`}
+                                                                        src={getCardBackground()}
+                                                                        alt="Membership card background"
                                                                         fill
                                                                         className="object-cover"
                                                                     />
                                                                 </div>
+
                                                                 {/* Overlay for better text readability */}
-                                                                <div className="absolute inset-0 bg-black/30 py-3" />
-                                                                {/* Status label inside segment */}
-                                                                <div className="absolute inset-0 flex items-center justify-center z-10">
-                                                                    <span className="text-[12px] font-medium text-white">
-                                                                        {monthData.status}
-                                                                    </span>
+                                                                <div className="absolute inset-0 bg-black/20" />
+
+                                                                {/* Decorative lines */}
+                                                                <div className="absolute inset-0 opacity-10">
+                                                                    <div className="absolute top-0 left-0 w-full h-full" style={{
+                                                                        backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)'
+                                                                    }} />
+                                                                </div>
+
+                                                                <div className="relative z-10 h-full flex flex-col">
+                                                                    {/* Logo */}
+                                                                    <div className="flex items-start mb-6">
+                                                                        <div className="rounded-lg p-2">
+                                                                            <Image
+                                                                                src="/images/logo.png"
+                                                                                alt="IMS Savvy"
+                                                                                width={120}
+                                                                                height={26}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/* Loyalty Rewards text */}
+                                                                    <h2 className="text-2xl font-bold text-white mb-auto mt-4">{t("passenger.account.loyaltyRewards")}</h2>
+
+                                                                    {/* Membership ID and Name */}
+                                                                    <div className="mt-auto">
+                                                                        {currentTier && (
+                                                                            <div className="mb-4">
+                                                                                <span
+                                                                                    className="text-white text-lg italic font-semibold px-4 py-2 rounded-full shadow-lg inline-block"
+                                                                                    style={{
+                                                                                        backgroundColor: currentTier.color,
+                                                                                        boxShadow: `0 4px 14px 0 ${currentTier.color}40`
+                                                                                    }}
+                                                                                >
+                                                                                    {currentTier.name}
+                                                                                </span>
+                                                                            </div>
+                                                                        )}
+                                                                        <div>
+                                                                            <p className="text-white text-sm font-semibold mb-1">
+                                                                                {user ? `${user.firstName} ${user.lastName}`.toUpperCase() : mockData.name.toUpperCase()}
+                                                                            </p>
+                                                                            <p className="text-white text-xs font-medium">
+                                                                                {t("passenger.account.membership")} {user?.imsNumber || "—"}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        );
-                                                    })}
-                                                </div>
 
-                                                {/* Month labels below timeline */}
-                                                <div className="flex mt-1 gap-1">
-                                                    {lastThreeMonths.map((monthData, index) => (
-                                                        <div
-                                                            key={index}
-                                                            className="flex flex-col items-center flex-1"
-                                                        >
-                                                            <span className="text-xs text-white font-medium">{monthData.month}</span>
+                                                            {/* QR Code */}
+                                                            <div className="flex justify-center flex-shrink-0">
+                                                                <div className="bg-white rounded-lg p-4 shadow-md">
+                                                                    <div className="w-64 h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+                                                                        <QrCode className="h-48 w-48 text-gray-400" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            {/* Instruction text */}
+                                                            <p className="text-sm text-gray-600 text-center">
+                                                                {t("passenger.account.completeTicketTransactions")}
+                                                            </p>
+
+                                                            {/* Copy to clipboard button */}
+                                                            {user?.imsNumber && (
+                                                                <button
+                                                                    onClick={handleCopyMembershipId}
+                                                                    className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium"
+                                                                    title={t("passenger.account.copyMembershipId")}
+                                                                >
+                                                                    <Copy className="h-4 w-4" />
+                                                                    <span>{t("passenger.account.copyToClipboard")}</span>
+                                                                </button>
+                                                            )}
+
+                                                            {/* Membership ID with copy */}
+                                                            {user?.imsNumber && (
+                                                                <div className="flex items-center justify-center gap-2 p-3 border-2 border-dashed border-blue-500 rounded-lg bg-blue-50">
+                                                                    <span className="text-sm font-semibold text-blue-600">
+                                                                        {user.imsNumber}
+                                                                    </span>
+                                                                    <button
+                                                                        onClick={handleCopyMembershipId}
+                                                                        className="p-1 hover:bg-blue-100 rounded transition-colors"
+                                                                        title={t("passenger.account.copyMembershipId")}
+                                                                    >
+                                                                        <Copy className="h-4 w-4 text-blue-600" />
+                                                                    </button>
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                    ))}
-                                                </div>
-                                            </>
-                                        )}
+                                                    </Dialog.Panel>
+                                                </Transition.Child>
+                                            </div>
+                                        </Dialog>
+                                    </Transition>
+
+                                    {/* Status Timeline - Last 3 Months */}
+                                    <div className="py-8 mb-6 border-t border-white">
+                                        <h2 className="text-lg font-semibold text-white mb-2 text-center">Your progess</h2>
+
+                                        <div className="flex items-center gap-1 mb-2">
+                                            <h4 className="text-sm text-white text-left">Last 3 months</h4>
+                                            <InfoTooltip
+                                                text={t("passenger.account.lastThreeMonthsTooltip") || "Shows your tier status for the last 3 months"}
+                                                position="top"
+                                            />
+                                        </div>
+                                        <div className="relative">
+                                            {loadingTierHistories ? (
+                                                <div className="text-center py-4 text-gray-500 text-sm">{t("passenger.account.loadingTierHistories")}</div>
+                                            ) : lastThreeMonths.length === 0 ? (
+                                                <div className="text-center py-4 text-gray-500 text-sm">{t("passenger.account.noTierData")}</div>
+                                            ) : (
+                                                <>
+                                                    <div className="h-8 overflow-visible flex gap-1">
+                                                        {lastThreeMonths.map((monthData, index) => {
+                                                            // Получаем фон из тира
+                                                            const getTierBackground = () => {
+                                                                if (monthData.tier) {
+                                                                    const tierCode = monthData.tier.code.toLowerCase();
+                                                                    const validTiers = ["bronze", "silver", "gold", "platinum"];
+                                                                    if (validTiers.includes(tierCode)) {
+                                                                        return `/images/membership/${tierCode}.jpg`;
+                                                                    }
+                                                                }
+                                                                // Fallback на основе статуса
+                                                                const statusCode = monthData.status.toLowerCase();
+                                                                if (["bronze", "silver", "gold", "platinum"].includes(statusCode)) {
+                                                                    return `/images/membership/${statusCode}.jpg`;
+                                                                }
+                                                                return "/images/membership/bronze.jpg";
+                                                            };
+                                                            const isFirst = index === 0;
+                                                            const isLast = index === lastThreeMonths.length - 1;
+                                                            return (
+                                                                <div
+                                                                    key={index}
+                                                                    className={`h-full flex-1 relative overflow-hidden ${isFirst ? 'rounded-l-full' : ''
+                                                                        } ${isLast ? 'rounded-r-full' : ''
+                                                                        }`}
+                                                                >
+                                                                    {/* Background image */}
+                                                                    <div className="absolute inset-0">
+                                                                        <Image
+                                                                            src={getTierBackground()}
+                                                                            alt={`${monthData.status} tier background`}
+                                                                            fill
+                                                                            className="object-cover"
+                                                                        />
+                                                                    </div>
+                                                                    {/* Overlay for better text readability */}
+                                                                    <div className="absolute inset-0 bg-black/30 py-3" />
+                                                                    {/* Status label inside segment */}
+                                                                    <div className="absolute inset-0 flex items-center justify-center z-10">
+                                                                        <span className="text-[12px] font-medium text-white">
+                                                                            {monthData.status}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+
+                                                    {/* Month labels below timeline */}
+                                                    <div className="flex mt-1 gap-1">
+                                                        {lastThreeMonths.map((monthData, index) => (
+                                                            <div
+                                                                key={index}
+                                                                className="flex flex-col items-center flex-1"
+                                                            >
+                                                                <span className="text-xs text-white font-medium">{monthData.month}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
 
-                                
 
-                                    {/* Status Progress and Monthly Activity Section */}
-                                    <div>
+
+
+                                {/* Status Progress and Monthly Activity Section */}
+                                <div 
+                                    className="p-6 relative overflow-hidden"
+                                    style={{
+                                        background: 'rgba(255, 255, 255, 0.3)',
+                                        backdropFilter: 'blur(20px)',
+                                        WebkitBackdropFilter: 'blur(20px)',
+                                        borderTopLeftRadius: '0',
+                                        borderTopRightRadius: '0',
+                                        borderBottomLeftRadius: '1rem',
+                                        borderBottomRightRadius: '1rem',
+                                        border: '1px solid rgba(255, 255, 255, 0.4)',
+                                        boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+                                    }}
+                                >
                                     {/* Status Cards - Current and Next */}
                                     <div className="mb-3">
                                         <h3 className="text-sm text-white text-left">
@@ -922,9 +936,9 @@ const AccountPage = () => {
                                     </div>
                                     <div className="flex items-center justify-between mb-8" style={{ gap: 'clamp(8px, 2vw, 16px)' }}>
                                         {/* Current status card on the left */}
-                                        <div style={{ width: '33.33%', flexShrink: 0 }}>
+                                        <div style={{ width: '40%', flexShrink: 0 }}>
                                             {currentTier ? (
-                                                <div className="relative shadow-lg overflow-hidden w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.5rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
+                                                <div className="relative shadow-lg overflow-hidden w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.3rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
                                                     {/* Background image */}
                                                     <div className="absolute inset-0">
                                                         <Image
@@ -947,7 +961,7 @@ const AccountPage = () => {
 
                                                     <div className="relative z-10 h-full flex flex-col">
                                                         {/* Logo */}
-                                                        <div className="flex items-start card-logo-container" style={{ marginBottom: '0.375rem' }}>
+                                                        <div className="flex items-start card-logo-container">
                                                             <div className="card-logo-wrapper" style={{ padding: '0.125rem', borderRadius: '0.25rem' }}>
                                                                 <Image
                                                                     src="/images/logo.png"
@@ -962,8 +976,8 @@ const AccountPage = () => {
 
                                                         {/* Discount */}
                                                         <div className="flex-1 flex flex-col justify-center">
-                                                            <div className="text-white card-discount-container" style={{ marginBottom: '0.375rem', textShadow: '0 0.0625rem 0.125rem rgba(0,0,0,0.5)' }}>
-                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(1.2rem, 4vw, 2.125rem)' }}>{Math.round(currentTier.discountPercent * 100)}%</span>
+                                                            <div className="text-white card-discount-container" style={{ textShadow: '0 0.0625rem 0.125rem rgba(0,0,0,0.5)' }}>
+                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(.8rem, 2vw, 1.125rem)' }}>{Math.round(currentTier.discountPercent * 100)}%</span>
                                                                 <span className="font-medium card-discount-text" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.8875rem)', marginLeft: '0.1875rem' }}>{t("passenger.account.discount")}</span>
                                                             </div>
                                                         </div>
@@ -971,34 +985,40 @@ const AccountPage = () => {
                                                         {/* Membership ID and Name */}
                                                         <div className="flex justify-between items-end mt-auto card-bottom-container" style={{ gap: '0.1875rem' }}>
                                                             <div className="flex-1 min-w-0 card-info-container">
-                                                                <p className="text-white font-medium card-ims-number" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5rem)', marginBottom: '0.0625rem', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                {/* <p className="text-white font-medium card-ims-number" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5rem)', marginBottom: '0.0625rem', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
                                                                     {user?.imsNumber || "—"}
-                                                                </p>
-                                                                <p className="text-white font-semibold card-owner-name" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.825rem)', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
-                                                                    {user ? `${user.firstName} ${user.lastName}`.toUpperCase() : mockData.name.toUpperCase()}
+                                                                </p> */}
+                                                                <p className="text-white font-semibold card-owner-name leading-[.8]" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.325rem)', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                    {user 
+                                                                        ? `${user.firstName}${user.lastName?.[0] ? ` ${user.lastName[0]}.` : ''}`.toUpperCase().trim() 
+                                                                        : (() => {
+                                                                            const parts = mockData.name.split(' ');
+                                                                            return parts[0] + (parts[1] ? ` ${parts[1][0]}.` : '');
+                                                                        })().toUpperCase().trim()
+                                                                    }
                                                                 </p>
                                                             </div>
                                                             <span
                                                                 className="text-white italic font-semibold shadow-lg inline-block flex-shrink-0 card-status-badge"
                                                                 style={{
-                                                                    fontSize: 'clamp(0.45rem, 1.2vw, 0.5625rem)',
-                                                                    padding: '0.125rem 0.375rem',
+                                                                    fontSize: 'clamp(0.45rem, .8vw, 0.3625rem)',
+                                                                    padding: '0.125rem 0.275rem',
                                                                     borderRadius: '9999px',
                                                                     backgroundColor: currentTier.color,
                                                                     boxShadow: `0 0.125rem 0.4375rem 0 ${currentTier.color}40`,
                                                                     textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.5)'
                                                                 }}
                                                             >
-                                                                {currentTier.name}
+                                                                {currentTier.name.split(' ')[0]}
                                                             </span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <div className="relative rounded-xl shadow-lg overflow-hidden bg-gray-400 w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.5rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
+                                                <div className="relative rounded-xl shadow-lg overflow-hidden bg-gray-400 w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.3rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
                                                     <div className="absolute inset-0 bg-black/20" />
                                                     <div className="relative z-10 h-full flex flex-col">
-                                                        <div className="flex items-start card-logo-container" style={{ marginBottom: '0.375rem' }}>
+                                                        <div className="flex items-start card-logo-container">
                                                             <div className="card-logo-wrapper" style={{ padding: '0.125rem', borderRadius: '0.25rem' }}>
                                                                 <Image
                                                                     src="/images/logo.png"
@@ -1011,22 +1031,28 @@ const AccountPage = () => {
                                                             </div>
                                                         </div>
                                                         <div className="flex-1 flex flex-col justify-center">
-                                                            <div className="text-white card-discount-container" style={{ marginBottom: '0.375rem', textShadow: '0 0.0625rem 0.125rem rgba(0,0,0,0.5)' }}>
-                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(1.2rem, 4vw, 2.125rem)' }}>0%</span>
+                                                            <div className="text-white card-discount-container" style={{ textShadow: '0 0.0625rem 0.125rem rgba(0,0,0,0.5)' }}>
+                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(.8rem, 2vw, 1.125rem)' }}>0%</span>
                                                                 <span className="font-medium card-discount-text" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.9875rem)', marginLeft: '0.1875rem' }}>{t("passenger.account.discount")}</span>
                                                             </div>
                                                         </div>
                                                         <div className="flex justify-between items-end mt-auto card-bottom-container" style={{ gap: '0.1875rem' }}>
                                                             <div className="flex-1 min-w-0 card-info-container">
-                                                                <p className="text-white font-medium card-ims-number" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5rem)', marginBottom: '0.0625rem', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                {/* <p className="text-white font-medium card-ims-number" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5rem)', marginBottom: '0.0625rem', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
                                                                     {user?.imsNumber || "—"}
-                                                                </p>
-                                                                <p className="text-white font-semibold card-owner-name" style={{ fontSize: 'clamp(0.55rem, 1.5vw, 0.625rem)', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
-                                                                    {user ? `${user.firstName} ${user.lastName}`.toUpperCase() : mockData.name.toUpperCase()}
+                                                                </p> */}
+                                                                <p className="text-white font-semibold card-owner-name leading-[.8]" style={{ fontSize: 'clamp(0.4rem, 1.5vw, 0.325rem)', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                    {user 
+                                                                        ? `${user.firstName}${user.lastName?.[0] ? ` ${user.lastName[0]}.` : ''}`.toUpperCase().trim() 
+                                                                        : (() => {
+                                                                            const parts = mockData.name.split(' ');
+                                                                            return parts[0] + (parts[1] ? ` ${parts[1][0]}.` : '');
+                                                                        })().toUpperCase().trim()
+                                                                    }
                                                                 </p>
                                                             </div>
-                                                            <span className="text-white italic font-semibold shadow-lg inline-block flex-shrink-0 bg-gray-500 card-status-badge" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5625rem)', padding: '0.125rem 0.375rem', borderRadius: '9999px', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.5)' }}>
-                                                                {currentStatus}
+                                                            <span className="text-white italic font-semibold shadow-lg inline-block flex-shrink-0 bg-gray-500 card-status-badge" style={{ fontSize: 'clamp(0.45rem, .8vw, 0.3625rem)', padding: '0.125rem 0.275rem', borderRadius: '9999px', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.5)' }}>
+                                                                {currentStatus.split(' ')[0]}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -1035,16 +1061,16 @@ const AccountPage = () => {
                                         </div>
 
                                         {/* Arrow between cards */}
-                                        <div className="flex items-center justify-center" style={{ width: '15%', flexShrink: 0 }}>
+                                        <div className="flex items-center justify-center" style={{ width: '12%', flexShrink: 0 }}>
                                             <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
                                             <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
                                             <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
                                         </div>
 
                                         {/* Next status card on the right */}
-                                        <div style={{ width: '33.33%', flexShrink: 0 }}>
+                                        <div style={{ width: '40%', flexShrink: 0 }}>
                                             {nextTier && nextTier.id !== currentTier?.id ? (
-                                                <div className="relative shadow-lg overflow-hidden w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.5rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
+                                                <div className="relative shadow-lg overflow-hidden w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.3rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
                                                     {/* Background image */}
                                                     <div className="absolute inset-0">
                                                         <Image
@@ -1079,7 +1105,7 @@ const AccountPage = () => {
 
                                                     <div className="relative z-10 h-full flex flex-col opacity-60">
                                                         {/* Logo */}
-                                                        <div className="flex items-start card-logo-container" style={{ marginBottom: '0.375rem' }}>
+                                                        <div className="flex items-start card-logo-container">
                                                             <div className="card-logo-wrapper" style={{ padding: '0.125rem', borderRadius: '0.25rem' }}>
                                                                 <Image
                                                                     src="/images/logo.png"
@@ -1094,34 +1120,40 @@ const AccountPage = () => {
 
                                                         {/* Discount */}
                                                         <div className="flex-1 flex flex-col justify-center">
-                                                            <div className="text-white card-discount-container" style={{ marginBottom: '0.375rem', textShadow: '0 0.0625rem 0.125rem rgba(0,0,0,0.5)' }}>
-                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(1.2rem, 4vw, 2.125rem)' }}>{Math.round(nextTier.discountPercent * 100)}%</span>
+                                                            <div className="text-white card-discount-container" style={{ textShadow: '0 0.0625rem 0.125rem rgba(0,0,0,0.5)' }}>
+                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(.8rem, 2vw, 1.125rem)' }}>{Math.round(nextTier.discountPercent * 100)}%</span>
                                                                 <span className="font-medium card-discount-text" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.8875rem)', marginLeft: '0.1875rem' }}>{t("passenger.account.discount")}</span>
                                                             </div>
                                                         </div>
-                                                        
+
                                                         {/* Membership ID and Name */}
                                                         <div className="flex justify-between items-end mt-auto card-bottom-container" style={{ gap: '0.1875rem' }}>
                                                             <div className="flex-1 min-w-0 card-info-container">
-                                                                <p className="text-white font-medium card-ims-number" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5rem)', marginBottom: '0.0625rem', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                {/* <p className="text-white font-medium card-ims-number" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5rem)', marginBottom: '0.0625rem', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
                                                                     {user?.imsNumber || "—"}
-                                                                </p>
-                                                                <p className="text-white font-semibold card-owner-name" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.825rem)', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
-                                                                    {user ? `${user.firstName} ${user.lastName}`.toUpperCase() : mockData.name.toUpperCase()}
+                                                                </p> */}
+                                                                <p className="text-white font-semibold card-owner-name leading-[.8]" style={{ fontSize: 'clamp(0.4rem, 1.5vw, 0.325rem)', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                    {user 
+                                                                        ? `${user.firstName}${user.lastName?.[0] ? ` ${user.lastName[0]}.` : ''}`.toUpperCase().trim() 
+                                                                        : (() => {
+                                                                            const parts = mockData.name.split(' ');
+                                                                            return parts[0] + (parts[1] ? ` ${parts[1][0]}.` : '');
+                                                                        })().toUpperCase().trim()
+                                                                    }
                                                                 </p>
                                                             </div>
                                                             <span
                                                                 className="text-white italic font-semibold shadow-lg inline-block flex-shrink-0 card-status-badge"
                                                                 style={{
-                                                                    fontSize: 'clamp(0.45rem, 1.2vw, 0.5625rem)',
-                                                                    padding: '0.125rem 0.375rem',
+                                                                    fontSize: 'clamp(0.45rem, .8vw, 0.3625rem)',
+                                                                    padding: '0.125rem 0.275rem',
                                                                     borderRadius: '9999px',
                                                                     backgroundColor: nextTier.color,
                                                                     boxShadow: `0 0.125rem 0.4375rem 0 ${nextTier.color}40`,
                                                                     textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.5)'
                                                                 }}
                                                             >
-                                                                {nextTier.name}
+                                                                {nextTier.name.split(' ')[0]}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -1130,10 +1162,10 @@ const AccountPage = () => {
                                                 // Если следующий тир равен текущему (максимальный уровень), не показываем
                                                 null
                                             ) : (
-                                                <div className="relative rounded-xl shadow-lg overflow-hidden bg-yellow-500 w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.5rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
+                                                <div className="relative rounded-xl shadow-lg overflow-hidden bg-yellow-500 w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.3rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
                                                     <div className="absolute inset-0 bg-black/20" />
                                                     <div className="relative z-10 h-full flex flex-col">
-                                                        <div className="flex items-start card-logo-container" style={{ marginBottom: '0.375rem' }}>
+                                                        <div className="flex items-start card-logo-container" >
                                                             <div className="card-logo-wrapper" style={{ padding: '0.125rem', borderRadius: '0.25rem' }}>
                                                                 <Image
                                                                     src="/images/logo.png"
@@ -1146,22 +1178,28 @@ const AccountPage = () => {
                                                             </div>
                                                         </div>
                                                         <div className="flex-1 flex flex-col justify-center">
-                                                            <div className="text-white card-discount-container" style={{ marginBottom: '0.375rem', textShadow: '0 0.0625rem 0.125rem rgba(0,0,0,0.5)' }}>
-                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(1rem, 3vw, 1.125rem)' }}>25%</span>
+                                                            <div className="text-white card-discount-container" style={{ textShadow: '0 0.0625rem 0.125rem rgba(0,0,0,0.5)' }}>
+                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(.8rem, 2vw, 1.125rem)' }}>25%</span>
                                                                 <span className="font-medium card-discount-text" style={{ fontSize: 'clamp(0.6rem, 1.5vw, 0.6875rem)', marginLeft: '0.1875rem' }}>{t("passenger.account.discount")}</span>
                                                             </div>
                                                         </div>
                                                         <div className="flex justify-between items-end mt-auto card-bottom-container" style={{ gap: '0.1875rem' }}>
                                                             <div className="flex-1 min-w-0 card-info-container">
-                                                                <p className="text-white font-medium card-ims-number" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5rem)', marginBottom: '0.0625rem', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                {/* <p className="text-white font-medium card-ims-number" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5rem)', marginBottom: '0.0625rem', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
                                                                     {user?.imsNumber || "—"}
-                                                                </p>
-                                                                <p className="text-white font-semibold card-owner-name" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.825rem)', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
-                                                                    {user ? `${user.firstName} ${user.lastName}`.toUpperCase() : mockData.name.toUpperCase()}
+                                                                </p> */}
+                                                                <p className="text-white font-semibold card-owner-name leading-[.8]" style={{ fontSize: 'clamp(0.4rem, 1.5vw, 0.325rem)', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.7)' }}>
+                                                                    {user 
+                                                                        ? `${user.firstName}${user.lastName?.[0] ? ` ${user.lastName[0]}.` : ''}`.toUpperCase().trim() 
+                                                                        : (() => {
+                                                                            const parts = mockData.name.split(' ');
+                                                                            return parts[0] + (parts[1] ? ` ${parts[1][0]}.` : '');
+                                                                        })().toUpperCase().trim()
+                                                                    }
                                                                 </p>
                                                             </div>
-                                                            <span className="text-white italic font-semibold shadow-lg inline-block flex-shrink-0 bg-yellow-600 card-status-badge" style={{ fontSize: 'clamp(0.45rem, 1.2vw, 0.5625rem)', padding: '0.125rem 0.375rem', borderRadius: '9999px', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.5)' }}>
-                                                                {nextStatus}
+                                                            <span className="text-white italic font-semibold shadow-lg inline-block flex-shrink-0 bg-yellow-600 card-status-badge" style={{ fontSize: 'clamp(0.45rem, .8vw, 0.3625rem)', padding: '0.125rem 0.275rem', borderRadius: '9999px', textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.5)' }}>
+                                                                {nextStatus.split(' ')[0]}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -1169,120 +1207,120 @@ const AccountPage = () => {
                                             )}
                                         </div>
                                     </div>
-                                        {/* Trips Option */}
-                                        <div className="flex items-center gap-4 mb-4">
-                                            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                                                <Plane className="h-6 w-6 text-blue-600" />
-                                            </div>
-                                            <div className="flex-1">
-                                                <h3 className="text-lg font-semibold text-white mb-2">{t("passenger.account.trips")}</h3>
-                                                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                                                    <div
-                                                        className="h-full bg-blue-600 rounded-full transition-all duration-500"
-                                                        style={{ width: `${tripsData.target > 0 ? Math.min((tripsData.current / tripsData.target) * 100, 100) : 0}%` }}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="flex flex-col items-end gap-1">
-                                                <span className="text-sm font-semibold text-white">
-                                                    {tripsData.current}/{tripsData.target}
-                                                </span>
-                                                <span className="text-sm font-semibold text-gray-700">
-                                                    {tripsData.target > 0 ? Math.round((tripsData.current / tripsData.target) * 100) : 0}%
-                                                </span>
+                                    {/* Trips Option */}
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                            <Plane className="h-6 w-6 text-blue-600" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="text-lg font-semibold text-white mb-2">{t("passenger.account.trips")}</h3>
+                                            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                                <div
+                                                    className="h-full bg-blue-600 rounded-full transition-all duration-500"
+                                                    style={{ width: `${tripsData.target > 0 ? Math.min((tripsData.current / tripsData.target) * 100, 100) : 0}%` }}
+                                                />
                                             </div>
                                         </div>
-
-                                        {/* OR Divider */}
-                                        <div className="flex items-center gap-4 my-6">
-                                            <div className="flex-1 h-px bg-gray-300"></div>
-                                            <span className="text-sm font-medium text-gray-500">{t("passenger.account.or")}</span>
-                                            <div className="flex-1 h-px bg-gray-300"></div>
-                                        </div>
-
-                                        {/* Monthly Activity Option */}
-                                        <div className="flex items-center gap-4 mb-4">
-                                            <div className="w-12 h-12 relative flex items-center justify-center">
-                                                <svg width={48} height={48} className="transform -rotate-90">
-                                                    <circle
-                                                        cx={24}
-                                                        cy={24}
-                                                        r={18}
-                                                        stroke="#E5E7EB"
-                                                        strokeWidth="4"
-                                                        fill="none"
-                                                    />
-                                                    {/* Чекпойнты для Monthly Activity */}
-                                                    {Array.from({ length: monthlyActivityGoal }, (_, i) => {
-                                                        const angle = (i * 360 / monthlyActivityGoal);
-                                                        const angleRad = (angle * Math.PI) / 180;
-                                                        const checkpointLength = 4;
-                                                        const checkpointInnerRadius = 18 - checkpointLength;
-                                                        const checkpointOuterRadius = 18;
-                                                        const x1 = 24 + checkpointInnerRadius * Math.cos(angleRad);
-                                                        const y1 = 24 + checkpointInnerRadius * Math.sin(angleRad);
-                                                        const x2 = 24 + checkpointOuterRadius * Math.cos(angleRad);
-                                                        const y2 = 24 + checkpointOuterRadius * Math.sin(angleRad);
-                                                        return (
-                                                            <line
-                                                                key={i}
-                                                                x1={x1}
-                                                                y1={y1}
-                                                                x2={x2}
-                                                                y2={y2}
-                                                                stroke="#9CA3AF"
-                                                                strokeWidth="2"
-                                                            />
-                                                        );
-                                                    })}
-                                                    <circle
-                                                        cx={24}
-                                                        cy={24}
-                                                        r={18}
-                                                        stroke="#3B82F6"
-                                                        strokeWidth="4"
-                                                        fill="none"
-                                                        strokeDasharray={2 * Math.PI * 18}
-                                                        strokeDashoffset={2 * Math.PI * 18 * (1 - Math.min((monthlyActivityCompleted / monthlyActivityGoal), 1))}
-                                                        strokeLinecap="round"
-                                                        className="transition-all duration-500"
-                                                    />
-                                                </svg>
-                                            </div>
-                                            <div className="flex-1">
-                                                <h3 className="text-lg font-semibold text-white mb-2">{t("passenger.account.monthlyActivity")}</h3>
-                                                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                                                    <div
-                                                        className="h-full bg-blue-600 rounded-full transition-all duration-500"
-                                                        style={{
-                                                            width: `${monthlyActivityGoal > 0 ? Math.min((monthlyActivityCompleted / monthlyActivityGoal) * 100, 100) : 0}%`
-                                                        }}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="flex flex-col items-end">
-                                                <span className="text-sm font-semibold text-white">
-                                                    {monthlyActivityCompleted}/{monthlyActivityGoal}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        {/* Category Progress Circles */}
-                                        <div className="mt-6">
-                                            <div className="grid grid-cols-3 gap-6">
-                                                {categoriesData.map((category, index) => (
-                                                    <CircularProgress
-                                                        key={index}
-                                                        label={category.name}
-                                                        value={category.value}
-                                                        target={category.target}
-                                                        unit={category.unit}
-                                                    />
-                                                ))}
-                                            </div>
+                                        <div className="flex flex-col items-end gap-1">
+                                            <span className="text-sm font-semibold text-white">
+                                                {tripsData.current}/{tripsData.target}
+                                            </span>
+                                            <span className="text-sm font-semibold text-white">
+                                                {tripsData.target > 0 ? Math.round((tripsData.current / tripsData.target) * 100) : 0}%
+                                            </span>
                                         </div>
                                     </div>
-                               
+
+                                    {/* OR Divider */}
+                                    <div className="flex items-center gap-4 my-6">
+                                        <div className="flex-1 h-px bg-gray-300"></div>
+                                        <span className="text-sm font-medium text-gray-500">{t("passenger.account.or")}</span>
+                                        <div className="flex-1 h-px bg-gray-300"></div>
+                                    </div>
+
+                                    {/* Monthly Activity Option */}
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <div className="w-12 h-12 relative flex items-center justify-center">
+                                            <svg width={48} height={48} className="transform -rotate-90">
+                                                <circle
+                                                    cx={24}
+                                                    cy={24}
+                                                    r={18}
+                                                    stroke="#E5E7EB"
+                                                    strokeWidth="4"
+                                                    fill="none"
+                                                />
+                                                {/* Чекпойнты для Monthly Activity */}
+                                                {Array.from({ length: monthlyActivityGoal }, (_, i) => {
+                                                    const angle = (i * 360 / monthlyActivityGoal);
+                                                    const angleRad = (angle * Math.PI) / 180;
+                                                    const checkpointLength = 4;
+                                                    const checkpointInnerRadius = 18 - checkpointLength;
+                                                    const checkpointOuterRadius = 18;
+                                                    const x1 = 24 + checkpointInnerRadius * Math.cos(angleRad);
+                                                    const y1 = 24 + checkpointInnerRadius * Math.sin(angleRad);
+                                                    const x2 = 24 + checkpointOuterRadius * Math.cos(angleRad);
+                                                    const y2 = 24 + checkpointOuterRadius * Math.sin(angleRad);
+                                                    return (
+                                                        <line
+                                                            key={i}
+                                                            x1={x1}
+                                                            y1={y1}
+                                                            x2={x2}
+                                                            y2={y2}
+                                                            stroke="#9CA3AF"
+                                                            strokeWidth="2"
+                                                        />
+                                                    );
+                                                })}
+                                                <circle
+                                                    cx={24}
+                                                    cy={24}
+                                                    r={18}
+                                                    stroke="#3B82F6"
+                                                    strokeWidth="4"
+                                                    fill="none"
+                                                    strokeDasharray={2 * Math.PI * 18}
+                                                    strokeDashoffset={2 * Math.PI * 18 * (1 - Math.min((monthlyActivityCompleted / monthlyActivityGoal), 1))}
+                                                    strokeLinecap="round"
+                                                    className="transition-all duration-500"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="text-lg font-semibold text-white mb-2">{t("passenger.account.monthlyActivity")}</h3>
+                                            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                                <div
+                                                    className="h-full bg-blue-600 rounded-full transition-all duration-500"
+                                                    style={{
+                                                        width: `${monthlyActivityGoal > 0 ? Math.min((monthlyActivityCompleted / monthlyActivityGoal) * 100, 100) : 0}%`
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-sm font-semibold text-white">
+                                                {monthlyActivityCompleted}/{monthlyActivityGoal}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Category Progress Circles */}
+                                    <div className="mt-6">
+                                        <div className="grid grid-cols-3 gap-6">
+                                            {categoriesData.map((category, index) => (
+                                                <CircularProgress
+                                                    key={index}
+                                                    label={category.name}
+                                                    value={category.value}
+                                                    target={category.target}
+                                                    unit={category.unit}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </>
                     )}
