@@ -105,18 +105,18 @@ const CircularProgress = ({
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                     {label === "Gym" ? (
                         <>
-                            <div className="text-xs font-semibold text-gray-800">{t("passenger.account.active")}</div>
-                            <div className="text-[10px] text-gray-500">{t("passenger.account.subscription")}</div>
+                            <div className="text-xs font-semibold text-brand-blue">{t("passenger.account.active")}</div>
+                            <div className="text-[10px] text-white">{t("passenger.account.subscription")}</div>
                         </>
                     ) : (
                         <>
-                            <div className="text-xs font-semibold text-gray-800">{value}</div>
-                            {unit && <div className="text-[10px] text-gray-500">{unit}</div>}
+                            <div className="text-xs font-semibold text-brand-blue">{value}</div>
+                            {unit && <div className="text-[10px] text-white">{unit}</div>}
                         </>
                     )}
                 </div>
             </div>
-            <div className="text-xs font-medium text-gray-700 text-center max-w-[80px]">
+            <div className="text-xs font-medium text-white text-center max-w-[80px]">
                 {label}
             </div>
         </div>
@@ -607,10 +607,10 @@ const AccountPage = () => {
                     {!isLoading && activeTab === "details" && (
                         <>
                             {/* User Info Section */}
-                            <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm p-6 border border-white/30 mb-6">
+                            <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-6 border border-white/20 mb-6">
                                 <div className="flex flex-col items-center mb-4">
                                     <div className="text-center">
-                                        <h2 className="text-xl font-semibold mb-2">
+                                        <h2 className="text-xl font-semibold mb-2 text-white">
                                             {user ? `${user.firstName} ${user.lastName}` : mockData.name}
                                         </h2>
                                         {currentTier && (
@@ -622,8 +622,8 @@ const AccountPage = () => {
                                             </div>
                                         )}
                                         <div className="mt-3">
-                                            <p className="text-xs text-gray-500">{t("passenger.account.imsSavvyMember")}</p>
-                                            <p className="text-sm font-medium text-gray-800">
+                                            <p className="text-xs text-gray-200">{t("passenger.account.imsSavvyMember")}</p>
+                                            <p className="text-sm font-medium text-white">
                                                 {user?.imsNumber || "—"}
                                             </p>
                                         </div>
@@ -632,34 +632,34 @@ const AccountPage = () => {
 
                                 {/* Miles Info */}
                                 <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-6">
-                                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2 sm:p-4 border border-white/30 flex items-center justify-between gap-1 sm:gap-3">
+                                    <div className="bg-white/10 backdrop-blur-md rounded-xl p-2 sm:p-4 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] flex items-center justify-between gap-1 sm:gap-3">
                                         <div className="flex items-center gap-1">
-                                            <p className="text-xs sm:text-sm text-gray-600">{t("passenger.account.totalMiles")}</p>
+                                            <p className="text-xs sm:text-sm text-gray-200">{t("passenger.account.totalMiles")}</p>
                                             <InfoTooltip
                                                 text={t("passenger.account.totalMilesTooltip")}
                                                 position="top"
                                             />
                                         </div>
-                                        <p className="text-base sm:text-xl font-bold text-gray-900">
+                                        <p className="text-base sm:text-xl font-bold text-white">
                                             {milesSummary ? milesSummary.totalMiles.toLocaleString() : mockData.totalMiles.toLocaleString()}
                                         </p>
                                     </div>
-                                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2 sm:p-4 border border-white/30 flex items-center justify-between gap-1 sm:gap-3">
+                                    <div className="bg-white/10 backdrop-blur-md rounded-xl p-2 sm:p-4 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] flex items-center justify-between gap-1 sm:gap-3">
                                         <div className="flex items-center gap-1">
-                                            <p className="text-xs sm:text-sm text-gray-600">{t("passenger.account.pending")}</p>
+                                            <p className="text-xs sm:text-sm text-gray-200">{t("passenger.account.pending")}</p>
                                             <InfoTooltip
                                                 text={t("passenger.account.pendingTooltip")}
                                                 position="top"
                                             />
                                         </div>
-                                        <p className="text-base sm:text-xl font-bold text-gray-900">
+                                        <p className="text-base sm:text-xl font-bold text-white">
                                             {milesSummary ? milesSummary.unconfirmed.toLocaleString() : mockData.pendingMiles.toLocaleString()}
                                         </p>
                                     </div>
                                 </div>
 
                                 {/* QR Code Section */}
-                                <div className="flex flex-col items-center mb-6">
+                                <div className="flex flex-col items-center mb-12">
                                     <div className="relative">
                                         <div className="bg-white rounded-lg p-4 shadow-sm">
                                             <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center">
@@ -828,7 +828,16 @@ const AccountPage = () => {
                                 </Transition>
 
                                 {/* Status Timeline - Last 3 Months */}
-                                <div className="pt-4 px-6 pb-6 mb-6">
+                                <div className="py-8 mb-6 border-t border-white">
+                                    <h2 className="text-lg font-semibold text-white mb-2 text-center">Your progess</h2>
+                                    
+                                    <div className="flex items-center gap-1 mb-2">
+                                        <h4 className="text-sm text-white text-left">Last 3 months</h4>
+                                        <InfoTooltip
+                                            text={t("passenger.account.lastThreeMonthsTooltip") || "Shows your tier status for the last 3 months"}
+                                            position="top"
+                                        />
+                                    </div>
                                     <div className="relative">
                                         {loadingTierHistories ? (
                                             <div className="text-center py-4 text-gray-500 text-sm">{t("passenger.account.loadingTierHistories")}</div>
@@ -836,7 +845,7 @@ const AccountPage = () => {
                                             <div className="text-center py-4 text-gray-500 text-sm">{t("passenger.account.noTierData")}</div>
                                         ) : (
                                             <>
-                                                <div className="h-4 overflow-visible flex gap-1">
+                                                <div className="h-8 overflow-visible flex gap-1">
                                                     {lastThreeMonths.map((monthData, index) => {
                                                         // Получаем фон из тира
                                                         const getTierBackground = () => {
@@ -873,10 +882,10 @@ const AccountPage = () => {
                                                                     />
                                                                 </div>
                                                                 {/* Overlay for better text readability */}
-                                                                <div className="absolute inset-0 bg-black/30" />
+                                                                <div className="absolute inset-0 bg-black/30 py-3" />
                                                                 {/* Status label inside segment */}
                                                                 <div className="absolute inset-0 flex items-center justify-center z-10">
-                                                                    <span className="text-[10px] font-medium text-white">
+                                                                    <span className="text-[12px] font-medium text-white">
                                                                         {monthData.status}
                                                                     </span>
                                                                 </div>
@@ -892,7 +901,7 @@ const AccountPage = () => {
                                                             key={index}
                                                             className="flex flex-col items-center flex-1"
                                                         >
-                                                            <span className="text-xs text-gray-500 font-medium">{monthData.month}</span>
+                                                            <span className="text-xs text-white font-medium">{monthData.month}</span>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -904,16 +913,16 @@ const AccountPage = () => {
                                 
 
                                     {/* Status Progress and Monthly Activity Section */}
-                                    <div className="bg-white/80 py-4 px-6 rounded-xl shadow-sm border border-white/30">
+                                    <div>
                                     {/* Status Cards - Current and Next */}
                                     <div className="mb-3">
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-2 text-center">
-                                            You are on your way to
+                                        <h3 className="text-sm text-white text-left">
+                                            Progress this month
                                         </h3>
                                     </div>
                                     <div className="flex items-center justify-between mb-8" style={{ gap: 'clamp(8px, 2vw, 16px)' }}>
                                         {/* Current status card on the left */}
-                                        <div className="flex-1 min-w-0">
+                                        <div style={{ width: '33.33%', flexShrink: 0 }}>
                                             {currentTier ? (
                                                 <div className="relative shadow-lg overflow-hidden w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.5rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
                                                     {/* Background image */}
@@ -1026,12 +1035,14 @@ const AccountPage = () => {
                                         </div>
 
                                         {/* Arrow between cards */}
-                                        <div className="flex items-center justify-center flex-shrink-0" style={{ width: 'clamp(20px, 4vw, 32px)' }}>
+                                        <div className="flex items-center justify-center" style={{ width: '15%', flexShrink: 0 }}>
+                                            <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
+                                            <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
                                             <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
                                         </div>
 
                                         {/* Next status card on the right */}
-                                        <div className="flex-1 min-w-0">
+                                        <div style={{ width: '33.33%', flexShrink: 0 }}>
                                             {nextTier && nextTier.id !== currentTier?.id ? (
                                                 <div className="relative shadow-lg overflow-hidden w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.5rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
                                                     {/* Background image */}
@@ -1164,7 +1175,7 @@ const AccountPage = () => {
                                                 <Plane className="h-6 w-6 text-blue-600" />
                                             </div>
                                             <div className="flex-1">
-                                                <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("passenger.account.trips")}</h3>
+                                                <h3 className="text-lg font-semibold text-white mb-2">{t("passenger.account.trips")}</h3>
                                                 <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                                                     <div
                                                         className="h-full bg-blue-600 rounded-full transition-all duration-500"
@@ -1173,7 +1184,7 @@ const AccountPage = () => {
                                                 </div>
                                             </div>
                                             <div className="flex flex-col items-end gap-1">
-                                                <span className="text-sm font-semibold text-gray-900">
+                                                <span className="text-sm font-semibold text-white">
                                                     {tripsData.current}/{tripsData.target}
                                                 </span>
                                                 <span className="text-sm font-semibold text-gray-700">
@@ -1239,7 +1250,7 @@ const AccountPage = () => {
                                                 </svg>
                                             </div>
                                             <div className="flex-1">
-                                                <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("passenger.account.monthlyActivity")}</h3>
+                                                <h3 className="text-lg font-semibold text-white mb-2">{t("passenger.account.monthlyActivity")}</h3>
                                                 <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                                                     <div
                                                         className="h-full bg-blue-600 rounded-full transition-all duration-500"
@@ -1250,7 +1261,7 @@ const AccountPage = () => {
                                                 </div>
                                             </div>
                                             <div className="flex flex-col items-end">
-                                                <span className="text-sm font-semibold text-gray-900">
+                                                <span className="text-sm font-semibold text-white">
                                                     {monthlyActivityCompleted}/{monthlyActivityGoal}
                                                 </span>
                                             </div>
@@ -1278,7 +1289,7 @@ const AccountPage = () => {
 
                     {/* Recent Transactions Tab */}
                     {!isLoading && activeTab === "transactions" && (
-                        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm p-6 border border-white/30">
+                        <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-6 border border-white/20">
                             {loadingTransactions ? (
                                 <div className="text-center py-8">
                                     <div className="text-gray-500">{t("passenger.account.loadingTransactions")}</div>
@@ -1315,7 +1326,7 @@ const AccountPage = () => {
                                                                         <span className="text-sm text-gray-600">
                                                                             {formatDate(transaction.date)}
                                                                         </span>
-                                                                        <span className="text-sm font-medium text-gray-900">
+                                                                        <span className="text-sm font-medium text-white">
                                                                             {transaction.category}
                                                                         </span>
                                                                     </div>

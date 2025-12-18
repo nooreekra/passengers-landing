@@ -61,7 +61,7 @@ const CircularProgress = ({
                 />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="text-xs font-semibold text-gray-800 text-center leading-tight px-1">
+                <div className="text-xs font-semibold text-white text-center leading-tight px-1">
                     {target.toLocaleString()}
                 </div>
             </div>
@@ -216,7 +216,7 @@ const WalletPage = () => {
                         {activeTab === "accounts" && (
                             <>
                                 {loading ? (
-                                    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm p-6 border border-white/30">
+                                    <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-6 border border-white/20">
                                         <Loader text={t("passenger.wallet.loading") || "Loading..."} />
                                     </div>
                                 ) : (
@@ -226,37 +226,37 @@ const WalletPage = () => {
                                             {/* All time Miles, Available to redeem and Pending */}
                                             <div className="grid grid-cols-2 gap-4">
                                                 {/* All time Miles - полная ширина, сверху */}
-                                                <div className="col-span-2 bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/30 flex items-center justify-between gap-3">
+                                                <div className="col-span-2 bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] flex items-center justify-between gap-3">
                                                     <div className="flex items-center gap-1">
-                                                        <p className="text-sm text-gray-600">{t("passenger.wallet.allTimeMiles")}</p>
+                                                        <p className="text-sm text-gray-200">{t("passenger.wallet.allTimeMiles")}</p>
                                                         <InfoTooltip 
                                                             text={t("passenger.wallet.allTimeMilesTooltip")}
                                                             position="top"
                                                         />
                                                     </div>
-                                                    <p className="text-xl font-bold text-gray-900">
+                                                    <p className="text-xl font-bold text-white">
                                                         {allTimeMiles.toLocaleString()}
                                                     </p>
                                                 </div>
 
                                                 {/* Available to redeem - снизу, первая колонка */}
-                                                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/30 justify-between flex flex-col gap-2">
-                                                    <p className="text-sm text-gray-600">{t("passenger.wallet.availableToRedeem")}</p>
-                                                    <p className="text-xl font-bold text-gray-900">
+                                                <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] justify-between flex flex-col gap-2">
+                                                    <p className="text-sm text-gray-200">{t("passenger.wallet.availableToRedeem")}</p>
+                                                    <p className="text-xl font-bold text-white">
                                                         {availableToRedeem.toLocaleString()}
                                                     </p>
                                                 </div>
 
                                                 {/* Pending - снизу, вторая колонка */}
-                                                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/30 justify-between flex flex-col gap-2">
+                                                <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] justify-between flex flex-col gap-2">
                                                     <div className="flex items-center gap-1">
-                                                        <p className="text-sm text-gray-600">{t("passenger.wallet.pending")}</p>
+                                                        <p className="text-sm text-gray-200">{t("passenger.wallet.pending")}</p>
                                                         <InfoTooltip 
                                                             text={t("passenger.wallet.pendingTooltip")}
                                                             position="top"
                                                         />
                                                     </div>
-                                                    <p className="text-xl font-bold text-gray-900">
+                                                    <p className="text-xl font-bold text-white">
                                                         {pending.toLocaleString()}
                                                     </p>
                                                 </div>
@@ -273,9 +273,9 @@ const WalletPage = () => {
                                         </div>
 
                                         {/* Wishlist Section */}
-                                        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm p-6 border border-white/30">
+                                        <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-6 border border-white/20">
                                             <div className="flex items-center justify-between mb-4">
-                                                <h3 className="font-semibold">{t("passenger.wallet.wishlist")}</h3>
+                                                <h3 className="font-semibold text-white">{t("passenger.wallet.wishlist")}</h3>
                                                 <button
                                                     onClick={() => router.push("/passenger/wallet/wishlist/new")}
                                                     className="bg-brand-blue text-white rounded-full p-2 hover:bg-[#0056C0] transition-all"
@@ -290,12 +290,12 @@ const WalletPage = () => {
                                                         <div
                                                             key={item.id}
                                                             onClick={() => router.push(`/passenger/wallet/wishlist/${item.id}`)}
-                                                            className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-all"
+                                                            className="flex items-center gap-3 p-3 bg-white/10 backdrop-blur-sm rounded-lg cursor-pointer hover:bg-white/15 transition-all border border-white/10"
                                                         >
                                                             {/* Content */}
                                                             <div className="flex-1 min-w-0">
-                                                                <p className="font-semibold text-sm">{item.name}</p>
-                                                                <p className="text-xs text-gray-500 underline">{item.destination}</p>
+                                                                <p className="font-semibold text-sm text-white">{item.name}</p>
+                                                                <p className="text-xs text-gray-200 underline">{item.destination}</p>
                                                             </div>
                                                             
                                                             {/* Circular Progress on the right */}
@@ -308,7 +308,7 @@ const WalletPage = () => {
                                                     ))}
                                                 </div>
                                             ) : (
-                                                <p className="text-gray-500 text-sm text-center py-4">
+                                                <p className="text-gray-200 text-sm text-center py-4">
                                                     {t("passenger.wallet.noWishlistItems")}
                                                 </p>
                                             )}
@@ -320,13 +320,13 @@ const WalletPage = () => {
 
                         {/* History Tab Content */}
                         {activeTab === "history" && (
-                            <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm p-6 border border-white/30">
+                            <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-6 border border-white/20">
                                 {loadingTransactions ? (
                                     <div className="py-8">
                                         <Loader text={t("passenger.wallet.loading") || "Loading..."} />
                                     </div>
                                 ) : transactions.length === 0 ? (
-                                    <p className="text-gray-500 text-sm text-center py-8">
+                                    <p className="text-gray-200 text-sm text-center py-8">
                                         {t("passenger.wallet.noTransactions")}
                                     </p>
                                 ) : (
@@ -334,11 +334,11 @@ const WalletPage = () => {
                                         {transactions.map((transaction) => (
                                             <div
                                                 key={transaction.id}
-                                                className="p-4 bg-gray-50 rounded-lg border border-gray-200"
+                                                className="p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/10"
                                             >
                                                 <div className="flex items-start justify-between mb-2">
                                                     <div className="flex-1">
-                                                        <p className="font-semibold text-sm text-gray-900">
+                                                        <p className="font-semibold text-sm text-white">
                                                             {transaction.description || (transaction.category ? (() => {
                                                                 const categoryKey = transaction.category.toLowerCase().replace(/\s+/g, '');
                                                                 const translated = t(`passenger.wallet.transactionCategories.${categoryKey}`, { defaultValue: transaction.category });
@@ -346,7 +346,7 @@ const WalletPage = () => {
                                                             })() : '')}
                                                         </p>
                                                         {transaction.category && (
-                                                            <p className="text-xs text-gray-500 mt-1">
+                                                            <p className="text-xs text-gray-200 mt-1">
                                                                 {(() => {
                                                                     const categoryKey = transaction.category.toLowerCase().replace(/\s+/g, '');
                                                                     const translated = t(`passenger.wallet.transactionCategories.${categoryKey}`, { defaultValue: transaction.category });
@@ -377,7 +377,7 @@ const WalletPage = () => {
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <p className="text-xs text-gray-400 mt-2">
+                                                <p className="text-xs text-gray-300 mt-2">
                                                     {new Date(transaction.createdAt).toLocaleDateString(
                                                         i18n.language === 'ru' ? 'ru-RU' : 
                                                         i18n.language === 'kk' ? 'kk-KZ' : 'en-US',

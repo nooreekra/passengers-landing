@@ -133,24 +133,24 @@ const MorePage = () => {
                                         router.push(item.href);
                                     }
                                 }}
-                                className="w-full bg-white/80 backdrop-blur-sm rounded-xl shadow-sm p-4 border border-white/30 flex items-center gap-4 hover:bg-white/90 transition-colors"
+                                className="w-full bg-white/10 backdrop-blur-md rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-4 border border-white/20 flex items-center gap-4 hover:bg-white/15 transition-all"
                             >
-                                <div className="bg-action-primary-light rounded-lg p-2">
-                                    <Icon className="h-5 w-5 text-action-primary" />
+                                <div className="bg-white/10 rounded-lg p-2 border border-white/20">
+                                    <Icon className="h-5 w-5 text-white" />
                                 </div>
-                                <span className="font-medium flex-1 text-left">{item.label}</span>
+                                <span className="font-medium flex-1 text-left text-white">{item.label}</span>
                             </button>
                         );
                     })}
 
                     <button
                         onClick={handleLogout}
-                        className="w-full bg-red-50/80 backdrop-blur-sm rounded-xl shadow-sm p-4 border border-red-200/50 flex items-center gap-4 hover:bg-red-50/90 transition-colors mt-4"
+                        className="w-full bg-red-500/10 backdrop-blur-md rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-4 border border-red-500/20 flex items-center gap-4 hover:bg-red-500/15 transition-all mt-4"
                     >
-                        <div className="bg-red-100 rounded-lg p-2">
-                            <LogOut className="h-5 w-5 text-red-600" />
+                        <div className="bg-white/10 rounded-lg p-2 border border-white/20">
+                            <LogOut className="h-5 w-5 text-white" />
                         </div>
-                        <span className="font-medium flex-1 text-left text-red-600">{t("passenger.more.logout")}</span>
+                        <span className="font-medium flex-1 text-left text-white">{t("passenger.more.logout")}</span>
                     </button>
                 </div>
                 </div>

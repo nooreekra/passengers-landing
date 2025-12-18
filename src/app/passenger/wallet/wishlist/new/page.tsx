@@ -183,13 +183,13 @@ const NewWishlistPage = () => {
 
             <div className="relative px-4 pt-4 pb-6">
                 <div className="max-w-[600px] mx-auto">
-                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-white/30">
-                        <h1 className="text-2xl font-semibold">{t("passenger.wallet.wishlist")}</h1>
+                    <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
+                        <h1 className="text-2xl font-semibold text-white">{t("passenger.wallet.wishlist")}</h1>
                         
                         <form onSubmit={handleSubmit} className="space-y-6">
                             {/* Name Field */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-white mb-2">
                                     {t("passenger.wallet.name")}
                                 </label>
                                 <div className="relative">
@@ -214,7 +214,7 @@ const NewWishlistPage = () => {
                             {isCustomName && (
                                 <div className="space-y-4 pl-4 border-l-2 border-action-primary">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label className="block text-sm font-medium text-white mb-2">
                                             {t("passenger.wallet.name")}
                                         </label>
                                         <input
@@ -231,7 +231,7 @@ const NewWishlistPage = () => {
 
                             {/* Country Field */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-white mb-2">
                                     {t("passenger.wallet.country") || "Country"}
                                 </label>
                                 <SearchableSelect
@@ -246,8 +246,8 @@ const NewWishlistPage = () => {
                             {/* City Field */}
                             {selectedCountry && (
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        {t("passenger.wallet.city") || "City"} <span className="text-xs text-gray-500">({t("passenger.wallet.optional") || "optional"})</span>
+                                    <label className="block text-sm font-medium text-white mb-2">
+                                        {t("passenger.wallet.city") || "City"} <span className="text-xs text-gray-200">({t("passenger.wallet.optional") || "optional"})</span>
                                     </label>
                                     <SearchableSelect
                                         value={selectedCity}
@@ -261,9 +261,9 @@ const NewWishlistPage = () => {
 
                             {/* Target Trip Field */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-white mb-2">
                                     {t("passenger.wallet.targetTrip")}
-                                    <span className="ml-2 text-xs text-gray-500">
+                                    <span className="ml-2 text-xs text-gray-200">
                                         ({t("passenger.wallet.setMilesAmountRequired")})
                                     </span>
                                 </label>
@@ -280,9 +280,9 @@ const NewWishlistPage = () => {
 
                             {/* Set Rules Field */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-white mb-2">
                                     {t("passenger.wallet.setRules")}
-                                    <span className="ml-2 text-xs text-gray-500">
+                                    <span className="ml-2 text-xs text-gray-200">
                                         ({t("passenger.wallet.percentOfTransactions")})
                                     </span>
                                 </label>
@@ -308,7 +308,7 @@ const NewWishlistPage = () => {
                             {rules === "% of each transaction" && (
                                 <div className="space-y-4 pl-4 border-l-2 border-action-primary">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label className="block text-sm font-medium text-white mb-2">
                                             {t("passenger.wallet.percentOfEachTransaction")}
                                         </label>
                                         <div className="flex items-center gap-2">

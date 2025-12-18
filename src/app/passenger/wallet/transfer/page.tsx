@@ -127,13 +127,13 @@ const TransferPage = () => {
 
             <div className="relative px-4 pt-4 pb-6">
                 <div className="max-w-[600px] mx-auto">
-                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-white/30">
-                        <h1 className="text-2xl font-semibold">{t("passenger.wallet.transferMiles")}</h1>
+                    <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
+                        <h1 className="text-2xl font-semibold text-white">{t("passenger.wallet.transferMiles")}</h1>
                         
                         <form onSubmit={handleSubmit} className="space-y-4">
                             {/* From Field */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-white mb-2">
                                     {t("passenger.wallet.from")}
                                 </label>
                                 <div className="relative">
@@ -166,7 +166,7 @@ const TransferPage = () => {
 
                             {/* To Field */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-white mb-2">
                                     {t("passenger.wallet.to")}
                                 </label>
                                 <div className="relative">
@@ -199,7 +199,7 @@ const TransferPage = () => {
 
                             {/* Amount Field */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-white mb-2">
                                     {t("passenger.wallet.amount")}
                                 </label>
                                 <input

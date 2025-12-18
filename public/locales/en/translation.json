@@ -1020,13 +1020,14 @@
             "categoryDescription": "This is a {{name}} category. Here you can find all available offers and partners in this category.",
             "partnerDescription": "This is a {{name}} partner. Learn more about our special offers and promotions.",
             "categories": {
-                "airline": "Airline",
+                "airline": "Airlines",
                 "hotel": "Hotels",
-                "gym": "Gym",
-                "bank": "Bank",
-                "restaurant": "Restaurant",
+                "gym": "Gyms",
+                "bank": "Banks",
+                "restaurant": "Restaurants",
                 "coffee": "Coffee"
-            }
+            },
+            "readMore": "Read more"
         },
         "account": {
             "title": "My account",
@@ -1037,6 +1038,7 @@
             "totalMilesTooltip": "Total number of miles accumulated over the entire participation period in the loyalty program",
             "pending": "Pending",
             "pendingTooltip": "Miles that are in the process of being credited and will be added to your balance after confirmation",
+            "lastThreeMonthsTooltip": "Shows your tier status progression for the last 3 months",
             "loyaltyRewards": "Loyalty Rewards",
             "completeTicketTransactions": "Complete ticket transactions quickly by scanning your digital card.",
             "copyMembershipId": "Copy membership ID",

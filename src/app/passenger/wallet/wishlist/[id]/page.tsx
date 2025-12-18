@@ -193,9 +193,9 @@ const WishlistProgressPage = () => {
             <div className="relative px-4 pt-4 pb-6">
                 <div className="max-w-[600px] mx-auto space-y-4">
                     {/* Wishlist Title with Edit and Delete Buttons and Progress */}
-                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-white/30">
+                    <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
                         <div className="flex items-center justify-between mb-6">
-                            <h1 className="text-2xl font-semibold">{wishlistData.name}</h1>
+                            <h1 className="text-2xl font-semibold text-white">{wishlistData.name}</h1>
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={() => router.push(`/passenger/wallet/wishlist/${wishlistId}/edit`)}
@@ -216,14 +216,14 @@ const WishlistProgressPage = () => {
                         {/* Progress and Target */}
                         <div className="grid grid-cols-2 gap-4 mb-4">
                             <div>
-                                <p className="text-sm text-gray-600 mb-1">{t("passenger.wallet.progress")}</p>
-                                <p className="text-2xl font-bold text-gray-900">
+                                <p className="text-sm text-gray-200 mb-1">{t("passenger.wallet.progress")}</p>
+                                <p className="text-2xl font-bold text-white">
                                     {wishlistData.progress.toLocaleString()} Miles
                                 </p>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600 mb-1">{t("passenger.wallet.target")}</p>
-                                <p className="text-2xl font-bold text-gray-900">
+                                <p className="text-sm text-gray-200 mb-1">{t("passenger.wallet.target")}</p>
+                                <p className="text-2xl font-bold text-white">
                                     {wishlistData.target.toLocaleString()} Miles
                                 </p>
                             </div>
@@ -236,15 +236,15 @@ const WishlistProgressPage = () => {
                                 style={{ width: `${Math.min(progressPercentage, 100)}%` }}
                             />
                         </div>
-                        <p className="text-xs text-gray-500 text-center">
+                        <p className="text-xs text-gray-200 text-center">
                             {progressPercentage.toFixed(1)}% {t("passenger.wallet.complete")}
                         </p>
                     </div>
 
                     {/* Rules Set */}
-                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-white/30">
-                        <h3 className="text-lg font-semibold">{t("passenger.wallet.rulesSet")}</h3>
-                        <p className="text-sm text-gray-600">{wishlistData.rules}</p>
+                    <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
+                        <h3 className="text-lg font-semibold text-white">{t("passenger.wallet.rulesSet")}</h3>
+                        <p className="text-sm text-gray-200">{wishlistData.rules}</p>
                     </div>
                 </div>
             </div>

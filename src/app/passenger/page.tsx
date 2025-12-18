@@ -825,7 +825,7 @@ const PassengerDashboardPage = () => {
                         }}
                     >
                         <div 
-                            className="w-16 h-16 bg-white/70 backdrop-blur-sm rounded-full flex flex-col items-center justify-center border-2 border-brand-blue shadow-lg overflow-hidden relative p-1"
+                            className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-full flex flex-col items-center justify-center border-2 border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] overflow-hidden relative p-1"
                             style={halfPosition === 'top' ? { 
                                 marginTop: '-32px'
                             } : {
@@ -834,13 +834,13 @@ const PassengerDashboardPage = () => {
                         >
                             {category.iconComponent ? (
                                 <>
-                                    <category.iconComponent className="w-5 h-5 text-brand-blue flex-shrink-0" />
-                                    <span className="text-[9px] text-brand-blue font-semibold text-center leading-tight truncate w-full px-0.5 mt-0.5">
+                                    <category.iconComponent className="w-5 h-5 text-white flex-shrink-0" />
+                                    <span className="text-[9px] text-white font-semibold text-center leading-tight truncate w-full px-0.5 mt-0.5">
                                         {category.name}
                                     </span>
                                 </>
                             ) : (
-                                <span className="text-[10px] text-brand-blue text-center px-1 font-semibold leading-tight truncate w-full">
+                                <span className="text-[10px] text-white text-center px-1 font-semibold leading-tight truncate w-full">
                                     {category.name}
                                 </span>
                             )}
@@ -1122,16 +1122,16 @@ const PassengerDashboardPage = () => {
                             }
                         }}
                     >
-                        <div className="w-16 h-16 bg-white/70 backdrop-blur-sm rounded-full flex flex-col items-center justify-center border-2 border-brand-blue shadow-lg cursor-pointer hover:border-opacity-80 hover:bg-white/80 transition-all overflow-hidden relative p-1">
+                        <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-full flex flex-col items-center justify-center border-2 border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] cursor-pointer hover:border-white/35 hover:bg-white/15 transition-all overflow-hidden relative p-1">
                             {category.iconComponent ? (
                                 <>
-                                    <category.iconComponent className="w-5 h-5 text-brand-blue flex-shrink-0" />
-                                    <span className="text-[9px] text-brand-blue font-semibold text-center leading-tight truncate w-full px-0.5 mt-0.5">
+                                    <category.iconComponent className="w-5 h-5 text-white flex-shrink-0" />
+                                    <span className="text-[9px] text-white font-semibold text-center leading-tight truncate w-full px-0.5 mt-0.5">
                                         {category.name}
                                     </span>
                                 </>
                             ) : (
-                                <span className="text-[10px] text-brand-blue text-center px-1 font-semibold leading-tight truncate w-full">
+                                <span className="text-[10px] text-white text-center px-1 font-semibold leading-tight truncate w-full">
                                     {category.name}
                                 </span>
                             )}
@@ -1332,7 +1332,7 @@ const PassengerDashboardPage = () => {
                                 }
                             }}
                         >
-                            <div className="w-16 h-16 bg-white/60 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-brand-blue shadow-sm cursor-pointer hover:border-opacity-80 transition-colors overflow-hidden relative">
+                            <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border-2 border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] cursor-pointer hover:border-white/35 hover:bg-white/15 transition-all overflow-hidden relative">
                                 {partner.businessLogo ? (
                                     <Image
                                         src={partner.businessLogo}
@@ -1388,7 +1388,7 @@ const PassengerDashboardPage = () => {
                     <select
                         value={selectedCountryCode}
                         onChange={(e) => setSelectedCountryCode(e.target.value)}
-                        className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-md border border-white/30 text-xs font-medium text-white outline-none cursor-pointer hover:bg-white/30 transition-colors appearance-none pr-8"
+                        className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-md border border-white/20 text-xs font-medium text-white outline-none cursor-pointer hover:bg-white/15 hover:border-white/35 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.1)] appearance-none pr-8"
                         disabled={loadingCountries}
                         style={{
                             backgroundImage: loadingCountries ? 'none' : 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 12 12\'%3E%3Cpath fill=\'white\' d=\'M6 9L1 4h10z\'/%3E%3C/svg%3E")',
@@ -1561,11 +1561,11 @@ const PassengerDashboardPage = () => {
                     {/* My Account */}
                     <button
                         onClick={() => router.push("/passenger/account")}
-                        className="bg-transparent backdrop-blur-sm border-2 border-white/30 rounded-xl 
-                        p-4 flex flex-col items-center justify-center gap-2 hover:border-brand-blue 
-                        transition-all shadow-lg cursor-pointer w-[160px] max-w-[200px]"
+                        className="bg-white/10 backdrop-blur-md border-2 border-white/20 rounded-xl 
+                        p-4 flex flex-col items-center justify-center gap-2 hover:border-white/35 hover:bg-white/15
+                        transition-all shadow-[0_4px_20px_rgba(0,0,0,0.1)] cursor-pointer w-[160px] max-w-[200px]"
                     >
-                        <div className="bg-white/20 backdrop-blur-sm rounded-full p-2">
+                        <div className="bg-white/10 backdrop-blur-md rounded-full p-2 border border-white/20">
                             <User className="h-5 w-5 text-white" />
                         </div>
                         <div className="text-center">
@@ -1576,11 +1576,11 @@ const PassengerDashboardPage = () => {
                     {/* Book a Trip */}
                     <button
                         onClick={() => router.push("/passenger/trips")}
-                        className="bg-transparent backdrop-blur-sm border-2 border-white/30 rounded-xl 
-                        p-4 flex flex-col items-center justify-center gap-2 hover:border-brand-blue 
-                        transition-all shadow-lg cursor-pointer w-[160px] max-w-[200px]"
+                        className="bg-white/10 backdrop-blur-md border-2 border-white/20 rounded-xl 
+                        p-4 flex flex-col items-center justify-center gap-2 hover:border-white/35 hover:bg-white/15
+                        transition-all shadow-[0_4px_20px_rgba(0,0,0,0.1)] cursor-pointer w-[160px] max-w-[200px]"
                     >
-                        <div className="bg-white/20 backdrop-blur-sm rounded-full p-2">
+                        <div className="bg-white/10 backdrop-blur-md rounded-full p-2 border border-white/20">
                             <FaPlane className="h-5 w-5 text-white" />
                         </div>
                         <div className="text-center">
@@ -1703,9 +1703,6 @@ const PassengerDashboardPage = () => {
                                         {/* Name и Description поверх изображения внизу */}
                                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent px-6 py-4">
                                             <div className="max-w-[600px] mx-auto w-full">
-                                                <h3 className="font-semibold text-white text-lg mb-2">
-                                                    {selectedStory.name}
-                                                </h3>
                                                 {selectedStory.description && (
                                                     <button
                                                         onClick={(e) => {
@@ -1722,7 +1719,7 @@ const PassengerDashboardPage = () => {
                                                             setIsDescriptionModalOpen(true);
                                                         }}
                                                     >
-                                                        {selectedStory.description}
+                                                        {t('passenger.home.readMore')}
                                                     </button>
                                                 )}
                                                 {!selectedStory.description && (
