@@ -1041,6 +1041,10 @@ const AccountPage = () => {
                                                 </>
                                             )}
                                         </div>
+                                        {/* Status benefits note */}
+                                        <p className="text-xs text-white/80 text-center mt-4">
+                                            {t("passenger.account.statusBenefitsNote")}
+                                        </p>
                                     </div>
                                 </div>
 
