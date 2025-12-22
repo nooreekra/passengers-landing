@@ -9,6 +9,8 @@ interface InfoTooltipProps {
   iconClassName?: string;
   tooltipClassName?: string;
   position?: "top" | "bottom" | "left" | "right";
+  bgColor?: "gray" | "blue";
+  iconColor?: "gray" | "blue";
 }
 
 export default function InfoTooltip({
@@ -16,9 +18,15 @@ export default function InfoTooltip({
   className = "",
   iconClassName = "",
   tooltipClassName = "",
-  position = "top"
+  position = "top",
+  bgColor = "gray",
+  iconColor = "gray"
 }: InfoTooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
+  
+  // Проверяем, задана ли ширина в tooltipClassName
+  const hasCustomWidth = tooltipClassName.includes('w-[') || tooltipClassName.includes('!w-') || tooltipClassName.includes('w-');
+  const tooltipStyle = hasCustomWidth ? {} : { maxWidth: '400px', minWidth: '280px' };
 
   const getPositionClasses = () => {
     switch (position) {
@@ -36,17 +44,22 @@ export default function InfoTooltip({
   };
 
   const getArrowClasses = () => {
+    const borderColor = bgColor === "blue" ? "border-t-brand-blue" : "border-t-gray-800";
+    const borderColorBottom = bgColor === "blue" ? "border-b-brand-blue" : "border-b-gray-800";
+    const borderColorLeft = bgColor === "blue" ? "border-l-brand-blue" : "border-l-gray-800";
+    const borderColorRight = bgColor === "blue" ? "border-r-brand-blue" : "border-r-gray-800";
+    
     switch (position) {
       case "top":
-        return "top-full left-1/2 transform -translate-x-1/2 border-t-gray-800";
+        return `top-full left-1/2 transform -translate-x-1/2 ${borderColor}`;
       case "bottom":
-        return "bottom-full left-1/2 transform -translate-x-1/2 border-b-gray-800";
+        return `bottom-full left-1/2 transform -translate-x-1/2 ${borderColorBottom}`;
       case "left":
-        return "left-full top-1/2 transform -translate-y-1/2 border-l-gray-800";
+        return `left-full top-1/2 transform -translate-y-1/2 ${borderColorLeft}`;
       case "right":
-        return "right-full top-1/2 transform -translate-y-1/2 border-r-gray-800";
+        return `right-full top-1/2 transform -translate-y-1/2 ${borderColorRight}`;
       default:
-        return "top-full left-1/2 transform -translate-x-1/2 border-t-gray-800";
+        return `top-full left-1/2 transform -translate-x-1/2 ${borderColor}`;
     }
   };
 
@@ -57,13 +70,13 @@ export default function InfoTooltip({
       onMouseLeave={() => setIsVisible(false)}
     >
       <QuestionIcon
-        className={`h-4 w-4 text-gray-400 hover:text-gray-600 transition-colors cursor-help ${iconClassName}`}
+        className={`h-4 w-4 ${iconColor === "blue" ? "text-brand-blue hover:text-action-primary-hovered" : "text-gray-400 hover:text-gray-600"} transition-colors cursor-help ${iconClassName}`}
       />
       
       {isVisible && (
         <div
-          className={`absolute z-50 px-3 py-2 text-sm text-white bg-gray-800 rounded-lg shadow-lg ${getPositionClasses()} ${tooltipClassName}`}
-          style={{ maxWidth: '400px', minWidth: '280px' }}
+          className={`absolute z-[9999] px-3 py-2 text-sm text-white ${bgColor === "blue" ? "bg-brand-blue" : "bg-gray-800"} rounded-lg shadow-lg ${getPositionClasses()} ${tooltipClassName}`}
+          style={tooltipStyle}
         >
           <div className="text-center">{text}</div>
           <div

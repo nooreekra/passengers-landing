@@ -637,6 +637,8 @@ const AccountPage = () => {
                                                 <InfoTooltip
                                                     text={t("passenger.account.totalMilesTooltip")}
                                                     position="top"
+                                                    iconColor="blue"
+                                                    tooltipClassName="!w-[200px]"
                                                 />
                                             </div>
                                             <p className="text-base sm:text-xl font-bold text-white">
@@ -648,7 +650,9 @@ const AccountPage = () => {
                                                 <p className="text-xs sm:text-sm text-gray-200">{t("passenger.account.pending")}</p>
                                                 <InfoTooltip
                                                     text={t("passenger.account.pendingTooltip")}
-                                                    position="top"
+                                                    position="left"
+                                                    iconColor="blue"
+                                                    tooltipClassName="!w-[200px]"
                                                 />
                                             </div>
                                             <p className="text-base sm:text-xl font-bold text-white">
@@ -835,6 +839,8 @@ const AccountPage = () => {
                                             <InfoTooltip
                                                 text={t("passenger.account.lastThreeMonthsTooltip") || "Shows your tier status for the last 3 months"}
                                                 position="top"
+                                                iconColor="blue"
+                                                tooltipClassName="!w-[200px]"
                                             />
                                         </div>
                                         <div className="relative">

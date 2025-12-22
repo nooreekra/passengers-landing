@@ -188,7 +188,7 @@ const PassengerDashboardPage = () => {
         }
     }, [categories.length, selectedCategoryIndex]);
 
-    // Автоматический свайп каждые 5 секунд
+    // Автоматический свайп каждые 2 секунды
     useEffect(() => {
         if (categories.length <= 1 || isModalOpen || autoSwipePaused.current) {
             return;
@@ -199,7 +199,7 @@ const PassengerDashboardPage = () => {
             setSelectedCategoryIndex((prev) => 
                 prev < categories.length - 1 ? prev + 1 : 0
             );
-        }, 5000);
+        }, 2000);
 
         return () => clearInterval(interval);
     }, [categories.length, isModalOpen]);
