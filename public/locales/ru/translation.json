@@ -339,10 +339,16 @@
       "lastName": "Фамилия",
       "email": "Email",
       "password": "Пароль",
+      "phone": "Телефон",
+      "country": "Страна",
       "enterFirstName": "Введите ваше имя",
       "enterLastName": "Введите вашу фамилию",
       "enterEmail": "Введите ваш email",
       "enterPassword": "Введите ваш пароль",
+      "enterPhone": "Введите ваш телефон",
+      "enterCountry": "Введите вашу страну",
+      "selectCountry": "Выберите страну",
+      "loadingCountries": "Загрузка стран...",
       "signUp": "Зарегистрироваться",
       "registering": "Регистрация...",
       "errors": {
@@ -351,7 +357,9 @@
         "emailRequired": "Email обязателен",
         "emailInvalid": "Введите корректный email",
         "passwordRequired": "Пароль обязателен",
-        "passwordMinLength": "Пароль должен содержать не менее 6 символов"
+        "passwordMinLength": "Пароль должен содержать не менее 6 символов",
+        "phoneRequired": "Телефон обязателен",
+        "countryRequired": "Страна обязательна"
       }
     },
     "confirmForm": {

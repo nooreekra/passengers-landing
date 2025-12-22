@@ -1,18 +1,49 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import SearchableSelect from '../shared/ui/SearchableSelect'
+import { getCountries } from '../shared/api/locations'
 
 const RegistrationForm = ({ onSubmit, isLoading }) => {
   const { t } = useTranslation()
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
+    phone: '',
+    country: '',
     email: '',
     password: ''
   })
   const [showPassword, setShowPassword] = useState(false)
   const [errors, setErrors] = useState({})
+  const [countries, setCountries] = useState([])
+  const [loadingCountries, setLoadingCountries] = useState(false)
+
+  // Загрузка стран при монтировании компонента
+  useEffect(() => {
+    const loadCountries = async () => {
+      try {
+        setLoadingCountries(true)
+        const countriesData = await getCountries()
+        setCountries(countriesData || [])
+      } catch (error) {
+        console.error('Failed to load countries:', error)
+        setCountries([])
+      } finally {
+        setLoadingCountries(false)
+      }
+    }
+    loadCountries()
+  }, [])
+
+  // Преобразуем countries в формат для SearchableSelect
+  const countryOptions = useMemo(() => {
+    return countries.map((country) => ({
+      value: country.id,
+      label: country.name,
+    }))
+  }, [countries])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -26,6 +57,21 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
       setErrors(prev => ({
         ...prev,
         [name]: ''
+      }))
+    }
+  }
+
+  const handleCountryChange = (value) => {
+    setFormData(prev => ({
+      ...prev,
+      country: value
+    }))
+    
+    // Очистка ошибки при изменении поля
+    if (errors.country) {
+      setErrors(prev => ({
+        ...prev,
+        country: ''
       }))
     }
   }
@@ -53,6 +99,14 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
       newErrors.password = t('auth.registrationForm.errors.passwordMinLength')
     }
     
+    if (!formData.phone.trim()) {
+      newErrors.phone = t('auth.registrationForm.errors.phoneRequired')
+    }
+    
+    if (!formData.country) {
+      newErrors.country = t('auth.registrationForm.errors.countryRequired')
+    }
+    
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -61,7 +115,9 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
     e.preventDefault()
     
     if (validateForm()) {
-      onSubmit(formData)
+      // Пока не отправляем phone и country в запросе
+      const { phone, country, ...dataToSubmit } = formData
+      onSubmit(dataToSubmit)
     }
   }
 
@@ -106,6 +162,48 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
         />
         {errors.lastName && (
           <div className="field-error">{errors.lastName}</div>
+        )}
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="phone" className="form-label">
+          {t('auth.registrationForm.phone')}
+        </label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          className={`form-input ${errors.phone ? 'error' : ''}`}
+          placeholder={t('auth.registrationForm.enterPhone')}
+          disabled={isLoading}
+        />
+        {errors.phone && (
+          <div className="field-error">{errors.phone}</div>
+        )}
+      </div>
+
+      <div className="form-group" style={{ position: 'relative', zIndex: 1 }}>
+        <label htmlFor="country" className="form-label">
+          {t('auth.registrationForm.country')}
+        </label>
+        <div 
+          style={{ position: 'relative', zIndex: 1000 }}
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <SearchableSelect
+            value={formData.country}
+            options={countryOptions}
+            onChange={handleCountryChange}
+            placeholder={loadingCountries ? t('auth.registrationForm.loadingCountries') : t('auth.registrationForm.selectCountry')}
+            disabled={isLoading || loadingCountries}
+            required
+          />
+        </div>
+        {errors.country && (
+          <div className="field-error">{errors.country}</div>
         )}
       </div>
 
@@ -156,6 +254,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
           <div className="field-error">{errors.password}</div>
         )}
       </div>
+
 
       <button
         type="submit"

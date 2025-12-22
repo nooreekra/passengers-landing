@@ -991,6 +991,47 @@ body {
   animation: slideUp 0.3s ease;
 }
 
+/* Стили для react-select внутри модального окна */
+.auth-modal-content .react-select__menu,
+.auth-modal-content .react-select__menu-portal,
+#react-select-menu-portal {
+  z-index: 3000 !important;
+}
+
+/* Убеждаемся, что меню react-select видно */
+body > div[id*="react-select"] {
+  z-index: 3000 !important;
+}
+
+/* Стили для react-select меню портала */
+body > div[class*="react-select"] {
+  z-index: 3000 !important;
+}
+
+/* Специальные стили для меню внутри модального окна */
+.auth-modal-content .react-select__control {
+  cursor: pointer;
+}
+
+.auth-modal-content .react-select__menu {
+  z-index: 3000 !important;
+  position: fixed !important;
+}
+
+/* Стили для портала react-select меню */
+div[id^="react-select"] {
+  z-index: 3000 !important;
+}
+
+/* Убеждаемся, что меню не скрыто */
+.react-select__menu {
+  z-index: 3000 !important;
+}
+
+.react-select__menu-portal {
+  z-index: 3000 !important;
+}
+
 @keyframes slideUp {
   from {
     opacity: 0;

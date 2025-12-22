@@ -340,10 +340,16 @@
       "lastName": "Last Name",
       "email": "Email",
       "password": "Password",
+      "phone": "Phone",
+      "country": "Country",
       "enterFirstName": "Enter your first name",
       "enterLastName": "Enter your last name",
       "enterEmail": "Enter your email",
       "enterPassword": "Enter your password",
+      "enterPhone": "Enter your phone",
+      "enterCountry": "Enter your country",
+      "selectCountry": "Select country",
+      "loadingCountries": "Loading countries...",
       "signUp": "Sign Up",
       "registering": "Registering...",
       "errors": {
@@ -352,7 +358,9 @@
         "emailRequired": "Email is required",
         "emailInvalid": "Enter a valid email",
         "passwordRequired": "Password is required",
-        "passwordMinLength": "Password must contain at least 6 characters"
+        "passwordMinLength": "Password must contain at least 6 characters",
+        "phoneRequired": "Phone is required",
+        "countryRequired": "Country is required"
       }
     },
     "confirmForm": {

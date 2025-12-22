@@ -47,10 +47,16 @@
       "lastName": "Тегі",
       "email": "Email",
       "password": "Пароль",
+      "phone": "Телефон",
+      "country": "Ел",
       "enterFirstName": "Атыңызды енгізіңіз",
       "enterLastName": "Тегіңізді енгізіңіз",
       "enterEmail": "Email-іңізді енгізіңіз",
       "enterPassword": "Парольдіңізді енгізіңіз",
+      "enterPhone": "Телефоныңызды енгізіңіз",
+      "enterCountry": "Еліңізді енгізіңіз",
+      "selectCountry": "Елді таңдаңыз",
+      "loadingCountries": "Елдерді жүктеу...",
       "signUp": "Тіркелу",
       "registering": "Тіркелу...",
       "errors": {
@@ -59,7 +65,9 @@
         "emailRequired": "Email міндетті",
         "emailInvalid": "Жарамды email енгізіңіз",
         "passwordRequired": "Пароль міндетті",
-        "passwordMinLength": "Пароль кемінде 6 таңбадан тұруы керек"
+        "passwordMinLength": "Пароль кемінде 6 таңбадан тұруы керек",
+        "phoneRequired": "Телефон міндетті",
+        "countryRequired": "Ел міндетті"
       }
     },
     "confirmForm": {
