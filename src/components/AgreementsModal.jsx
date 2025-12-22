@@ -9,8 +9,8 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
   const [agreements, setAgreements] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  const [readAgreements, setReadAgreements] = useState(new Set())
-  const [currentAgreementIndex, setCurrentAgreementIndex] = useState(0)
+  const [checkedAgreements, setCheckedAgreements] = useState(new Set())
+  const [viewingAgreement, setViewingAgreement] = useState(null)
 
   // Загрузка соглашений при открытии модалки
   useEffect(() => {
@@ -22,8 +22,8 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
   const loadAgreements = async () => {
     setIsLoading(true)
     setError('')
-    setReadAgreements(new Set())
-    setCurrentAgreementIndex(0)
+    setCheckedAgreements(new Set())
+    setViewingAgreement(null)
     
     try {
       const data = await agreementsService.getAgreements(entityType)
@@ -36,41 +36,39 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
     }
   }
 
-  const handleScroll = (e) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.target
-    const scrollPercentage = (scrollTop + clientHeight) / scrollHeight
-    
-    // Считаем соглашение прочитанным, если прокручено более 90%
-    if (scrollPercentage >= 0.9) {
-      setReadAgreements(prev => new Set([...prev, currentAgreementIndex]))
-    }
+  const handleToggleAgreement = (index) => {
+    setCheckedAgreements(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(index)) {
+        newSet.delete(index)
+      } else {
+        newSet.add(index)
+      }
+      return newSet
+    })
   }
 
-  const handleNext = () => {
-    if (currentAgreementIndex < agreements.length - 1) {
-      setCurrentAgreementIndex(prev => prev + 1)
-    }
+  const handleOpenAgreement = (agreement) => {
+    setViewingAgreement(agreement)
   }
 
-  const handlePrevious = () => {
-    if (currentAgreementIndex > 0) {
-      setCurrentAgreementIndex(prev => prev - 1)
-    }
+  const handleCloseViewer = () => {
+    setViewingAgreement(null)
   }
 
   const handleAccept = () => {
-    // Проверяем, что все соглашения прочитаны
-    const allRead = agreements.every((_, index) => readAgreements.has(index))
-    if (allRead && agreements.length > 0) {
-      onAccept()
-    } else if (agreements.length === 0) {
-      // Если соглашений нет, разрешаем регистрацию
+    // Проверяем, что все соглашения отмечены
+    const allChecked = agreements.length > 0 
+      ? agreements.every((_, index) => checkedAgreements.has(index))
+      : true
+    
+    if (allChecked) {
       onAccept()
     }
   }
 
-  const allAgreementsRead = agreements.length > 0 
-    ? agreements.every((_, index) => readAgreements.has(index))
+  const allAgreementsChecked = agreements.length > 0 
+    ? agreements.every((_, index) => checkedAgreements.has(index))
     : true
 
   // Закрытие модалки по Escape
@@ -98,111 +96,119 @@ const AgreementsModal = ({ isOpen, onClose, onAccept, entityType = 'Business' })
 
   if (!isOpen) return null
 
-  const currentAgreement = agreements[currentAgreementIndex]
-
   return (
-    <div className="auth-modal-overlay" onClick={onClose}>
-      <div className="auth-modal-content agreements-modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="auth-modal-close" onClick={onClose} aria-label="Close">
-          ×
-        </button>
-        
-        <div className="auth-modal-header">
-          <h2 className="auth-modal-title">{t('auth.agreementsModal.title')}</h2>
-          <p className="auth-modal-subtitle">
-            {t('auth.agreementsModal.subtitle')}
-          </p>
+    <>
+      <div className="auth-modal-overlay" onClick={onClose}>
+        <div className="auth-modal-content agreements-modal-content" onClick={(e) => e.stopPropagation()}>
+          <button className="auth-modal-close" onClick={onClose} aria-label="Close">
+            ×
+          </button>
+          
+          <div className="auth-modal-header">
+            <h2 className="auth-modal-title">{t('auth.agreementsModal.title')}</h2>
+            <p className="auth-modal-subtitle">
+              {t('auth.agreementsModal.subtitle')}
+            </p>
+          </div>
+
+          {isLoading ? (
+            <div className="agreements-loading">
+              <span className="loading-spinner"></span>
+              <p>{t('auth.agreementsModal.loading')}</p>
+            </div>
+          ) : error ? (
+            <div className="error-message">
+              {error}
+            </div>
+          ) : agreements.length === 0 ? (
+            <div className="agreements-empty">
+              <p>{t('auth.agreementsModal.noAgreements')}</p>
+              <button
+                className="login-button"
+                onClick={handleAccept}
+              >
+                {t('auth.agreementsModal.continueRegistration')}
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="agreements-list">
+                {agreements.map((agreement, index) => (
+                  <div key={agreement.id || index} className="agreement-list-item">
+                    <label className="agreement-checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={checkedAgreements.has(index)}
+                        onChange={() => handleToggleAgreement(index)}
+                        className="agreement-checkbox"
+                      />
+                      <span 
+                        className="agreement-link"
+                        onClick={() => handleOpenAgreement(agreement)}
+                        title={t('auth.agreementsModal.clickToView')}
+                      >
+                        {agreement.title}
+                      </span>
+                    </label>
+                    <div className="agreement-meta-small">
+                      <span>{t('auth.agreementsModal.version')}: {agreement.version}</span>
+                      <span>{t('auth.agreementsModal.updated')}: {new Date(agreement.updatedAt).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="agreements-progress">
+                <p className="progress-text">
+                  {t('auth.agreementsModal.readProgress')}: {checkedAgreements.size} {t('auth.agreementsModal.of')} {agreements.length}
+                </p>
+              </div>
+
+              <button
+                className="login-button"
+                onClick={handleAccept}
+                disabled={!allAgreementsChecked}
+              >
+                {allAgreementsChecked ? t('auth.agreementsModal.acceptAndContinue') : t('auth.agreementsModal.pleaseReadAll')}
+              </button>
+            </>
+          )}
         </div>
-
-        {isLoading ? (
-          <div className="agreements-loading">
-            <span className="loading-spinner"></span>
-            <p>{t('auth.agreementsModal.loading')}</p>
-          </div>
-        ) : error ? (
-          <div className="error-message">
-            {error}
-          </div>
-        ) : agreements.length === 0 ? (
-          <div className="agreements-empty">
-            <p>{t('auth.agreementsModal.noAgreements')}</p>
-            <button
-              className="login-button"
-              onClick={handleAccept}
-            >
-              {t('auth.agreementsModal.continueRegistration')}
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="agreements-counter">
-              {t('auth.agreementsModal.document')} {currentAgreementIndex + 1} {t('auth.agreementsModal.of')} {agreements.length}
-            </div>
-
-            <div className="agreements-navigation">
-              <button
-                className="agreement-nav-button"
-                onClick={handlePrevious}
-                disabled={currentAgreementIndex === 0}
-              >
-                ← {t('auth.agreementsModal.previous')}
-              </button>
-              <button
-                className="agreement-nav-button"
-                onClick={handleNext}
-                disabled={currentAgreementIndex === agreements.length - 1}
-              >
-                {t('auth.agreementsModal.next')} →
-              </button>
-            </div>
-
-            <div 
-              className="agreement-content"
-              onScroll={handleScroll}
-            >
-              <div className="agreement-item">
-                <h3 className="agreement-title">{currentAgreement.title}</h3>
-                <div className="agreement-meta">
-                  <span>{t('auth.agreementsModal.version')}: {currentAgreement.version}</span>
-                  <span>{t('auth.agreementsModal.updated')}: {new Date(currentAgreement.updatedAt).toLocaleDateString()}</span>
-                </div>
-                <div 
-                  className="agreement-text"
-                  dangerouslySetInnerHTML={{ __html: currentAgreement.content }}
-                />
-                <div className="agreement-status">
-                  {readAgreements.has(currentAgreementIndex) ? (
-                    <span className="agreement-read">✓ {t('auth.agreementsModal.read')}</span>
-                  ) : (
-                    <span className="agreement-unread">{t('auth.agreementsModal.scrollToEnd')}</span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="agreements-progress">
-              <div className="progress-bar">
-                <div 
-                  className="progress-fill"
-                  style={{ width: `${(readAgreements.size / agreements.length) * 100}%` }}
-                />
-              </div>
-              <p className="progress-text">
-                {t('auth.agreementsModal.readProgress')}: {readAgreements.size} {t('auth.agreementsModal.of')} {agreements.length}
-              </p>
-            </div>
-
-            <button
-              className="login-button"
-              onClick={handleAccept}
-              disabled={!allAgreementsRead}
-            >
-              {allAgreementsRead ? t('auth.agreementsModal.acceptAndContinue') : t('auth.agreementsModal.pleaseReadAll')}
-            </button>
-          </>
-        )}
       </div>
-    </div>
+
+      {/* Модальное окно для просмотра документа */}
+      {viewingAgreement && (
+        <div className="auth-modal-overlay" onClick={handleCloseViewer}>
+          <div className="auth-modal-content agreement-viewer-content" onClick={(e) => e.stopPropagation()}>
+            <button className="auth-modal-close" onClick={handleCloseViewer} aria-label="Close">
+              ×
+            </button>
+            
+            <div className="auth-modal-header">
+              <h2 className="auth-modal-title">{viewingAgreement.title}</h2>
+              <div className="agreement-meta">
+                <span>{t('auth.agreementsModal.version')}: {viewingAgreement.version}</span>
+                <span>{t('auth.agreementsModal.updated')}: {new Date(viewingAgreement.updatedAt).toLocaleDateString()}</span>
+              </div>
+            </div>
+
+            <div className="agreement-content-viewer">
+              <div 
+                className="agreement-text"
+                dangerouslySetInnerHTML={{ __html: viewingAgreement.content }}
+              />
+            </div>
+
+            <button
+              className="login-button"
+              onClick={handleCloseViewer}
+            >
+              {t('auth.agreementsModal.close')}
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 

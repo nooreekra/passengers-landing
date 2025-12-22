@@ -384,7 +384,9 @@
       "scrollToEnd": "Scroll to the end to mark as read",
       "readProgress": "Read",
       "acceptAndContinue": "Accept and Continue Registration",
-      "pleaseReadAll": "Please read all agreements"
+      "pleaseReadAll": "Please read all agreements",
+      "clickToView": "Click to view document",
+      "close": "Close"
     },
     "changePassword": {
       "title": "Change Password",

@@ -1392,6 +1392,88 @@ body {
   background: #cbd5e0;
 }
 
+/* Новые стили для списка документов */
+.agreements-list {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding: 10px 0;
+  max-height: 400px;
+}
+
+.agreement-list-item {
+  padding: 16px;
+  margin-bottom: 12px;
+  background: #f7fafc;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.agreement-list-item:hover {
+  border-color: #667eea;
+  background: #f7faff;
+}
+
+.agreement-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.agreement-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #667eea;
+  flex-shrink: 0;
+}
+
+.agreement-link {
+  color: #667eea;
+  font-weight: 600;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  flex: 1;
+}
+
+.agreement-link:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}
+
+.agreement-meta-small {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  margin-left: 32px;
+  font-size: 12px;
+  color: #718096;
+}
+
+/* Стили для модального окна просмотра документа */
+.agreement-viewer-content {
+  max-width: 900px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.agreement-content-viewer {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #f7fafc;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  max-height: 500px;
+}
+
 @media (max-width: 768px) {
   .agreements-modal-content {
     max-width: 95%;
@@ -1417,6 +1499,36 @@ body {
 
   .agreements-navigation {
     flex-direction: column;
+  }
+
+  .agreements-list {
+    max-height: 300px;
+    padding: 8px 0;
+  }
+
+  .agreement-list-item {
+    padding: 12px;
+  }
+
+  .agreement-link {
+    font-size: 14px;
+  }
+
+  .agreement-meta-small {
+    flex-direction: column;
+    gap: 4px;
+    margin-left: 32px;
+    font-size: 11px;
+  }
+
+  .agreement-content-viewer {
+    max-height: 350px;
+    padding: 15px;
+  }
+
+  .agreement-viewer-content {
+    max-width: 95%;
+    max-height: 95vh;
   }
 }
 
