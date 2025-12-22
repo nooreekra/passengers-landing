@@ -231,7 +231,9 @@ const WalletPage = () => {
                                                         <p className="text-sm text-gray-200">{t("passenger.wallet.allTimeMiles")}</p>
                                                         <InfoTooltip 
                                                             text={t("passenger.wallet.allTimeMilesTooltip")}
-                                                            position="top"
+                                                            position="right"
+                                                            iconColor="blue"
+                                                            tooltipClassName="!w-[200px]"
                                                         />
                                                     </div>
                                                     <p className="text-xl font-bold text-white">
@@ -253,7 +255,9 @@ const WalletPage = () => {
                                                         <p className="text-sm text-gray-200">{t("passenger.wallet.pending")}</p>
                                                         <InfoTooltip 
                                                             text={t("passenger.wallet.pendingTooltip")}
-                                                            position="top"
+                                                            position="left"
+                                                            iconColor="blue"
+                                                            tooltipClassName="!w-[200px]"
                                                         />
                                                     </div>
                                                     <p className="text-xl font-bold text-white">
