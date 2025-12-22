@@ -4,7 +4,7 @@ import React, { useState, Fragment, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { User, Mail, Phone, QrCode, ChevronDown, ChevronUp, Copy, Maximize2, X, Plane, Lock, ChevronRight, Camera } from "lucide-react";
+import { User, Mail, Phone, QrCode, ChevronDown, ChevronUp, Copy, Maximize2, X, Plane, Lock, ChevronRight, Camera, Star } from "lucide-react";
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -12,6 +12,7 @@ import InfoTooltip from "@/shared/ui/InfoTooltip";
 import Loader from "@/shared/ui/Loader";
 import { getTransactions, TransactionItem, getTierHistories, TierHistory, getTransactionsSummary, TransactionsSummary, getMilesSummary, MilesSummary, getTiers, Tier, getWallet } from "@/shared/api/passenger";
 import { useTranslation } from "react-i18next";
+import i18n from "@/shared/i18n";
 import { Html5Qrcode } from "html5-qrcode";
 
 // Transaction types
@@ -1069,7 +1070,12 @@ const AccountPage = () => {
                                     {/* Status Cards - Current and Next */}
                                     <div className="mb-3">
                                         <h3 className="text-sm text-white text-left">
-                                            Progress this month
+                                            {(() => {
+                                                const currentDate = new Date();
+                                                const locale = i18n.language === 'ru' ? 'ru-RU' : i18n.language === 'kk' ? 'kk-KZ' : 'en-US';
+                                                const currentMonth = currentDate.toLocaleDateString(locale, { month: 'long' });
+                                                return t("passenger.account.progressThisMonth", { month: currentMonth });
+                                            })()}
                                         </h3>
                                     </div>
                                     <div className="flex items-center justify-between mb-8" style={{ gap: 'clamp(8px, 2vw, 16px)' }}>
@@ -1345,6 +1351,15 @@ const AccountPage = () => {
                                             )}
                                         </div>
                                     </div>
+                                    
+                                    {/* Achieve next status text */}
+                                    <div className="flex items-center gap-2 mb-6">
+                                        <Star className="h-5 w-5 text-white flex-shrink-0" />
+                                        <p className="text-sm text-white">
+                                            {t("passenger.account.achieveNextStatus")}
+                                        </p>
+                                    </div>
+
                                     {/* Trips Option */}
                                     <div className="flex items-center gap-4 mb-4">
                                         <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -1372,7 +1387,7 @@ const AccountPage = () => {
                                     {/* OR Divider */}
                                     <div className="flex items-center gap-4 my-6">
                                         <div className="flex-1 h-px bg-gray-300"></div>
-                                        <span className="text-sm font-medium text-gray-500">{t("passenger.account.or")}</span>
+                                        <span className="text-sm font-medium text-brand-blue">{t("passenger.account.or")}</span>
                                         <div className="flex-1 h-px bg-gray-300"></div>
                                     </div>
 

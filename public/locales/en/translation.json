@@ -1071,7 +1071,9 @@
             "copyToClipboard": "Copy to clipboard",
             "copied": "Copied",
             "loading": "Loading...",
-            "membership": "Membership"
+            "membership": "Membership",
+            "progressThisMonth": "Progress this {{month}}",
+            "achieveNextStatus": "Achieve your next status by hitting certain number of:"
         },
         "more": {
             "title": "More",

@@ -282,7 +282,9 @@
       "copyToClipboard": "Алмасу буферіне көшіру",
       "copied": "Көшірілді",
       "loading": "Жүктелуде...",
-      "membership": "Мүшелік"
+      "membership": "Мүшелік",
+      "progressThisMonth": "{{month}} айының прогрессі",
+      "achieveNextStatus": "Келесі мәртебені белгілі бір санға жету арқылы қол жеткізіңіз:"
     },
     "more": {
       "title": "Қосымша",

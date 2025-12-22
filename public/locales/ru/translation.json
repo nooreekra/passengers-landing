@@ -1098,7 +1098,9 @@
             "copyToClipboard": "Копировать в буфер обмена",
             "copied": "Скопировано",
             "loading": "Загрузка...",
-            "membership": "Участник"
+            "membership": "Участник",
+            "progressThisMonth": "Прогресс за {{month}}",
+            "achieveNextStatus": "Достигните следующего статуса, выполнив определенное количество:"
         },
         "more": {
             "title": "Еще",
