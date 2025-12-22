@@ -1840,10 +1840,16 @@ div[id^="react-select"] {
   margin-bottom: 20px;
 }
 
+/* Плашка в белой секции - синий фон, белый текст */
+.collect-section .collect-miles-section-title {
+  background: linear-gradient(159deg, rgba(0,51,102,1) 0%, rgba(15,82,186,1) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 .collect-section .collect-miles-section-title .section-title {
   margin-bottom: 0;
   font-weight: 700;
-  color: #2d3748;
+  color: #ffffff;
 }
 
 .section-title {
@@ -2097,10 +2103,29 @@ div[id^="react-select"] {
   margin-bottom: 20px;
 }
 
+/* Плашка в синей секции - белый фон, синий текст */
+.spend-miles-section .spend-miles-section-title {
+  background: #ffffff;
+  border: 1px solid rgba(0, 51, 102, 0.3);
+}
 
 .spend-miles-section-title p, .benefits-section-title p {
   margin-bottom: 0;
   color: #fff;
+}
+
+.spend-miles-section .spend-miles-section-title p {
+  color: rgba(0, 51, 102, 1);
+}
+
+/* Плашка benefits-section-title - белый фон, синий текст */
+.benefits-section-title {
+  background: #ffffff;
+  border: 1px solid rgba(0, 51, 102, 0.3);
+}
+
+.benefits-section-title p {
+  color: rgba(0, 51, 102, 1);
 }
 
 .spend-miles-section .section-title,
@@ -2512,8 +2537,15 @@ div[id^="react-select"] {
   margin-bottom: 20px;
 }
 
-.status-benefits-section-title p {
+/* Плашка в белой секции - синий фон, белый текст */
+.status-section .status-benefits-section-title {
+  background: linear-gradient(159deg, rgba(0,51,102,1) 0%, rgba(15,82,186,1) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.status-section .status-benefits-section-title p {
   margin-bottom: 0;
+  color: #ffffff;
 }
 
 .status-benefits-section-title h2 {
@@ -2681,8 +2713,15 @@ div[id^="react-select"] {
   margin-bottom: 20px;
 }
 
+/* Плашка в белой секции - синий фон, белый текст */
+.partners-section .partners-benefits-section-title {
+  background: linear-gradient(159deg, rgba(0,51,102,1) 0%, rgba(15,82,186,1) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 .partners-section .partners-benefits-section-title p {
   margin-bottom: 0;
+  color: #ffffff;
 }
 
 .partners-benefits-container {
