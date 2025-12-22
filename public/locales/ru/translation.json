@@ -1078,6 +1078,8 @@
             "lastThreeMonthsTooltip": "Показывает прогресс вашего статуса за последние 3 месяца",
             "loyaltyRewards": "Программа лояльности",
             "completeTicketTransactions": "Быстро завершайте транзакции с билетами, сканируя вашу цифровую карту.",
+            "scanQRCode": "Сканировать QR-код",
+            "scanQRCodeInstruction": "Наведите камеру на QR-код",
             "copyMembershipId": "Копировать ID участника",
             "loadingTierHistories": "Загрузка истории статусов...",
             "noTierData": "Нет данных о статусах",

@@ -262,6 +262,8 @@
       "lastThreeMonthsTooltip": "Соңғы 3 айдағы статусыңыздың дамуын көрсетеді",
       "loyaltyRewards": "Лоялдылық сыйлықтары",
       "completeTicketTransactions": "Цифрлық картаңызды сканерлеу арқылы билет транзакцияларын жылдам аяқтаңыз.",
+      "scanQRCode": "QR-кодты сканерлеу",
+      "scanQRCodeInstruction": "Камераңызды QR-кодқа бағыттаңыз",
       "copyMembershipId": "Мүшелік ID-сын көшіру",
       "loadingTierHistories": "Мәртебе тарихын жүктеу...",
       "noTierData": "Мәртебе деректері жоқ",

@@ -4,7 +4,7 @@ import React, { useState, Fragment, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { User, Mail, Phone, QrCode, ChevronDown, ChevronUp, Copy, Maximize2, X, Plane, Lock, ChevronRight } from "lucide-react";
+import { User, Mail, Phone, QrCode, ChevronDown, ChevronUp, Copy, Maximize2, X, Plane, Lock, ChevronRight, Camera } from "lucide-react";
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -12,6 +12,7 @@ import InfoTooltip from "@/shared/ui/InfoTooltip";
 import Loader from "@/shared/ui/Loader";
 import { getTransactions, TransactionItem, getTierHistories, TierHistory, getTransactionsSummary, TransactionsSummary, getMilesSummary, MilesSummary, getTiers, Tier, getWallet } from "@/shared/api/passenger";
 import { useTranslation } from "react-i18next";
+import { Html5Qrcode } from "html5-qrcode";
 
 // Transaction types
 interface Transaction {
@@ -130,6 +131,8 @@ const AccountPage = () => {
     // Some transactions expanded by default
     const [expandedTransactions, setExpandedTransactions] = useState<Set<string>>(new Set());
     const [isQrExpanded, setIsQrExpanded] = useState(false);
+    const [isScanning, setIsScanning] = useState(false);
+    const qrCodeScannerRef = useRef<Html5Qrcode | null>(null);
     const [transactionsData, setTransactionsData] = useState<TransactionItem[]>([]);
     const [loadingTransactions, setLoadingTransactions] = useState(false);
     const [tierHistories, setTierHistories] = useState<TierHistory[]>([]);
@@ -491,6 +494,67 @@ const AccountPage = () => {
         }
     };
 
+    const handleStartScanning = async () => {
+        try {
+            setIsScanning(true);
+            // Небольшая задержка для рендеринга контейнера
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            const scanner = new Html5Qrcode("qr-reader");
+            qrCodeScannerRef.current = scanner;
+
+            await scanner.start(
+                { facingMode: "environment" },
+                {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 }
+                },
+                (decodedText) => {
+                    // QR-код успешно отсканирован
+                    console.log("QR Code scanned:", decodedText);
+                    handleStopScanning();
+                    // Здесь можно добавить логику обработки отсканированного QR-кода
+                    // Например, переход на страницу партнера или обработка данных
+                },
+                (errorMessage) => {
+                    // Игнорируем ошибки сканирования (они происходят постоянно, пока не найден QR)
+                }
+            );
+        } catch (error) {
+            console.error("Error starting QR scanner:", error);
+            setIsScanning(false);
+        }
+    };
+
+    const handleStopScanning = async () => {
+        if (qrCodeScannerRef.current) {
+            try {
+                await qrCodeScannerRef.current.stop();
+                await qrCodeScannerRef.current.clear();
+            } catch (error) {
+                console.error("Error stopping QR scanner:", error);
+            }
+            qrCodeScannerRef.current = null;
+        }
+        setIsScanning(false);
+    };
+
+    // Очистка сканера при закрытии модалки или размонтировании компонента
+    useEffect(() => {
+        return () => {
+            if (qrCodeScannerRef.current) {
+                const scanner = qrCodeScannerRef.current;
+                scanner.stop().catch(() => {}).then(() => {
+                    try {
+                        scanner.clear();
+                    } catch (e) {
+                        // Игнорируем ошибки очистки
+                    }
+                });
+            }
+        };
+    }, []);
+
     // Функция для получения hex цвета статуса из тира или fallback
     const getStatusColor = (status: string): string => {
         // Сначала пытаемся найти в справочнике тиров
@@ -752,13 +816,20 @@ const AccountPage = () => {
                                                                         </div>
                                                                     </div>
 
-                                                                    {/* Loyalty Rewards text */}
-                                                                    <h2 className="text-2xl font-bold text-white mb-auto mt-4">{t("passenger.account.loyaltyRewards")}</h2>
-
-                                                                    {/* Membership ID and Name */}
-                                                                    <div className="mt-auto">
+                                                                    {/* Name, Membership ID and Status */}
+                                                                    <div className="flex items-start justify-between mb-auto mt-4">
+                                                                        {/* Left side: Name and Membership ID */}
+                                                                        <div className="flex-1">
+                                                                            <p className="text-white text-sm font-semibold mb-1">
+                                                                                {user ? `${user.firstName} ${user.lastName}`.toUpperCase() : mockData.name.toUpperCase()}
+                                                                            </p>
+                                                                            <p className="text-white text-xs font-medium">
+                                                                                {t("passenger.account.membership")} {user?.imsNumber || "—"}
+                                                                            </p>
+                                                                        </div>
+                                                                        {/* Right side: Status */}
                                                                         {currentTier && (
-                                                                            <div className="mb-4">
+                                                                            <div className="ml-4">
                                                                                 <span
                                                                                     className="text-white text-lg italic font-semibold px-4 py-2 rounded-full shadow-lg inline-block"
                                                                                     style={{
@@ -770,25 +841,27 @@ const AccountPage = () => {
                                                                                 </span>
                                                                             </div>
                                                                         )}
-                                                                        <div>
-                                                                            <p className="text-white text-sm font-semibold mb-1">
-                                                                                {user ? `${user.firstName} ${user.lastName}`.toUpperCase() : mockData.name.toUpperCase()}
-                                                                            </p>
-                                                                            <p className="text-white text-xs font-medium">
-                                                                                {t("passenger.account.membership")} {user?.imsNumber || "—"}
-                                                                            </p>
-                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
 
                                                             {/* QR Code */}
-                                                            <div className="flex justify-center flex-shrink-0">
+                                                            <div className="flex flex-col items-center flex-shrink-0 gap-4">
                                                                 <div className="bg-white rounded-lg p-4 shadow-md">
                                                                     <div className="w-64 h-64 bg-gray-100 rounded-lg flex items-center justify-center">
                                                                         <QrCode className="h-48 w-48 text-gray-400" />
                                                                     </div>
                                                                 </div>
+                                                                
+                                                                {/* Camera button for scanning QR */}
+                                                                <button
+                                                                    onClick={handleStartScanning}
+                                                                    className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium shadow-md"
+                                                                    title={t("passenger.account.scanQRCode") || "Scan QR Code"}
+                                                                >
+                                                                    <Camera className="h-5 w-5" />
+                                                                    <span>{t("passenger.account.scanQRCode") || "Scan QR Code"}</span>
+                                                                </button>
                                                             </div>
 
                                                             {/* Instruction text */}
@@ -823,6 +896,61 @@ const AccountPage = () => {
                                                                     </button>
                                                                 </div>
                                                             )}
+                                                        </div>
+                                                    </Dialog.Panel>
+                                                </Transition.Child>
+                                            </div>
+                                        </Dialog>
+                                    </Transition>
+
+                                    {/* QR Scanner Modal */}
+                                    <Transition appear show={isScanning} as={Fragment}>
+                                        <Dialog as="div" className="relative z-50" onClose={handleStopScanning}>
+                                            <Transition.Child
+                                                as={Fragment}
+                                                enter="ease-out duration-300"
+                                                enterFrom="opacity-0"
+                                                enterTo="opacity-100"
+                                                leave="ease-in duration-200"
+                                                leaveFrom="opacity-100"
+                                                leaveTo="opacity-0"
+                                            >
+                                                <div className="fixed inset-0 bg-black/75" />
+                                            </Transition.Child>
+
+                                            <div className="fixed inset-0 overflow-y-auto">
+                                                <Transition.Child
+                                                    as={Fragment}
+                                                    enter="ease-out duration-300"
+                                                    enterFrom="opacity-0 scale-95"
+                                                    enterTo="opacity-100 scale-100"
+                                                    leave="ease-in duration-200"
+                                                    leaveFrom="opacity-100 scale-100"
+                                                    leaveTo="opacity-0 scale-95"
+                                                >
+                                                    <Dialog.Panel className="w-full h-full bg-gray-900 flex flex-col overflow-hidden">
+                                                        {/* Close button */}
+                                                        <div className="flex justify-end p-4 flex-shrink-0">
+                                                            <button
+                                                                onClick={handleStopScanning}
+                                                                className="text-white hover:text-gray-300 transition-colors"
+                                                            >
+                                                                <X className="h-6 w-6" />
+                                                            </button>
+                                                        </div>
+
+                                                        <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center px-6 pb-6 pt-4 gap-6 min-h-0">
+                                                            <h2 className="text-xl font-semibold text-white text-center">
+                                                                {t("passenger.account.scanQRCode") || "Scan QR Code"}
+                                                            </h2>
+                                                            <p className="text-sm text-gray-400 text-center">
+                                                                {t("passenger.account.scanQRCodeInstruction") || "Point your camera at the QR code"}
+                                                            </p>
+                                                            
+                                                            {/* QR Scanner Container */}
+                                                            <div className="w-full max-w-md">
+                                                                <div id="qr-reader" className="w-full rounded-lg overflow-hidden"></div>
+                                                            </div>
                                                         </div>
                                                     </Dialog.Panel>
                                                 </Transition.Child>

@@ -1051,6 +1051,8 @@
             "lastThreeMonthsTooltip": "Shows your tier status progression for the last 3 months",
             "loyaltyRewards": "Loyalty Rewards",
             "completeTicketTransactions": "Complete ticket transactions quickly by scanning your digital card.",
+            "scanQRCode": "Scan QR Code",
+            "scanQRCodeInstruction": "Point your camera at the QR code",
             "copyMembershipId": "Copy membership ID",
             "loadingTierHistories": "Loading tier history...",
             "noTierData": "No tier data available",
