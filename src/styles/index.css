@@ -1862,6 +1862,7 @@ div[id^="react-select"] {
 
 .section-subtitle {
   font-size: 32px;
+  line-height: 1.1;
   text-align: center;
   font-weight: 400;
   margin-bottom: 12px;
@@ -2694,6 +2695,18 @@ div[id^="react-select"] {
   line-height: 1.5;
 }
 
+.status-benefits-footer-text {
+  font-size: 16px;
+  text-align: center;
+  margin-top: 20px;
+  font-weight: 400;
+  line-height: 1.6;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #2d3748;
+}
+
 /* Partners Benefits Section */
 .partners-benefits-section {
   width: 100%;
@@ -3026,6 +3039,11 @@ div[id^="react-select"] {
     padding: 0 20px;
   }
 
+  .status-benefits-footer-text {
+    font-size: 14px;
+    padding: 0 20px;
+  }
+
   .collect-miles-visualization {
     min-height: 400px;
   }
@@ -3233,6 +3251,11 @@ div[id^="react-select"] {
   .section-description {
     font-size: 14px;
     margin-bottom: 30px;
+    padding: 0 15px;
+  }
+
+  .status-benefits-footer-text {
+    font-size: 14px;
     padding: 0 15px;
   }
 

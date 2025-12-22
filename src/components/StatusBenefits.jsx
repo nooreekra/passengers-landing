@@ -93,6 +93,9 @@ const StatusBenefits = () => {
           </div>
         ))}
       </div>
+      <p className="status-benefits-footer-text">
+        even if you are not taking enough flights to get to desired status, you can alternatively hit you monthly targets with our Partner Network
+      </p>
     </div>
   )
 }
