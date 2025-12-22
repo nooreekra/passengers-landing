@@ -2,12 +2,15 @@
 
 import React, { useState, useEffect } from 'react'
 import AuthModal from './AuthModal'
+import LanguageModal from './LanguageModal'
 import { useTranslation } from 'react-i18next'
 import i18n from '../shared/i18n'
+import { Globe, X } from 'lucide-react'
 
 const Header = () => {
   const { t } = useTranslation()
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+  const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language || 'en')
 
@@ -35,9 +38,12 @@ const Header = () => {
     }
   }
 
-  const handleLanguageChange = (langCode) => {
-    i18n.changeLanguage(langCode)
-    setCurrentLanguage(langCode)
+  const handleLanguageModalOpen = () => {
+    setIsLanguageModalOpen(true)
+  }
+
+  const handleLanguageModalClose = () => {
+    setIsLanguageModalOpen(false)
   }
 
   // Слушаем изменения языка
@@ -55,7 +61,15 @@ const Header = () => {
   // Закрытие меню при клике вне его
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isMenuOpen && !event.target.closest('.burger-menu') && !event.target.closest('.burger-button')) {
+      // Не закрываем меню если клик на элементы внутри меню, на кнопку бургера, или на переключатель языков
+      if (
+        isMenuOpen && 
+        !event.target.closest('.burger-menu') && 
+        !event.target.closest('.burger-button') &&
+        !event.target.closest('.header-language-button') &&
+        !event.target.closest('.language-modal-overlay') &&
+        !event.target.closest('.language-modal-content')
+      ) {
         closeMenu()
       }
     }
@@ -83,7 +97,20 @@ const Header = () => {
       <header className="landing-header">
         <div className="header-container">
           <div className="header-logo">
-            <img src="/images/landing/logo.png" alt="Logo" />
+            {isMenuOpen ? (
+              <button 
+                className="header-language-button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleLanguageModalOpen()
+                }}
+                aria-label="Select language"
+              >
+                <Globe size={24} strokeWidth={2.5} />
+              </button>
+            ) : (
+              <img src="/images/landing/logo.png" alt="Logo" />
+            )}
           </div>
           
           <div className="header-actions">
@@ -108,6 +135,16 @@ const Header = () => {
 
       {/* Burger Menu */}
       <div className={`burger-menu ${isMenuOpen ? 'open' : ''}`}>
+        <div className="burger-menu-header">
+          <div className="burger-menu-header-spacer"></div>
+          <button 
+            className="burger-menu-close-button"
+            onClick={closeMenu}
+            aria-label="Close menu"
+          >
+            <X size={24} />
+          </button>
+        </div>
         <div className="burger-menu-content">
           <nav className="burger-menu-nav">
             <button 
@@ -129,35 +166,17 @@ const Header = () => {
               {t('landing.header.menu.membership')}
             </button>
           </nav>
-          
-          <div className="burger-menu-language">
-            <div className="language-switcher">
-              <button
-                className={`language-button ${currentLanguage === 'en' ? 'active' : ''}`}
-                onClick={() => handleLanguageChange('en')}
-              >
-                EN
-              </button>
-              <button
-                className={`language-button ${currentLanguage === 'ru' ? 'active' : ''}`}
-                onClick={() => handleLanguageChange('ru')}
-              >
-                RU
-              </button>
-              <button
-                className={`language-button ${currentLanguage === 'kk' ? 'active' : ''}`}
-                onClick={() => handleLanguageChange('kk')}
-              >
-                KZ
-              </button>
-            </div>
-          </div>
         </div>
       </div>
 
       <AuthModal 
         isOpen={isAuthModalOpen} 
         onClose={handleCloseAuthModal} 
+      />
+
+      <LanguageModal 
+        isOpen={isLanguageModalOpen} 
+        onClose={handleLanguageModalClose} 
       />
     </>
   )
