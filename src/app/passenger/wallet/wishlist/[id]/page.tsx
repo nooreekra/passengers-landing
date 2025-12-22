@@ -201,7 +201,7 @@ const WishlistProgressPage = () => {
                                     onClick={() => router.push(`/passenger/wallet/wishlist/${wishlistId}/edit`)}
                                     className="text-action-primary hover:text-action-primary/80 transition-colors"
                                 >
-                                    <Edit className="h-5 w-5" />
+                                    <Edit className="h-5 w-5 text-brand-blue" />
                                 </button>
                                 <button
                                     onClick={handleDelete}
