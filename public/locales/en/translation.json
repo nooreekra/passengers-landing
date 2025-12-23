@@ -354,7 +354,9 @@
       "registering": "Registering...",
       "errors": {
         "firstNameRequired": "First name is required",
+        "firstNameLatinOnly": "First name must contain only Latin letters",
         "lastNameRequired": "Last name is required",
+        "lastNameLatinOnly": "Last name must contain only Latin letters",
         "emailRequired": "Email is required",
         "emailInvalid": "Enter a valid email",
         "passwordRequired": "Password is required",

@@ -61,7 +61,9 @@
       "registering": "Тіркелу...",
       "errors": {
         "firstNameRequired": "Аты міндетті",
+        "firstNameLatinOnly": "Аты тек латын әріптерінен тұруы керек",
         "lastNameRequired": "Тегі міндетті",
+        "lastNameLatinOnly": "Тегі тек латын әріптерінен тұруы керек",
         "emailRequired": "Email міндетті",
         "emailInvalid": "Жарамды email енгізіңіз",
         "passwordRequired": "Пароль міндетті",

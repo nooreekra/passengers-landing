@@ -353,7 +353,9 @@
       "registering": "Регистрация...",
       "errors": {
         "firstNameRequired": "Имя обязательно",
+        "firstNameLatinOnly": "Имя должно содержать только латинские буквы",
         "lastNameRequired": "Фамилия обязательна",
+        "lastNameLatinOnly": "Фамилия должна содержать только латинские буквы",
         "emailRequired": "Email обязателен",
         "emailInvalid": "Введите корректный email",
         "passwordRequired": "Пароль обязателен",

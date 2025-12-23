@@ -81,10 +81,14 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
     
     if (!formData.firstName.trim()) {
       newErrors.firstName = t('auth.registrationForm.errors.firstNameRequired')
+    } else if (!/^[A-Za-z\s]+$/.test(formData.firstName.trim())) {
+      newErrors.firstName = t('auth.registrationForm.errors.firstNameLatinOnly')
     }
     
     if (!formData.lastName.trim()) {
       newErrors.lastName = t('auth.registrationForm.errors.lastNameRequired')
+    } else if (!/^[A-Za-z\s]+$/.test(formData.lastName.trim())) {
+      newErrors.lastName = t('auth.registrationForm.errors.lastNameLatinOnly')
     }
     
     if (!formData.email) {
