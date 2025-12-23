@@ -1254,6 +1254,110 @@
                 "coffee": "Coffee",
                 "coffeeDesc": "With friends",
                 "miles": "Miles"
+            },
+            "unifiedMiles": {
+                "title": "Unified Miles",
+                "paragraph1": "IMS Miles are unified Miles which means every time you take your flight, stay at hotel, buy a croissant or pay using a credit card, you collect the same IMS Miles from all our Partners.",
+                "paragraph2": "No need to register for 10 different airline loyalty programs, 20 different hotel loyalty programs, 30 different restaurant & coffee shop loyalty programs any more. All your rewards are now unified & in one place. Keep track of all your activity & Miles collected from different places in one window.",
+                "paragraph3": "Move over, IMS Miles never expire, nor capped, giving flexibility & control over your rewards. With a wide range of ecosystem partners, you can collect miles with your daily activity at your home country or abroad, while on a business trip."
+            },
+            "wishlist": {
+                "title": "Wishlist",
+                "airlines": "Airlines",
+                "description": "Start your wishlist & set up separate trips. System will connect sub wallets, so you could collect Miles separately for each trip.",
+                "ideas": "Some ideas!",
+                "weekendEscape": {
+                    "title": "Weekend Escape",
+                    "description": "Short trip to nearby destination, to unwind over the weekend in one of the closest megacities, or in the quiet of mountain chalet or ski for couple of days or escape in the quiet of the beach house.",
+                    "note": "It just takes a short flight & one night stay (Sat-Sun) to escape, hence can be achieved with the least amount of Miles to target."
+                },
+                "familyHoliday": {
+                    "title": "Family Holiday",
+                    "description": "Take your family to annual holiday & create ever lasting memories. All paid by Miles awarded by our partners. Doesn't it sound as a perfect vacation?"
+                },
+                "buddiesTrip": {
+                    "title": "Buddies Trip",
+                    "description": "Have been planning a joint trip with your buddies or besties, classmates or siblings, but couldn't get it organised over years? Each person of the group can now set up personal target against common destination chosen & start collecting Miles. When all hit their targets, you are finally ready to take off!!!"
+                },
+                "dreamDestination": {
+                    "title": "Dream Destination",
+                    "description": "Tempting white sand beaches of Maldives, penthouse with bird's eye view over Central Park of New York or breathtaking winter scenes of Mont Blanc from an elegant mountain chalet. Have always been top of your mind? Yet, it keeps sleeping away as a perfect Dream.",
+                    "callToAction": "Choose your Dream Holiday Destination today, set the target & let the system keep topping it up daily. You can't keep postponing it forever."
+                },
+                "allocation": {
+                    "title": "P/S:",
+                    "description": "Allocate 10%, 15% or 20% from each transaction, when you set up the rule, so your wishlist sub-wallets tops up every time you receive Miles. Ex: if you set 10% rule, every time you receive 100 Miles, 10 miles go to Wishlist sub-wallet & 90 Miles top up \"Available to Redeem\" in your wallet."
+                }
+            },
+            "airlines": {
+                "title": "Airlines",
+                "description": "Collect IMS Miles every time you fly with our airline partners. Whether you're traveling for business or leisure, each flight brings you closer to your next destination.",
+                "benefits": "All your flights are automatically tracked, and miles are credited to your unified IMS Miles account. No need to register for multiple airline loyalty programs - everything is in one place.",
+                "howItWorks": "How It Works",
+                "step1": "Book your flight with any of our airline partners",
+                "step2": "Your flight is automatically tracked in the system",
+                "step3": "Miles are credited to your unified IMS Miles account",
+                "step4": "Use your miles for your next trip or save them for your dream destination"
+            },
+            "hotels": {
+                "title": "Hotels",
+                "description": "Every hotel stay earns you IMS Miles. Whether you're on a business trip or enjoying a vacation, your accommodation expenses turn into rewards.",
+                "benefits": "Stay at any of our partner hotels and automatically collect miles. No need to join multiple hotel loyalty programs - all your stays are unified in your IMS Miles account.",
+                "howItWorks": "How It Works",
+                "step1": "Book a stay at any of our partner hotels",
+                "step2": "Check in and enjoy your stay",
+                "step3": "Your stay is automatically tracked and miles are credited",
+                "step4": "Use your accumulated miles for future hotel stays or other rewards"
+            },
+            "banks": {
+                "title": "Banks",
+                "description": "Turn your everyday banking into rewards. Every time you pay with your credit card from our partner banks, you collect IMS Miles automatically.",
+                "benefits": "Monthly card payments, purchases, and transactions all contribute to your miles balance. Make your daily spending work for you and bring you closer to your next vacation.",
+                "howItWorks": "How It Works",
+                "step1": "Use your partner bank credit card for everyday purchases",
+                "step2": "Every transaction automatically earns you IMS Miles",
+                "step3": "Track your monthly card payments and accumulated miles in one place",
+                "step4": "Redeem your miles for flights, hotels, or other travel rewards"
+            },
+            "restaurants": {
+                "title": "Restaurants",
+                "description": "Enjoy delicious meals and earn IMS Miles at the same time. Every dinner with family, business lunch with partners, or special occasion celebration at our partner restaurants earns you rewards.",
+                "benefits": "No need to join separate restaurant loyalty programs. All your dining experiences are unified in your IMS Miles account, making every meal a step closer to your next vacation.",
+                "howItWorks": "How It Works",
+                "step1": "Dine at any of our partner restaurants",
+                "step2": "Pay with your linked card or account",
+                "step3": "Miles are automatically credited to your account",
+                "step4": "Use your miles for flights, hotels, or more dining experiences"
+            },
+            "coffeeShops": {
+                "title": "Coffee Shops",
+                "description": "Your daily coffee ritual can now fuel your next vacation. Every cup of coffee, croissant, or snack purchased at our partner coffee shops earns you IMS Miles.",
+                "benefits": "Grab your morning coffee with friends, enjoy a takeaway, or relax with a pastry - all while collecting miles that bring you closer to your dream destination.",
+                "howItWorks": "How It Works",
+                "step1": "Visit any of our partner coffee shops",
+                "step2": "Buy your coffee, croissant, or any item",
+                "step3": "Pay and automatically earn IMS Miles",
+                "step4": "Watch your miles accumulate with every visit"
+            },
+            "gyms": {
+                "title": "Gyms",
+                "description": "Stay fit and earn miles at the same time. Your monthly gym membership fees and fitness activities at our partner gyms automatically earn you IMS Miles.",
+                "benefits": "Investing in your health now rewards you with travel opportunities. Every workout session and membership payment brings you closer to your next adventure.",
+                "howItWorks": "How It Works",
+                "step1": "Join or visit any of our partner gyms",
+                "step2": "Pay your monthly membership fee",
+                "step3": "Stay active and earn miles with every payment",
+                "step4": "Use your fitness miles for your next travel adventure"
+            },
+            "gasStations": {
+                "title": "Gas Stations",
+                "description": "Every time you fill up your tank at our partner gas stations, you're filling up your miles account too. Turn your regular fuel stops into travel rewards.",
+                "benefits": "No matter if you're driving to work, on a road trip, or just running errands, every fuel purchase earns you IMS Miles that can be used for flights, hotels, and more.",
+                "howItWorks": "How It Works",
+                "step1": "Fill up your tank at any of our partner gas stations",
+                "step2": "Pay for your fuel purchase",
+                "step3": "Miles are automatically credited to your IMS account",
+                "step4": "Use your miles to fuel your next travel adventure"
             }
         },
         "spendMiles": {

@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import AuthModal from './AuthModal'
 import LanguageModal from './LanguageModal'
 import { useTranslation } from 'react-i18next'
@@ -9,6 +10,7 @@ import { Globe, X, ChevronLeft } from 'lucide-react'
 
 const Header = () => {
   const { t } = useTranslation()
+  const router = useRouter()
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -67,20 +69,25 @@ const Header = () => {
     }
   }
 
+  const navigateToPage = (path) => {
+    router.push(path)
+    closeMenu()
+  }
+
   // Структура подменю
   const submenus = {
     collect: {
       title: t('landing.header.menu.collectMiles'),
       items: [
-        { label: 'Unified miles', action: () => scrollToSection('collect-section') },
-        { label: 'Wishlist', action: () => scrollToSection('collect-section') },
-        { label: 'Airlines', action: () => scrollToSection('collect-section') },
-        { label: 'Hotels', action: () => scrollToSection('collect-section') },
-        { label: 'Banks', action: () => scrollToSection('collect-section') },
-        { label: 'Restaurants', action: () => scrollToSection('collect-section') },
-        { label: 'Coffee shops', action: () => scrollToSection('collect-section') },
-        { label: 'Gyms', action: () => scrollToSection('collect-section') },
-        { label: 'Gas stations', action: () => scrollToSection('collect-section') },
+        { label: 'Unified miles', action: () => navigateToPage('/collect-miles/unified-miles') },
+        { label: 'Wishlist', action: () => navigateToPage('/collect-miles/wishlist') },
+        { label: 'Airlines', action: () => navigateToPage('/collect-miles/airlines') },
+        { label: 'Hotels', action: () => navigateToPage('/collect-miles/hotels') },
+        { label: 'Banks', action: () => navigateToPage('/collect-miles/banks') },
+        { label: 'Restaurants', action: () => navigateToPage('/collect-miles/restaurants') },
+        { label: 'Coffee shops', action: () => navigateToPage('/collect-miles/coffee-shops') },
+        { label: 'Gyms', action: () => navigateToPage('/collect-miles/gyms') },
+        { label: 'Gas stations', action: () => navigateToPage('/collect-miles/gas-stations') },
       ]
     },
     spend: {
