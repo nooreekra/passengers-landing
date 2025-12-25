@@ -324,7 +324,7 @@ const WalletPage = () => {
 
                         {/* History Tab Content */}
                         {activeTab === "history" && (
-                            <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-6 border border-white/20">
+                            <div className="">
                                 {loadingTransactions ? (
                                     <div className="py-8">
                                         <Loader text={t("passenger.wallet.loading") || "Loading..."} />

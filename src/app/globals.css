@@ -125,3 +125,7 @@ svg {
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
+
+.rdp-weekdays { 
+    color: #fff;
+}
