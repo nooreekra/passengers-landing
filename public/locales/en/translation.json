@@ -298,6 +298,8 @@
       "signInToAccount": "Sign in to your account",
       "signUp": "Sign up",
       "confirmEmail": "Confirm your email",
+      "forgotPassword": "Password Recovery",
+      "resetPassword": "Reset Password",
       "signIn": "Sign In",
       "signUpButton": "Sign Up",
       "errors": {
@@ -311,13 +313,21 @@
         "registrationError": "An error occurred during registration. Please try again.",
         "invalidCode": "Invalid confirmation code",
         "codeNotFound": "Confirmation code not found or expired",
-        "confirmationError": "An error occurred during confirmation. Please try again."
+        "confirmationError": "An error occurred during confirmation. Please try again.",
+        "invalidEmail": "Invalid email",
+        "userNotFound": "User with this email not found",
+        "invalidTokenOrPassword": "Invalid code or password",
+        "tokenNotFound": "Code not found or expired",
+        "passwordResetRequestError": "An error occurred during password reset request. Please try again.",
+        "passwordResetError": "An error occurred during password reset. Please try again."
       },
       "success": {
         "loginSuccess": "Login successful!",
         "registrationSuccess": "Registration successful! Check your email for the confirmation code.",
         "emailConfirmed": "Email successfully confirmed!",
-        "emailConfirmedSimple": "Email successfully confirmed!"
+        "emailConfirmedSimple": "Email successfully confirmed!",
+        "passwordResetLinkSent": "Password reset link has been sent to your email",
+        "passwordResetSuccess": "Password successfully reset!"
       }
     },
     "loginForm": {
@@ -375,6 +385,37 @@
       "errors": {
         "codeRequired": "Confirmation code is required",
         "codeMinLength": "Code must contain at least 4 characters"
+      }
+    },
+    "forgotPasswordForm": {
+      "email": "Email",
+      "enterEmail": "Enter your email",
+      "instructions": "We will send you a password reset link to the specified email",
+      "sendResetLink": "Send reset link",
+      "sending": "Sending...",
+      "back": "Back",
+      "errors": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Enter a valid email"
+      }
+    },
+    "resetPasswordForm": {
+      "token": "Code",
+      "enterToken": "Enter code from email",
+      "tokenInstructions": "Enter the code that was sent to your email",
+      "newPassword": "New Password",
+      "enterNewPassword": "Enter new password",
+      "confirmPassword": "Confirm Password",
+      "enterConfirmPassword": "Confirm new password",
+      "resetPassword": "Reset Password",
+      "resetting": "Resetting password...",
+      "back": "Back",
+      "errors": {
+        "tokenRequired": "Code is required",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Password must contain at least 6 characters",
+        "confirmPasswordRequired": "Password confirmation is required",
+        "passwordsDoNotMatch": "Passwords do not match"
       }
     },
     "agreementsModal": {

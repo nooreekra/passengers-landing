@@ -297,6 +297,8 @@
       "signInToAccount": "Войдите в свой аккаунт",
       "signUp": "Зарегистрируйтесь",
       "confirmEmail": "Подтвердите ваш email",
+      "forgotPassword": "Восстановление пароля",
+      "resetPassword": "Сброс пароля",
       "signIn": "Войти",
       "signUpButton": "Регистрация",
       "errors": {
@@ -310,13 +312,21 @@
         "registrationError": "Произошла ошибка при регистрации. Попробуйте снова.",
         "invalidCode": "Неверный код подтверждения",
         "codeNotFound": "Код подтверждения не найден или истек",
-        "confirmationError": "Произошла ошибка при подтверждении. Попробуйте снова."
+        "confirmationError": "Произошла ошибка при подтверждении. Попробуйте снова.",
+        "invalidEmail": "Неверный email",
+        "userNotFound": "Пользователь с таким email не найден",
+        "invalidTokenOrPassword": "Неверный код или пароль",
+        "tokenNotFound": "Код не найден или истек",
+        "passwordResetRequestError": "Произошла ошибка при запросе сброса пароля. Попробуйте снова.",
+        "passwordResetError": "Произошла ошибка при сбросе пароля. Попробуйте снова."
       },
       "success": {
         "loginSuccess": "Вход выполнен успешно! Перенаправление...",
         "registrationSuccess": "Регистрация прошла успешно! Проверьте email для получения кода подтверждения.",
         "emailConfirmed": "Email успешно подтвержден! Перенаправление...",
-        "emailConfirmedSimple": "Email успешно подтвержден!"
+        "emailConfirmedSimple": "Email успешно подтвержден!",
+        "passwordResetLinkSent": "Ссылка для сброса пароля отправлена на ваш email",
+        "passwordResetSuccess": "Пароль успешно сброшен!"
       }
     },
     "loginForm": {
@@ -374,6 +384,37 @@
       "errors": {
         "codeRequired": "Код подтверждения обязателен",
         "codeMinLength": "Код должен содержать не менее 4 символов"
+      }
+    },
+    "forgotPasswordForm": {
+      "email": "Email",
+      "enterEmail": "Введите ваш email",
+      "instructions": "Мы отправим вам ссылку для сброса пароля на указанный email",
+      "sendResetLink": "Отправить ссылку",
+      "sending": "Отправка...",
+      "back": "Назад",
+      "errors": {
+        "emailRequired": "Email обязателен",
+        "emailInvalid": "Введите корректный email"
+      }
+    },
+    "resetPasswordForm": {
+      "token": "Код",
+      "enterToken": "Введите код из email",
+      "tokenInstructions": "Введите код, который был отправлен на ваш email",
+      "newPassword": "Новый пароль",
+      "enterNewPassword": "Введите новый пароль",
+      "confirmPassword": "Подтвердите пароль",
+      "enterConfirmPassword": "Подтвердите новый пароль",
+      "resetPassword": "Сбросить пароль",
+      "resetting": "Сброс пароля...",
+      "back": "Назад",
+      "errors": {
+        "tokenRequired": "Код обязателен",
+        "passwordRequired": "Пароль обязателен",
+        "passwordMinLength": "Пароль должен содержать не менее 6 символов",
+        "confirmPasswordRequired": "Подтверждение пароля обязательно",
+        "passwordsDoNotMatch": "Пароли не совпадают"
       }
     },
     "agreementsModal": {

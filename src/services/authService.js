@@ -255,6 +255,96 @@ class AuthService {
       throw error
     }
   }
+
+  // Request password reset
+  async requestPasswordReset(email) {
+    try {
+      // Определяем язык из браузера или используем значение по умолчанию
+      const language = navigator.language || 'en-US'
+      
+      const response = await fetch(this.getApiUrl('/api/auth/request-password-reset'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Accept-Language': language
+        },
+        body: JSON.stringify({
+          email: email
+        })
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.detail || errorData.message || `HTTP error! status: ${response.status}`)
+      }
+
+      // Если статус 204 No Content, возвращаем пустой объект
+      if (response.status === 204) {
+        return {}
+      }
+
+      // Проверяем, есть ли тело ответа перед парсингом JSON
+      const contentType = response.headers.get('content-type')
+      if (contentType && contentType.includes('application/json')) {
+        const text = await response.text()
+        if (text) {
+          return JSON.parse(text)
+        }
+      }
+      
+      return {}
+    } catch (error) {
+      console.error('Password reset request error:', error)
+      throw error
+    }
+  }
+
+  // Confirm password reset
+  async confirmPasswordReset(email, token, newPassword) {
+    try {
+      // Определяем язык из браузера или используем значение по умолчанию
+      const language = navigator.language || 'en-US'
+      
+      const response = await fetch(this.getApiUrl('/api/auth/confirm-password-reset'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Accept-Language': language
+        },
+        body: JSON.stringify({
+          email: email,
+          token: token,
+          newPassword: newPassword
+        })
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.detail || errorData.message || `HTTP error! status: ${response.status}`)
+      }
+
+      // Если статус 204 No Content, возвращаем пустой объект
+      if (response.status === 204) {
+        return {}
+      }
+
+      // Проверяем, есть ли тело ответа перед парсингом JSON
+      const contentType = response.headers.get('content-type')
+      if (contentType && contentType.includes('application/json')) {
+        const text = await response.text()
+        if (text) {
+          return JSON.parse(text)
+        }
+      }
+      
+      return {}
+    } catch (error) {
+      console.error('Password reset confirmation error:', error)
+      throw error
+    }
+  }
 }
 
 export default new AuthService()

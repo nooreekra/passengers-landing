@@ -5,6 +5,8 @@
       "signInToAccount": "Аккаунтыңызға кіріңіз",
       "signUp": "Тіркеліңіз",
       "confirmEmail": "Email-іңізді растаңыз",
+      "forgotPassword": "Парольді қалпына келтіру",
+      "resetPassword": "Парольді қалпына келтіру",
       "signIn": "Кіру",
       "signUpButton": "Тіркелу",
       "errors": {
@@ -18,13 +20,21 @@
         "registrationError": "Тіркелу кезінде қате орын алды. Қайталап көріңіз.",
         "invalidCode": "Жарамсыз растау коды",
         "codeNotFound": "Растау коды табылмады немесе мерзімі өткен",
-        "confirmationError": "Растау кезінде қате орын алды. Қайталап көріңіз."
+        "confirmationError": "Растау кезінде қате орын алды. Қайталап көріңіз.",
+        "invalidEmail": "Жарамсыз email",
+        "userNotFound": "Осы email-мен пайдаланушы табылмады",
+        "invalidTokenOrPassword": "Жарамсыз код немесе пароль",
+        "tokenNotFound": "Код табылмады немесе мерзімі өткен",
+        "passwordResetRequestError": "Парольді қалпына келтіру сұрауы кезінде қате орын алды. Қайталап көріңіз.",
+        "passwordResetError": "Парольді қалпына келтіру кезінде қате орын алды. Қайталап көріңіз."
       },
       "success": {
         "loginSuccess": "Кіру сәтті аяқталды! Басқа бетке өту...",
         "registrationSuccess": "Тіркелу сәтті аяқталды! Растау кодын алу үшін email-іңізді тексеріңіз.",
         "emailConfirmed": "Email сәтті расталды! Басқа бетке өту...",
-        "emailConfirmedSimple": "Email сәтті расталды!"
+        "emailConfirmedSimple": "Email сәтті расталды!",
+        "passwordResetLinkSent": "Парольді қалпына келтіру сілтемесі email-іңізге жіберілді",
+        "passwordResetSuccess": "Пароль сәтті қалпына келтірілді!"
       }
     },
     "loginForm": {
@@ -82,6 +92,37 @@
       "errors": {
         "codeRequired": "Растау коды міндетті",
         "codeMinLength": "Код кемінде 4 таңбадан тұруы керек"
+      }
+    },
+    "forgotPasswordForm": {
+      "email": "Email",
+      "enterEmail": "Email-іңізді енгізіңіз",
+      "instructions": "Біз сізге көрсетілген email-ге парольді қалпына келтіру сілтемесін жібереміз",
+      "sendResetLink": "Сілтемені жіберу",
+      "sending": "Жіберу...",
+      "back": "Артқа",
+      "errors": {
+        "emailRequired": "Email міндетті",
+        "emailInvalid": "Жарамды email енгізіңіз"
+      }
+    },
+    "resetPasswordForm": {
+      "token": "Код",
+      "enterToken": "Email-ден кодты енгізіңіз",
+      "tokenInstructions": "Email-іңізге жіберілген кодты енгізіңіз",
+      "newPassword": "Жаңа пароль",
+      "enterNewPassword": "Жаңа парольді енгізіңіз",
+      "confirmPassword": "Парольді растау",
+      "enterConfirmPassword": "Жаңа парольді растаңыз",
+      "resetPassword": "Парольді қалпына келтіру",
+      "resetting": "Парольді қалпына келтіру...",
+      "back": "Артқа",
+      "errors": {
+        "tokenRequired": "Код міндетті",
+        "passwordRequired": "Пароль міндетті",
+        "passwordMinLength": "Пароль кемінде 6 таңбадан тұруы керек",
+        "confirmPasswordRequired": "Парольді растау міндетті",
+        "passwordsDoNotMatch": "Парольдер сәйкес келмейді"
       }
     },
     "agreementsModal": {

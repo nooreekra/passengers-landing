@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-const LoginForm = ({ onSubmit, isLoading }) => {
+const LoginForm = ({ onSubmit, isLoading, onForgotPassword }) => {
   const { t } = useTranslation()
   const [formData, setFormData] = useState({
     email: '',
@@ -125,7 +125,15 @@ const LoginForm = ({ onSubmit, isLoading }) => {
       </button>
 
       <div className="forgot-password">
-        <a href="#" onClick={(e) => e.preventDefault()}>
+        <a 
+          href="#" 
+          onClick={(e) => {
+            e.preventDefault()
+            if (onForgotPassword) {
+              onForgotPassword()
+            }
+          }}
+        >
           {t('auth.loginForm.forgotPassword')}
         </a>
       </div>

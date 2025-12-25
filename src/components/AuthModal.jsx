@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next'
 import LoginForm from './LoginForm'
 import RegistrationForm from './RegistrationForm'
 import ConfirmForm from './ConfirmForm'
+import ForgotPasswordForm from './ForgotPasswordForm'
+import ResetPasswordForm from './ResetPasswordForm'
 import AgreementsModal from './AgreementsModal'
 import authService from '../services/authService'
 import { login, getMe } from '@/shared/api/auth'
@@ -34,6 +36,9 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [registrationEmail, setRegistrationEmail] = useState('')
   const [showConfirm, setShowConfirm] = useState(false)
   const [showAgreements, setShowAgreements] = useState(false)
+  const [showForgotPassword, setShowForgotPassword] = useState(false)
+  const [showResetPassword, setShowResetPassword] = useState(false)
+  const [resetPasswordEmail, setResetPasswordEmail] = useState('')
 
   // Закрытие модалки по Escape
   useEffect(() => {
@@ -280,13 +285,106 @@ const AuthModal = ({ isOpen, onClose }) => {
     setSuccess('')
   }
 
+  const handleForgotPassword = () => {
+    setShowForgotPassword(true)
+    setError('')
+    setSuccess('')
+  }
+
+  const handleRequestPasswordReset = async (data) => {
+    setIsLoading(true)
+    setError('')
+    setSuccess('')
+    
+    try {
+      await authService.requestPasswordReset(data.email)
+      setResetPasswordEmail(data.email)
+      setShowForgotPassword(false)
+      setShowResetPassword(true)
+      setSuccess(t('auth.modal.success.passwordResetLinkSent'))
+      
+      // Автоматически скрываем сообщение об успехе через 5 секунд
+      setTimeout(() => {
+        setSuccess('')
+      }, 5000)
+    } catch (err) {
+      console.error('Password reset request error:', err)
+      
+      if (err.message.includes('400') || err.message.includes('Bad Request')) {
+        setError(t('auth.modal.errors.invalidEmail'))
+      } else if (err.message.includes('404') || err.message.includes('Not Found')) {
+        setError(t('auth.modal.errors.userNotFound'))
+      } else if (err.message.includes('500') || err.message.includes('Internal Server Error')) {
+        setError(t('auth.modal.errors.serverError'))
+      } else if (err.message.includes('Network') || err.message.includes('fetch')) {
+        setError(t('auth.modal.errors.networkError'))
+      } else {
+        setError(err.message || t('auth.modal.errors.passwordResetRequestError'))
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleConfirmPasswordReset = async (data) => {
+    setIsLoading(true)
+    setError('')
+    setSuccess('')
+    
+    try {
+      await authService.confirmPasswordReset(data.email, data.token, data.newPassword)
+      setSuccess(t('auth.modal.success.passwordResetSuccess'))
+      
+      // Автоматически переключаемся на форму входа через 2 секунды
+      setTimeout(() => {
+        setShowResetPassword(false)
+        setShowForgotPassword(false)
+        setMode('login')
+        setSuccess('')
+      }, 2000)
+    } catch (err) {
+      console.error('Password reset confirmation error:', err)
+      
+      if (err.message.includes('400') || err.message.includes('Bad Request')) {
+        setError(t('auth.modal.errors.invalidTokenOrPassword'))
+      } else if (err.message.includes('404') || err.message.includes('Not Found')) {
+        setError(t('auth.modal.errors.tokenNotFound'))
+      } else if (err.message.includes('500') || err.message.includes('Internal Server Error')) {
+        setError(t('auth.modal.errors.serverError'))
+      } else if (err.message.includes('Network') || err.message.includes('fetch')) {
+        setError(t('auth.modal.errors.networkError'))
+      } else {
+        setError(err.message || t('auth.modal.errors.passwordResetError'))
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleBackToForgotPassword = () => {
+    setShowResetPassword(false)
+    setShowForgotPassword(true)
+    setError('')
+    setSuccess('')
+  }
+
+  const handleBackToLogin = () => {
+    setShowForgotPassword(false)
+    setShowResetPassword(false)
+    setError('')
+    setSuccess('')
+  }
+
   const handleModeChange = (newMode) => {
     setMode(newMode)
     setError('')
     setSuccess('')
     setShowConfirm(false)
     setShowAgreements(false)
+    setShowForgotPassword(false)
+    setShowResetPassword(false)
     setRegistrationEmail('')
+    setResetPasswordEmail('')
     
     // Если переключаемся на регистрацию, показываем модалку соглашений
     if (newMode === 'register') {
@@ -305,7 +403,10 @@ const AuthModal = ({ isOpen, onClose }) => {
     setSuccess('')
     setShowConfirm(false)
     setShowAgreements(false)
+    setShowForgotPassword(false)
+    setShowResetPassword(false)
     setRegistrationEmail('')
+    setResetPasswordEmail('')
     onClose()
   }
 
@@ -338,13 +439,17 @@ const AuthModal = ({ isOpen, onClose }) => {
           <p className="auth-modal-subtitle">
             {showConfirm 
               ? t('auth.modal.confirmEmail')
-              : mode === 'login'
-                ? t('auth.modal.signInToAccount')
-                : t('auth.modal.signUp')}
+              : showForgotPassword
+                ? t('auth.modal.forgotPassword')
+                : showResetPassword
+                  ? t('auth.modal.resetPassword')
+                  : mode === 'login'
+                    ? t('auth.modal.signInToAccount')
+                    : t('auth.modal.signUp')}
           </p>
         </div>
 
-        {!showConfirm && (
+        {!showConfirm && !showForgotPassword && !showResetPassword && (
           <div className="tabs-container">
             <button
               className={`tab-button ${mode === 'login' ? 'active' : ''}`}
@@ -382,10 +487,24 @@ const AuthModal = ({ isOpen, onClose }) => {
             isLoading={isLoading}
             onBack={handleBackToRegistration}
           />
+        ) : showForgotPassword ? (
+          <ForgotPasswordForm
+            onSubmit={handleRequestPasswordReset}
+            isLoading={isLoading}
+            onBack={handleBackToLogin}
+          />
+        ) : showResetPassword ? (
+          <ResetPasswordForm
+            email={resetPasswordEmail}
+            onSubmit={handleConfirmPasswordReset}
+            isLoading={isLoading}
+            onBack={handleBackToForgotPassword}
+          />
         ) : mode === 'login' ? (
           <LoginForm 
             onSubmit={handleLogin}
             isLoading={isLoading}
+            onForgotPassword={handleForgotPassword}
           />
         ) : (
           <RegistrationForm
