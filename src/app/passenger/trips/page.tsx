@@ -629,6 +629,21 @@ const TripsPage = () => {
                     )}
                 </div>
             </div>
+
+            {/* Overlay - Страница в разработке */}
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+                <div className="bg-white/10 backdrop-blur-md rounded-xl p-8 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.3)] max-w-md mx-4 text-center">
+                    <div className="mb-4">
+                        <Plane className="h-16 w-16 text-blue-400 mx-auto animate-pulse" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-white mb-3">
+                        {t("passenger.trips.inProgress")}
+                    </h2>
+                    <p className="text-gray-300 text-sm leading-relaxed">
+                        {t("passenger.trips.inProgressDescription")}
+                    </p>
+                </div>
+            </div>
         </div>
     );
 };

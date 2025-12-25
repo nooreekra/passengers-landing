@@ -1259,6 +1259,8 @@
             "endDate": "END DATE",
             "select": "Select",
             "done": "Done",
+            "inProgress": "Page in Development",
+            "inProgressDescription": "This page is currently under development. Trip booking functionality will be available soon.",
             "oneWay": "ONE WAY",
             "roundTrip": "ROUND TRIP",
             "bookAFlight": "BOOK A FLIGHT",
