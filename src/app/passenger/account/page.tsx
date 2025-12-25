@@ -1494,7 +1494,7 @@ const AccountPage = () => {
                                     {sortedMonths.map((monthKey) => (
                                         <div key={monthKey} className="mb-6">
                                             {/* Month Header */}
-                                            <div className="text-sm font-semibold text-gray-700 mb-3">
+                                            <div className="text-sm font-semibold text-white mb-3">
                                                 {formatMonthYear(monthKey)}
                                             </div>
 
@@ -1508,13 +1508,13 @@ const AccountPage = () => {
                                                     return (
                                                         <div
                                                             key={transaction.id}
-                                                            className={`bg-gray-50 rounded-lg p-4 ${hasDetails ? 'cursor-pointer hover:bg-gray-100 transition-colors' : ''}`}
+                                                            className={`bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10 ${hasDetails ? 'cursor-pointer hover:bg-white/15 transition-all' : ''}`}
                                                             onClick={() => hasDetails && toggleTransaction(transaction.id)}
                                                         >
                                                             <div className="flex items-start justify-between">
                                                                 <div className="flex-1">
                                                                     <div className="flex items-center gap-2 mb-2">
-                                                                        <span className="text-sm text-gray-600">
+                                                                        <span className="text-sm text-gray-200">
                                                                             {formatDate(transaction.date)}
                                                                         </span>
                                                                         <span className="text-sm font-medium text-white">
@@ -1524,11 +1524,11 @@ const AccountPage = () => {
 
                                                                     <div className="flex items-center gap-2">
                                                                         {isIncome ? (
-                                                                            <span className="text-sm font-semibold text-green-600">
+                                                                            <span className="text-sm font-semibold text-green-400">
                                                                                 +{transaction.miles.toLocaleString()} Miles
                                                                             </span>
                                                                         ) : (
-                                                                            <span className="text-sm font-semibold text-red-600">
+                                                                            <span className="text-sm font-semibold text-red-400">
                                                                                 -{transaction.miles.toLocaleString()} Miles
                                                                             </span>
                                                                         )}
@@ -1536,8 +1536,8 @@ const AccountPage = () => {
 
                                                                     {/* Expanded details */}
                                                                     {isExpanded && transaction.description && (
-                                                                        <div className="mt-3 pt-3 border-t border-gray-200">
-                                                                            <p className="text-sm text-gray-600">
+                                                                        <div className="mt-3 pt-3 border-t border-white/20">
+                                                                            <p className="text-sm text-gray-200">
                                                                                 {transaction.description}
                                                                             </p>
                                                                         </div>
@@ -1548,9 +1548,9 @@ const AccountPage = () => {
                                                                 {hasDetails && (
                                                                     <div className="ml-4 flex-shrink-0">
                                                                         {isExpanded ? (
-                                                                            <ChevronUp className="h-5 w-5 text-gray-400" />
+                                                                            <ChevronUp className="h-5 w-5 text-gray-300" />
                                                                         ) : (
-                                                                            <ChevronDown className="h-5 w-5 text-gray-400" />
+                                                                            <ChevronDown className="h-5 w-5 text-gray-300" />
                                                                         )}
                                                                     </div>
                                                                 )}

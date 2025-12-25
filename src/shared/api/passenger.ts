@@ -156,7 +156,7 @@ export interface TransactionsResponse {
  */
 export async function getTransactions(walletId: string, offset = 0, limit = 100): Promise<TransactionsResponse> {
     const { data } = await axiosInstance.get<WalletTransaction[]>(`/api/wallets/${walletId}/transactions`, {
-        params: { offset, limit }
+        params: { offset, limit, sortBy: 'createdAt:desc' }
     });
     
     // Преобразуем WalletTransaction[] в TransactionItem[]
@@ -311,7 +311,9 @@ export interface WalletTransaction {
  * Получение транзакций кошелька
  */
 export async function getWalletTransactions(walletId: string): Promise<WalletTransaction[]> {
-    const { data } = await axiosInstance.get<WalletTransaction[]>(`/api/wallets/${walletId}/transactions`);
+    const { data } = await axiosInstance.get<WalletTransaction[]>(`/api/wallets/${walletId}/transactions`, {
+        params: { sortBy: 'createdAt:desc' }
+    });
     return data;
 }
 
