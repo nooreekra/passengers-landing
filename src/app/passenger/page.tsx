@@ -26,6 +26,7 @@ const PassengerDashboardPage = () => {
     const user = useSelector((state: RootState) => state.user.current);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
+    const [isStoriesExpanded, setIsStoriesExpanded] = useState(false);
     const [copied, setCopied] = useState(false);
     const [selectedStory, setSelectedStory] = useState<{ type: 'category' | 'partner', name: string, id?: number | string, description?: string, imageUrl?: string, storyImageUrl?: string } | null>(null);
     const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
@@ -237,6 +238,7 @@ const PassengerDashboardPage = () => {
     const wasSwiped = useRef<boolean>(false); // Флаг для отслеживания свайпа
     const touchMoveDistance = useRef<number>(0); // Расстояние движения
     const hasMoved = useRef<boolean>(false); // Флаг для отслеживания реального движения
+    const isClickOnBackground = useRef<boolean>(false); // Флаг для отслеживания клика на фон
 
     // Создаем плоский массив всех сторисов (категории + партнеры)
     const allStories = useMemo(() => {
@@ -301,6 +303,7 @@ const PassengerDashboardPage = () => {
         touchStartY.current = clientY;
         touchStartX.current = clientX;
         isDragging.current = true;
+        isClickOnBackground.current = false;
     };
 
     // Обработка движения
@@ -316,6 +319,11 @@ const PassengerDashboardPage = () => {
         // Если горизонтальное движение больше вертикального, считаем это горизонтальным скроллом
         if (diffX > diffY && diffX > 10) {
             isHorizontalScrolling.current = true;
+        }
+        
+        // Если было движение, это не клик на фон
+        if (diffX > 5 || diffY > 5) {
+            isClickOnBackground.current = false;
         }
     };
 
@@ -869,6 +877,20 @@ const PassengerDashboardPage = () => {
                         minWidth: '100%',
                         touchAction: 'pan-x pinch-zoom'
                     }}
+                    onClick={(e) => {
+                        // Открываем список при клике на пустое пространство внутри карусели
+                        const target = e.target as HTMLElement;
+                        // Если клик был на сам элемент карусели или на пустое пространство между элементами
+                        const isClickOnStory = target.closest('[data-story-item]') || target.closest('button');
+                        // Если клик был на пустое пространство (не на элементы сторисов)
+                        if (!isClickOnStory) {
+                            // Проверяем, что не было свайпа
+                            if (!wasSwiped.current && !hasMoved.current) {
+                                e.stopPropagation(); // Останавливаем распространение, чтобы не сработал родительский обработчик
+                                setIsStoriesExpanded(true);
+                            }
+                        }
+                    }}
                     onTouchStart={(e) => {
                         // Останавливаем распространение, чтобы родитель не обрабатывал событие
                         e.stopPropagation();
@@ -932,6 +954,7 @@ const PassengerDashboardPage = () => {
                 >
                     {/* Название категории как первый элемент */}
                     <div 
+                        data-story-item
                         className="flex flex-col items-center gap-2 flex-shrink-0 cursor-pointer" 
                         style={{ minWidth: "80px" }}
                         onTouchStart={(e) => {
@@ -1142,6 +1165,7 @@ const PassengerDashboardPage = () => {
                     {!showOnlyFirst && category.partners.map((partner) => (
                         <div
                             key={partner.id}
+                            data-story-item
                             className="flex flex-col items-center gap-2 flex-shrink-0 cursor-pointer"
                             style={{ minWidth: "80px" }}
                             onTouchStart={(e) => {
@@ -1436,19 +1460,107 @@ const PassengerDashboardPage = () => {
                             <div className="text-white">{t("passenger.home.noStories")}</div>
                         </div>
                     ) : (
-                        <div 
-                            className="flex flex-col items-center gap-4 overflow-hidden relative select-none mb-6" 
-                            style={{ minHeight: '110px' }}
-                            onTouchStart={handleTouchStart}
+                        <motion.div 
+                            className="flex flex-col items-center gap-4 overflow-hidden relative select-none mb-6 cursor-pointer" 
+                            initial={false}
+                            animate={{ 
+                                minHeight: isStoriesExpanded ? 'auto' : '110px',
+                                maxHeight: isStoriesExpanded ? '70vh' : '110px'
+                            }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            style={{ 
+                                overflow: isStoriesExpanded ? 'auto' : 'hidden'
+                            }}
+                            onTouchStart={(e) => {
+                                // Проверяем, клик ли это на пустое пространство (между сторисами или на фон)
+                                const target = e.target as HTMLElement;
+                                // Клик на элемент сториса или кнопку - не открываем список
+                                const isClickOnStory = target.closest('button') ||
+                                                       target.closest('[data-story-item]');
+                                // Клик на пустое пространство внутри карусели (между сторисами) - открываем список
+                                const isClickOnCarouselBackground = target.closest('[data-carousel]') && !isClickOnStory;
+                                // Клик на фон вне карусели - открываем список
+                                const isClickOnOutside = !target.closest('[data-carousel]') && !isClickOnStory;
+                                
+                                if (isClickOnCarouselBackground || isClickOnOutside) {
+                                    isClickOnBackground.current = true;
+                                } else {
+                                    isClickOnBackground.current = false;
+                                }
+                                // Вызываем оригинальный обработчик
+                                handleTouchStart(e);
+                            }}
                             onTouchMove={handleTouchMove}
-                            onTouchEnd={handleTouchEnd}
-                            onMouseDown={handleMouseDown}
+                            onTouchEnd={(e) => {
+                                // Вызываем оригинальный обработчик
+                                handleTouchEnd(e);
+                                // Проверяем, был ли это клик на пустое пространство (без движения)
+                                if (isClickOnBackground.current && !wasSwiped.current && !hasMoved.current) {
+                                    const target = e.target as HTMLElement;
+                                    const isClickOnStory = target.closest('button') ||
+                                                           target.closest('[data-story-item]');
+                                    const isClickOnCarouselBackground = target.closest('[data-carousel]') && !isClickOnStory;
+                                    const isClickOnOutside = !target.closest('[data-carousel]') && !isClickOnStory;
+                                    
+                                    if (isClickOnCarouselBackground || isClickOnOutside) {
+                                        setIsStoriesExpanded(true);
+                                    }
+                                }
+                                isClickOnBackground.current = false;
+                            }}
+                            onMouseDown={(e) => {
+                                // Проверяем, клик ли это на пустое пространство (между сторисами или на фон)
+                                const target = e.target as HTMLElement;
+                                // Клик на элемент сториса или кнопку - не открываем список
+                                const isClickOnStory = target.closest('button') ||
+                                                       target.closest('[data-story-item]');
+                                // Клик на пустое пространство внутри карусели (между сторисами) - открываем список
+                                const isClickOnCarouselBackground = target.closest('[data-carousel]') && !isClickOnStory;
+                                // Клик на фон вне карусели - открываем список
+                                const isClickOnOutside = !target.closest('[data-carousel]') && !isClickOnStory;
+                                
+                                if (isClickOnCarouselBackground || isClickOnOutside) {
+                                    isClickOnBackground.current = true;
+                                } else {
+                                    isClickOnBackground.current = false;
+                                }
+                                // Вызываем оригинальный обработчик
+                                handleMouseDown(e);
+                            }}
                             onMouseMove={handleMouseMove}
                             onMouseUp={handleMouseUp}
                             onMouseLeave={handleMouseUp}
+                            onClick={(e) => {
+                                // Открываем список сторисов при клике на пустое пространство (между сторисами или на фон)
+                                const target = e.target as HTMLElement;
+                                const isClickOnStory = target.closest('button') ||
+                                                       target.closest('[data-story-item]');
+                                const isClickOnCarouselBackground = target.closest('[data-carousel]') && !isClickOnStory;
+                                const isClickOnOutside = !target.closest('[data-carousel]') && !isClickOnStory;
+                                
+                                if ((isClickOnCarouselBackground || isClickOnOutside) && isClickOnBackground.current && !wasSwiped.current && !hasMoved.current) {
+                                    setIsStoriesExpanded(true);
+                                }
+                                isClickOnBackground.current = false;
+                            }}
                         >
+                            {!isStoriesExpanded ? (
+                            <>
                             {/* Контейнер с вертикальной анимацией движения снизу вверх */}
-                            <div className="w-full relative overflow-hidden" style={{ height: '110px' }}>
+                            <div 
+                                className="w-full relative overflow-hidden flex items-center" 
+                                style={{ height: '110px' }}
+                                onClick={(e) => {
+                                    // Открываем список при клике на пустое пространство (не на кнопки-полукруги)
+                                    const target = e.target as HTMLElement;
+                                    // Если клик был на сам контейнер или на motion.div, но не на кнопки
+                                    if (!target.closest('button') && !target.closest('[data-story-item]') && !target.closest('[data-carousel]')) {
+                                        if (!wasSwiped.current && !hasMoved.current) {
+                                            setIsStoriesExpanded(true);
+                                        }
+                                    }
+                                }}
+                            >
                                 {/* Контейнер для всех трех категорий - все двигаются вместе */}
                                 <AnimatePresence mode="popLayout" custom={direction} initial={false}>
                             <motion.div
@@ -1467,6 +1579,18 @@ const PassengerDashboardPage = () => {
                                     top: 0,
                                     left: 0,
                                     right: 0
+                                }}
+                                onClick={(e) => {
+                                    // Открываем список при клике на пустое пространство
+                                    const target = e.target as HTMLElement;
+                                    // Если клик был на motion.div или его дочерние элементы, но не на кнопки и не на элементы сторисов
+                                    if (!target.closest('button') && 
+                                        !target.closest('[data-story-item]') && 
+                                        !target.closest('[data-carousel]')) {
+                                        if (!wasSwiped.current && !hasMoved.current) {
+                                            setIsStoriesExpanded(true);
+                                        }
+                                    }
                                 }}
                             >
                                 {/* Предыдущая категория (верхняя часть, видно только нижние 24px) */}
@@ -1493,7 +1617,10 @@ const PassengerDashboardPage = () => {
                                 
                                 {/* Кликабельный верхний полукруг (видимая нижняя часть) - позиционирован в видимой области */}
                                 <button
-                                    onClick={handleTopSemicircleClick}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleTopSemicircleClick(e);
+                                    }}
                                     className="absolute cursor-pointer hover:bg-white/5 transition-colors"
                                     style={{
                                         top: '0px',
@@ -1501,16 +1628,30 @@ const PassengerDashboardPage = () => {
                                         right: 0,
                                         height: '24px',
                                         zIndex: 20,
+                                        pointerEvents: 'auto',
                                     }}
                                     aria-label="Swipe down to previous category"
                                 />
 
                                 {/* Текущая категория (центральная часть, полностью видна) */}
                                 <div 
-                                    className="w-full absolute"
+                                    className="w-full absolute flex items-center"
                                     style={{ 
                                         top: '24px',
-                                        height: '72px'
+                                        height: '72px',
+                                        pointerEvents: 'auto',
+                                    }}
+                                    onClick={(e) => {
+                                        // Открываем список при клике на пустое пространство в центральной области
+                                        const target = e.target as HTMLElement;
+                                        // Если клик был на карусель, но не на элементы сторисов и не на кнопки
+                                        const isClickOnStory = target.closest('[data-story-item]') || target.closest('button');
+                                        if (target.closest('[data-carousel]') && !isClickOnStory) {
+                                            if (!wasSwiped.current && !hasMoved.current) {
+                                                e.stopPropagation();
+                                                setIsStoriesExpanded(true);
+                                            }
+                                        }
                                     }}
                                 >
                                     {renderCategory(currentCategory, 1)}
@@ -1538,7 +1679,10 @@ const PassengerDashboardPage = () => {
                                     </div>
                                     {/* Кликабельный нижний полукруг (видимая верхняя часть) */}
                                     <button
-                                        onClick={handleBottomSemicircleClick}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleBottomSemicircleClick(e);
+                                        }}
                                         className="absolute cursor-pointer hover:bg-white/5 transition-colors"
                                         style={{
                                             top: 0,
@@ -1546,6 +1690,7 @@ const PassengerDashboardPage = () => {
                                             right: 0,
                                             height: '24px',
                                             zIndex: 20,
+                                            pointerEvents: 'auto',
                                         }}
                                         aria-label="Swipe up to next category"
                                     />
@@ -1553,7 +1698,109 @@ const PassengerDashboardPage = () => {
                             </motion.div>
                                 </AnimatePresence>
                             </div>
-                        </div>
+                            </>
+                            ) : (
+                                // Расширенный список всех сторисов
+                                <div className="w-full relative z-10 flex flex-col" style={{ minHeight: '200px' }}>
+                                    <div className="flex justify-end px-2">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setIsStoriesExpanded(false);
+                                            }}
+                                            className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+                                        >
+                                            <X className="h-4 w-4 text-white" />
+                                        </button>
+                                    </div>
+                                    
+                                    <div 
+                                        className="space-y-6 max-h-[60vh] overflow-y-auto scrollbar-hide"
+                                        style={{
+                                            scrollbarWidth: 'none',
+                                            msOverflowStyle: 'none',
+                                        }}
+                                    >
+                                        {categories.length === 0 ? (
+                                            <div className="text-center py-8 text-white/70">
+                                                {t("passenger.home.noStories")}
+                                            </div>
+                                        ) : (
+                                        categories.map((category) => (
+                                            <div key={category.id} className="space-y-3">
+                                                <div 
+                                                    data-carousel="true"
+                                                    className="flex gap-3 overflow-x-auto scrollbar-hide px-2"
+                                                    style={{ 
+                                                        scrollBehavior: 'smooth',
+                                                        WebkitOverflowScrolling: 'touch',
+                                                        scrollbarWidth: 'none',
+                                                        msOverflowStyle: 'none',
+                                                    }}
+                                                >
+                                                    {/* Категория как первый элемент */}
+                                                    <div 
+                                                        data-story-item
+                                                        className="flex flex-col items-center gap-2 flex-shrink-0 cursor-pointer"
+                                                        style={{ minWidth: "80px" }}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            openStoryModal({ type: 'category', name: category.name, id: category.id });
+                                                            setIsStoriesExpanded(false);
+                                                        }}
+                                                    >
+                                                        <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-full flex flex-col items-center justify-center border-2 border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] overflow-hidden relative p-1">
+                                                            {category.iconComponent ? (
+                                                                <>
+                                                                    <category.iconComponent className="w-5 h-5 text-white flex-shrink-0" />
+                                                                    <span className="text-[9px] text-white font-semibold text-center leading-tight truncate w-full px-0.5 mt-0.5">
+                                                                        {category.name}
+                                                                    </span>
+                                                                </>
+                                                            ) : (
+                                                                <span className="text-[10px] text-white text-center px-1 font-semibold leading-tight truncate w-full">
+                                                                    {category.name}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Партнеры категории */}
+                                                    {category.partners.map((partner) => (
+                                                        <div
+                                                            key={partner.id}
+                                                            data-story-item
+                                                            className="flex flex-col items-center gap-2 flex-shrink-0 cursor-pointer"
+                                                            style={{ minWidth: "80px" }}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                openStoryModal({ type: 'partner', name: partner.name, id: partner.id, categoryId: category.id });
+                                                                setIsStoriesExpanded(false);
+                                                            }}
+                                                        >
+                                                            <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border-2 border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] cursor-pointer hover:border-white/35 hover:bg-white/15 transition-all overflow-hidden relative">
+                                                                {partner.businessLogo ? (
+                                                                    <Image
+                                                                        src={partner.businessLogo}
+                                                                        alt={partner.name}
+                                                                        fill
+                                                                        className="object-cover rounded-full"
+                                                                        unoptimized
+                                                                    />
+                                                                ) : (
+                                                                    <span className="text-xs text-gray-800 font-medium">Logo</span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </motion.div>
                     )}
 
                 {/* Две главные кнопки */}
@@ -1836,6 +2083,7 @@ const PassengerDashboardPage = () => {
                     </div>
                 </Dialog>
             </Transition>
+
         </div>
     );
 };
