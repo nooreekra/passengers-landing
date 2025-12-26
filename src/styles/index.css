@@ -1947,6 +1947,7 @@ div[id^="react-select"] {
   font-weight: 400;
   line-height: 1.6;
   max-width: 800px;
+  margin-bottom: 12px;
 }
 
 .collect-section .section-title,
