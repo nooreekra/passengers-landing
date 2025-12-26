@@ -13,22 +13,19 @@ export default function RestaurantsPage() {
       <Header />
       <section className="collect-miles-section" style={{ padding: '120px 20px 80px', minHeight: '100vh' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <h1 style={{ 
-            fontSize: '48px', 
-            fontWeight: 'bold', 
+          <h1 className="section-subtitle" style={{ 
             marginBottom: '40px',
-            textAlign: 'center',
             textTransform: 'uppercase'
           }}>
             {t('landing.collectMiles.restaurants.title', 'Restaurants')}
           </h1>
           
-          <div style={{ fontSize: '20px', lineHeight: '1.8', marginBottom: '40px' }}>
-            <p style={{ marginBottom: '30px', textAlign: 'center', maxWidth: '900px', margin: '0 auto 30px' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto 40px' }}>
+            <p className="section-description" style={{ marginBottom: '30px' }}>
               {t('landing.collectMiles.restaurants.description', 
                 'Enjoy delicious meals and earn IMS Miles at the same time. Every dinner with family, business lunch with partners, or special occasion celebration at our partner restaurants earns you rewards.')}
             </p>
-            <p style={{ textAlign: 'center', maxWidth: '900px', margin: '0 auto' }}>
+            <p className="section-description">
               {t('landing.collectMiles.restaurants.benefits', 
                 'No need to join separate restaurant loyalty programs. All your dining experiences are unified in your IMS Miles account, making every meal a step closer to your next vacation.')}
             </p>
@@ -41,28 +38,27 @@ export default function RestaurantsPage() {
             borderRadius: '12px',
             border: '1px solid #e0e0e0'
           }}>
-            <h2 style={{ 
-              fontSize: '32px', 
-              fontWeight: 'bold', 
+            <h2 className="section-subtitle" style={{ 
+              fontSize: '28px',
               marginBottom: '30px',
               textTransform: 'uppercase'
             }}>
               {t('landing.collectMiles.restaurants.howItWorks', 'How It Works')}
             </h2>
-            <ul style={{ fontSize: '18px', lineHeight: '2', listStyle: 'none', padding: 0 }}>
-              <li style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              <li className="section-description" style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🍽️</span>
                 {t('landing.collectMiles.restaurants.step1', 'Dine at any of our partner restaurants')}
               </li>
-              <li style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
+              <li className="section-description" style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>💳</span>
                 {t('landing.collectMiles.restaurants.step2', 'Pay with your linked card or account')}
               </li>
-              <li style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
+              <li className="section-description" style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🎁</span>
                 {t('landing.collectMiles.restaurants.step3', 'Miles are automatically credited to your account')}
               </li>
-              <li style={{ paddingLeft: '30px', position: 'relative' }}>
+              <li className="section-description" style={{ paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>✈️</span>
                 {t('landing.collectMiles.restaurants.step4', 'Use your miles for flights, hotels, or more dining experiences')}
               </li>

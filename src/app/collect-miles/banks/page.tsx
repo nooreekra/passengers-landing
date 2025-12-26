@@ -13,22 +13,19 @@ export default function BanksPage() {
       <Header />
       <section className="collect-miles-section" style={{ padding: '120px 20px 80px', minHeight: '100vh' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <h1 style={{ 
-            fontSize: '48px', 
-            fontWeight: 'bold', 
+          <h1 className="section-subtitle" style={{ 
             marginBottom: '40px',
-            textAlign: 'center',
             textTransform: 'uppercase'
           }}>
             {t('landing.collectMiles.banks.title', 'Banks')}
           </h1>
           
-          <div style={{ fontSize: '20px', lineHeight: '1.8', marginBottom: '40px' }}>
-            <p style={{ marginBottom: '30px', textAlign: 'center', maxWidth: '900px', margin: '0 auto 30px' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto 40px' }}>
+            <p className="section-description" style={{ marginBottom: '30px' }}>
               {t('landing.collectMiles.banks.description', 
                 'Turn your everyday banking into rewards. Every time you pay with your credit card from our partner banks, you collect IMS Miles automatically.')}
             </p>
-            <p style={{ textAlign: 'center', maxWidth: '900px', margin: '0 auto' }}>
+            <p className="section-description">
               {t('landing.collectMiles.banks.benefits', 
                 'Monthly card payments, purchases, and transactions all contribute to your miles balance. Make your daily spending work for you and bring you closer to your next vacation.')}
             </p>
@@ -41,28 +38,27 @@ export default function BanksPage() {
             borderRadius: '12px',
             border: '1px solid #e0e0e0'
           }}>
-            <h2 style={{ 
-              fontSize: '32px', 
-              fontWeight: 'bold', 
+            <h2 className="section-subtitle" style={{ 
+              fontSize: '28px',
               marginBottom: '30px',
               textTransform: 'uppercase'
             }}>
               {t('landing.collectMiles.banks.howItWorks', 'How It Works')}
             </h2>
-            <ul style={{ fontSize: '18px', lineHeight: '2', listStyle: 'none', padding: 0 }}>
-              <li style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              <li className="section-description" style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>💳</span>
                 {t('landing.collectMiles.banks.step1', 'Use your partner bank credit card for everyday purchases')}
               </li>
-              <li style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
+              <li className="section-description" style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>💵</span>
                 {t('landing.collectMiles.banks.step2', 'Every transaction automatically earns you IMS Miles')}
               </li>
-              <li style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
+              <li className="section-description" style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>📊</span>
                 {t('landing.collectMiles.banks.step3', 'Track your monthly card payments and accumulated miles in one place')}
               </li>
-              <li style={{ paddingLeft: '30px', position: 'relative' }}>
+              <li className="section-description" style={{ paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>✈️</span>
                 {t('landing.collectMiles.banks.step4', 'Redeem your miles for flights, hotels, or other travel rewards')}
               </li>

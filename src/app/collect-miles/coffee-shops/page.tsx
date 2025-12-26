@@ -13,22 +13,19 @@ export default function CoffeeShopsPage() {
       <Header />
       <section className="collect-miles-section" style={{ padding: '120px 20px 80px', minHeight: '100vh' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <h1 style={{ 
-            fontSize: '48px', 
-            fontWeight: 'bold', 
+          <h1 className="section-subtitle" style={{ 
             marginBottom: '40px',
-            textAlign: 'center',
             textTransform: 'uppercase'
           }}>
             {t('landing.collectMiles.coffeeShops.title', 'Coffee Shops')}
           </h1>
           
-          <div style={{ fontSize: '20px', lineHeight: '1.8', marginBottom: '40px' }}>
-            <p style={{ marginBottom: '30px', textAlign: 'center', maxWidth: '900px', margin: '0 auto 30px' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto 40px' }}>
+            <p className="section-description" style={{ marginBottom: '30px' }}>
               {t('landing.collectMiles.coffeeShops.description', 
                 'Your daily coffee ritual can now fuel your next vacation. Every cup of coffee, croissant, or snack purchased at our partner coffee shops earns you IMS Miles.')}
             </p>
-            <p style={{ textAlign: 'center', maxWidth: '900px', margin: '0 auto' }}>
+            <p className="section-description">
               {t('landing.collectMiles.coffeeShops.benefits', 
                 'Grab your morning coffee with friends, enjoy a takeaway, or relax with a pastry - all while collecting miles that bring you closer to your dream destination.')}
             </p>
@@ -41,28 +38,27 @@ export default function CoffeeShopsPage() {
             borderRadius: '12px',
             border: '1px solid #e0e0e0'
           }}>
-            <h2 style={{ 
-              fontSize: '32px', 
-              fontWeight: 'bold', 
+            <h2 className="section-subtitle" style={{ 
+              fontSize: '28px',
               marginBottom: '30px',
               textTransform: 'uppercase'
             }}>
               {t('landing.collectMiles.coffeeShops.howItWorks', 'How It Works')}
             </h2>
-            <ul style={{ fontSize: '18px', lineHeight: '2', listStyle: 'none', padding: 0 }}>
-              <li style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              <li className="section-description" style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>☕</span>
                 {t('landing.collectMiles.coffeeShops.step1', 'Visit any of our partner coffee shops')}
               </li>
-              <li style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
+              <li className="section-description" style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🥐</span>
                 {t('landing.collectMiles.coffeeShops.step2', 'Buy your coffee, croissant, or any item')}
               </li>
-              <li style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
+              <li className="section-description" style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>💳</span>
                 {t('landing.collectMiles.coffeeShops.step3', 'Pay and automatically earn IMS Miles')}
               </li>
-              <li style={{ paddingLeft: '30px', position: 'relative' }}>
+              <li className="section-description" style={{ paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🎉</span>
                 {t('landing.collectMiles.coffeeShops.step4', 'Watch your miles accumulate with every visit')}
               </li>

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { User, X, Copy } from "lucide-react";
+import { User, X, Copy, ChevronDown } from "lucide-react";
 import { FaPlane, FaHotel, FaDumbbell, FaBuilding, FaUtensils, FaCoffee } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, Transition } from "@headlessui/react";
@@ -1697,18 +1697,34 @@ const PassengerDashboardPage = () => {
                                 </div>
                             </motion.div>
                                 </AnimatePresence>
+                                {/* Стрелочка для раскрытия */}
+                                <div className="absolute right-2 top-1/2 -translate-y-1/2 z-30 pointer-events-none">
+                                    <ChevronDown className="h-5 w-5 text-white/60" />
+                                </div>
                             </div>
                             </>
                             ) : (
                                 // Расширенный список всех сторисов
                                 <div className="w-full relative z-10 flex flex-col" style={{ minHeight: '200px' }}>
-                                    <div className="flex justify-end px-2">
+                                    <div className="flex justify-end px-2 items-center gap-2">
+                                        {/* Стрелочка для сворачивания */}
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setIsStoriesExpanded(false);
+                                            }}
+                                            className="p-1.5 hover:bg-white/10 rounded-full transition-colors flex items-center justify-center"
+                                            aria-label="Свернуть"
+                                        >
+                                            <ChevronDown className="h-4 w-4 text-white rotate-180 transition-transform" />
+                                        </button>
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 setIsStoriesExpanded(false);
                                             }}
                                             className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+                                            aria-label="Закрыть"
                                         >
                                             <X className="h-4 w-4 text-white" />
                                         </button>
