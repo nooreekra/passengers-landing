@@ -11,17 +11,17 @@ export default function GasStationsPage() {
   return (
     <div className="home-page">
       <Header />
-      <section className="collect-miles-section" style={{ padding: '120px 20px 80px', minHeight: '100vh' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <section className="collect-miles-section" style={{ padding: '80px 20px 40px', minHeight: '100vh' }}>
+        <div style={{ maxWidth: '1200px' }}>
           <h1 className="section-subtitle" style={{ 
-            marginBottom: '40px',
+            marginBottom: '20px',
             textTransform: 'uppercase'
           }}>
             {t('landing.collectMiles.gasStations.title', 'Gas Stations')}
           </h1>
           
-          <div style={{ maxWidth: '900px', margin: '0 auto 40px' }}>
-            <p className="section-description" style={{ marginBottom: '30px' }}>
+          <div style={{ maxWidth: '900px', marginLeft: 'auto', marginRight: 'auto', marginBottom: '20px' }}>
+            <p className="section-description" style={{ marginBottom: '15px' }}>
               {t('landing.collectMiles.gasStations.description', 
                 'Every time you fill up your tank at our partner gas stations, you\'re filling up your miles account too. Turn your regular fuel stops into travel rewards.')}
             </p>
@@ -32,29 +32,29 @@ export default function GasStationsPage() {
           </div>
 
           <div style={{ 
-            marginTop: '60px', 
-            padding: '40px', 
+            marginTop: '30px', 
+            padding: '25px', 
             backgroundColor: '#f9f9f9', 
             borderRadius: '12px',
             border: '1px solid #e0e0e0'
           }}>
             <h2 className="section-subtitle" style={{ 
               fontSize: '28px',
-              marginBottom: '30px',
+              marginBottom: '15px',
               textTransform: 'uppercase'
             }}>
               {t('landing.collectMiles.gasStations.howItWorks', 'How It Works')}
             </h2>
             <ul style={{ listStyle: 'none', padding: 0 }}>
-              <li className="section-description" style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
+              <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>⛽</span>
                 {t('landing.collectMiles.gasStations.step1', 'Fill up your tank at any of our partner gas stations')}
               </li>
-              <li className="section-description" style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
+              <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>💳</span>
                 {t('landing.collectMiles.gasStations.step2', 'Pay for your fuel purchase')}
               </li>
-              <li className="section-description" style={{ marginBottom: '20px', paddingLeft: '30px', position: 'relative' }}>
+              <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🎁</span>
                 {t('landing.collectMiles.gasStations.step3', 'Miles are automatically credited to your IMS account')}
               </li>

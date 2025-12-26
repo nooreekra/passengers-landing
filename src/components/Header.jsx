@@ -200,7 +200,15 @@ const Header = () => {
     <>
       <header className="landing-header">
         <div className="header-container">
-          <div className="header-logo">
+          <div 
+            className="header-logo"
+            onClick={() => {
+              if (!isMenuOpen) {
+                router.push('/')
+              }
+            }}
+            style={{ cursor: isMenuOpen ? 'default' : 'pointer' }}
+          >
             {isMenuOpen ? (
               <button 
                 className="header-language-button"

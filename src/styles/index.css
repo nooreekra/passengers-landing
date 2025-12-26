@@ -1901,7 +1901,6 @@ div[id^="react-select"] {
   overflow: visible;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
@@ -1945,12 +1944,9 @@ div[id^="react-select"] {
 .section-description {
   font-size: 16px;
   text-align: center;
-  margin-bottom: 36px;
   font-weight: 400;
   line-height: 1.6;
   max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .collect-section .section-title,
@@ -3108,8 +3104,6 @@ div[id^="react-select"] {
 
   .section-description {
     font-size: 14px;
-    margin-bottom: 40px;
-    padding: 0 20px;
   }
 
   .status-benefits-footer-text {
@@ -3323,8 +3317,6 @@ div[id^="react-select"] {
 
   .section-description {
     font-size: 14px;
-    margin-bottom: 30px;
-    padding: 0 15px;
   }
 
   .status-benefits-footer-text {

@@ -11,10 +11,10 @@ export default function UnifiedMilesPage() {
   return (
     <div className="home-page">
       <Header />
-      <section className="collect-miles-section" style={{ padding: '120px 20px 80px', minHeight: '100vh' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <section className="collect-miles-section" style={{ padding: '80px 20px 40px', minHeight: '100vh' }}>
+        <div style={{ maxWidth: '1200px' }}>
           <h1 className="section-subtitle" style={{ 
-            marginBottom: '40px',
+            marginBottom: '20px',
             textTransform: 'uppercase'
           }}>
             {t('landing.collectMiles.unifiedMiles.title', 'Unified Miles')}
@@ -22,38 +22,41 @@ export default function UnifiedMilesPage() {
           
           <div style={{ 
             maxWidth: '900px',
-            margin: '0 auto 40px'
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginBottom: '20px'
           }}>
-            <p className="section-description" style={{ marginBottom: '30px' }}>
+            <p className="section-description" style={{ marginBottom: '15px' }}>
               {t('landing.collectMiles.unifiedMiles.paragraph1', 
                 'IMS Miles are unified Miles which means every time you take your flight, stay at hotel, buy a croissant or pay using a credit card, you collect the same IMS Miles from all our Partners.')}
             </p>
             <div style={{ 
-              marginBottom: '30px',
+              marginBottom: '15px',
               backgroundColor: '#f0f7ff',
-              padding: '30px',
+              padding: '20px',
               borderRadius: '12px',
               maxWidth: '900px',
-              margin: '0 auto 30px'
+              marginLeft: 'auto',
+              marginRight: 'auto'
             }}>
-              <p className="section-description" style={{ marginBottom: '15px', textAlign: 'left' }}>
+              <p className="section-description" style={{ marginBottom: '8px', textAlign: 'left' }}>
                 {t('landing.collectMiles.unifiedMiles.paragraph2Intro', 
                   'No need to register any more for:')}
               </p>
               <ul style={{ 
                 listStyle: 'none', 
                 padding: 0, 
-                margin: '0 0 15px 0',
+                margin: '0 0 8px 0',
                 textAlign: 'left'
               }}>
                 <li className="section-description" style={{ 
-                  marginBottom: '10px'
+                  marginBottom: '5px'
                 }}>
                   {t('landing.collectMiles.unifiedMiles.paragraph2Item1', 
                     '•10 different airline loyalty programs')}
                 </li>
                 <li className="section-description" style={{ 
-                  marginBottom: '10px'
+                  marginBottom: '5px'
                 }}>
                   {t('landing.collectMiles.unifiedMiles.paragraph2Item2', 
                     '•20 different hotel loyalty programs')}

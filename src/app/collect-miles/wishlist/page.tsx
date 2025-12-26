@@ -11,47 +11,47 @@ export default function WishlistPage() {
   return (
     <div className="home-page">
       <Header />
-      <section className="collect-miles-section" style={{ padding: '120px 20px 80px', minHeight: '100vh' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <section className="collect-miles-section" style={{ padding: '80px 20px 40px', minHeight: '100vh' }}>
+        <div style={{ maxWidth: '1200px' }}>
           <h1 className="section-subtitle" style={{ 
-            marginBottom: '40px',
+            marginBottom: '20px',
             textTransform: 'uppercase'
           }}>
             {t('landing.collectMiles.wishlist.title', 'Wishlist')}
           </h1>
           
-          <div style={{ maxWidth: '900px', margin: '0 auto 60px' }}>
+          <div style={{ maxWidth: '900px', marginLeft: 'auto', marginRight: 'auto', marginBottom: '30px' }}>
             <p className="section-description">
               {t('landing.collectMiles.wishlist.description', 
                 'Start your wishlist & set up separate trips. System will connect sub wallets, so you could collect Miles separately for each trip.')}
             </p>
           </div>
 
-          <div style={{ marginTop: '60px' }}>
+          <div style={{ marginTop: '30px' }}>
             <h3 className="section-subtitle" style={{ 
               fontSize: '28px',
-              marginBottom: '30px',
+              marginBottom: '15px',
               textTransform: 'uppercase'
             }}>
               {t('landing.collectMiles.wishlist.ideas', 'Some ideas!')}
             </h3>
 
-            <div style={{ display: 'grid', gap: '40px', marginTop: '40px' }}>
+            <div style={{ display: 'grid', gap: '20px', marginTop: '20px' }}>
               {/* Weekend Escape */}
               <div style={{ 
-                padding: '30px', 
+                padding: '20px', 
                 backgroundColor: '#f9f9f9', 
                 borderRadius: '12px',
                 border: '1px solid #e0e0e0'
               }}>
                 <h4 className="section-subtitle" style={{ 
                   fontSize: '24px',
-                  marginBottom: '20px',
+                  marginBottom: '10px',
                   textTransform: 'uppercase'
                 }}>
                   {t('landing.collectMiles.wishlist.weekendEscape.title', 'Weekend Escape')}
                 </h4>
-                <p className="section-description" style={{ marginBottom: '20px' }}>
+                <p className="section-description" style={{ marginBottom: '10px' }}>
                   {t('landing.collectMiles.wishlist.weekendEscape.description', 
                     'Short trip to nearby destination, to unwind over the weekend in one of the closest megacities, or in the quiet of mountain chalet or ski for couple of days or escape in the quiet of the beach house.')}
                 </p>
@@ -63,14 +63,14 @@ export default function WishlistPage() {
 
               {/* Family Holiday */}
               <div style={{ 
-                padding: '30px', 
+                padding: '20px', 
                 backgroundColor: '#f9f9f9', 
                 borderRadius: '12px',
                 border: '1px solid #e0e0e0'
               }}>
                 <h4 className="section-subtitle" style={{ 
                   fontSize: '24px',
-                  marginBottom: '20px',
+                  marginBottom: '10px',
                   textTransform: 'uppercase'
                 }}>
                   {t('landing.collectMiles.wishlist.familyHoliday.title', 'Family Holiday')}
@@ -83,14 +83,14 @@ export default function WishlistPage() {
 
               {/* Buddies Trip */}
               <div style={{ 
-                padding: '30px', 
+                padding: '20px', 
                 backgroundColor: '#f9f9f9', 
                 borderRadius: '12px',
                 border: '1px solid #e0e0e0'
               }}>
                 <h4 className="section-subtitle" style={{ 
                   fontSize: '24px',
-                  marginBottom: '20px',
+                  marginBottom: '10px',
                   textTransform: 'uppercase'
                 }}>
                   {t('landing.collectMiles.wishlist.buddiesTrip.title', 'Buddies Trip')}
@@ -103,19 +103,19 @@ export default function WishlistPage() {
 
               {/* Dream Destination */}
               <div style={{ 
-                padding: '30px', 
+                padding: '20px', 
                 backgroundColor: '#f9f9f9', 
                 borderRadius: '12px',
                 border: '1px solid #e0e0e0'
               }}>
                 <h4 className="section-subtitle" style={{ 
                   fontSize: '24px',
-                  marginBottom: '20px',
+                  marginBottom: '10px',
                   textTransform: 'uppercase'
                 }}>
                   {t('landing.collectMiles.wishlist.dreamDestination.title', 'Dream Destination')}
                 </h4>
-                <p className="section-description" style={{ marginBottom: '20px' }}>
+                <p className="section-description" style={{ marginBottom: '10px' }}>
                   {t('landing.collectMiles.wishlist.dreamDestination.description', 
                     'Tempting white sand beaches of Maldives, penthouse with bird\'s eye view over Central Park of New York or breathtaking winter scenes of Mont Blanc from an elegant mountain chalet. Have always been top of your mind? Yet, it keeps sleeping away as a perfect Dream.')}
                 </p>
@@ -127,13 +127,13 @@ export default function WishlistPage() {
             </div>
 
             <div style={{ 
-              marginTop: '50px', 
-              padding: '30px', 
+              marginTop: '25px', 
+              padding: '20px', 
               backgroundColor: '#fff3cd', 
               borderRadius: '12px',
               border: '1px solid #ffc107'
             }}>
-              <p className="section-description" style={{ fontWeight: 'bold', marginBottom: '15px' }}>
+              <p className="section-description" style={{ fontWeight: 'bold', marginBottom: '8px' }}>
                 {t('landing.collectMiles.wishlist.allocation.title', 'P/S:')}
               </p>
               <p className="section-description">
