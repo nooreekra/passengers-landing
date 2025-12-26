@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { User, X, Copy, ChevronDown } from "lucide-react";
+import { User, X, Copy, ChevronDown, ChevronUp } from "lucide-react";
 import { FaPlane, FaHotel, FaDumbbell, FaBuilding, FaUtensils, FaCoffee } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, Transition } from "@headlessui/react";
@@ -1705,33 +1705,25 @@ const PassengerDashboardPage = () => {
                             </>
                             ) : (
                                 // Расширенный список всех сторисов
-                                <div className="w-full relative z-10 flex flex-col" style={{ minHeight: '200px' }}>
-                                    <div className="flex justify-end px-2 items-center gap-2">
+                                <div className="pt-7 w-full relative z-10 flex flex-col" style={{ minHeight: '200px' }}> 
+
+                                <div className="absolute right-0 top-12 flex justify-end px-2 items-center">
                                         {/* Стрелочка для сворачивания */}
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 setIsStoriesExpanded(false);
                                             }}
-                                            className="p-1.5 hover:bg-white/10 rounded-full transition-colors flex items-center justify-center"
+                                            className="p-1.5 rounded-full transition-colors flex items-center justify-center"
                                             aria-label="Свернуть"
                                         >
-                                            <ChevronDown className="h-4 w-4 text-white rotate-180 transition-transform" />
+                                            <div className="absolute right-2 top-1/2 -translate-y-1/2 z-30 pointer-events-none">
+                                                <ChevronUp className="h-5 w-5 text-white/60" />
+                                            </div>
                                         </button>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setIsStoriesExpanded(false);
-                                            }}
-                                            className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
-                                            aria-label="Закрыть"
-                                        >
-                                            <X className="h-4 w-4 text-white" />
-                                        </button>
-                                    </div>
-                                    
+                                    </div>   
                                     <div 
-                                        className="space-y-6 max-h-[60vh] overflow-y-auto scrollbar-hide"
+                                        className="space-y-6 max-h-[37vh] overflow-y-auto scrollbar-hide"
                                         style={{
                                             scrollbarWidth: 'none',
                                             msOverflowStyle: 'none',
