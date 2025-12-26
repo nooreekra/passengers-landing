@@ -1304,8 +1304,12 @@
             "unifiedMiles": {
                 "title": "Unified Miles",
                 "paragraph1": "IMS Miles are unified Miles which means every time you take your flight, stay at hotel, buy a croissant or pay using a credit card, you collect the same IMS Miles from all our Partners.",
-                "paragraph2": "No need to register for 10 different airline loyalty programs, 20 different hotel loyalty programs, 30 different restaurant & coffee shop loyalty programs any more. All your rewards are now unified & in one place. Keep track of all your activity & Miles collected from different places in one window.",
-                "paragraph3": "Move over, IMS Miles never expire, nor capped, giving flexibility & control over your rewards. With a wide range of ecosystem partners, you can collect miles with your daily activity at your home country or abroad, while on a business trip."
+                "paragraph2Intro": "No need to register any more for:",
+                "paragraph2Item1": "•10 different airline loyalty programs",
+                "paragraph2Item2": "•20 different hotel loyalty programs",
+                "paragraph2Item3": "•30 different restaurant & coffee shop loyalty programs",
+                "paragraph2End": "All your rewards are now unified & in one place. Keep track of all your activity & Miles collected from different places in one window.",
+                "paragraph3": "Moveover, IMS Miles never expire, nor capped, giving flexibility & control over your rewards. With a wide range of ecosystem partners, you can collect miles with your daily activity at your home country or abroad, while on a business trip."
             },
             "wishlist": {
                 "title": "Wishlist",
@@ -1357,10 +1361,10 @@
             },
             "banks": {
                 "title": "Banks",
-                "description": "Turn your everyday banking into rewards. Every time you pay with your credit card from our partner banks, you collect IMS Miles automatically.",
-                "benefits": "Monthly card payments, purchases, and transactions all contribute to your miles balance. Make your daily spending work for you and bring you closer to your next vacation.",
+                "description": "Every time you use your card or QR from our partner bank to pay, you collect IMS Miles automatically.",
+                "benefits": "Monthly card payments and purchases all contribute to your miles balance. Make your daily spending work for you and bring you closer to your next vacation.",
                 "howItWorks": "How It Works",
-                "step1": "Use your partner bank credit card for everyday purchases",
+                "step1": "Use the card for QR from our partner banks for everyday purchases",
                 "step2": "Every transaction automatically earns you IMS Miles",
                 "step3": "Track your monthly card payments and accumulated miles in one place",
                 "step4": "Redeem your miles for flights, hotels, or other travel rewards"
@@ -1373,7 +1377,7 @@
                 "step1": "Dine at any of our partner restaurants",
                 "step2": "Pay with your linked card or account",
                 "step3": "Miles are automatically credited to your account",
-                "step4": "Use your miles for flights, hotels, or more dining experiences"
+                "step4": "Use your miles for flights and hotels"
             },
             "coffeeShops": {
                 "title": "Coffee Shops",
