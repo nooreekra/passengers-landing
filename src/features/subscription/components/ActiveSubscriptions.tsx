@@ -101,7 +101,7 @@ export const ActiveSubscriptions: React.FC<ActiveSubscriptionsProps> = ({
     if (activeSubscriptions.length === 0) {
         return (
             <div className="text-center py-8">
-                <p className="text-white">{t("subscription.subscriptions.noSubscriptions")}</p>
+                <p className="text-gray-500">{t("subscription.subscriptions.noSubscriptions")}</p>
             </div>
         );
     }
