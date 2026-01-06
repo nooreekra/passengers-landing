@@ -139,8 +139,10 @@ export interface TransactionItem {
     category: string;
     description: string;
     miles: number;
-    type: "Earn" | "Spend";
-    status: "Confirmed" | "Pending";
+    type: "TopUp" | "Transfer" | "Spent";
+    status: "Pending" | "Paid" | "Cancelled";
+    fromWishlistId?: string | null;
+    toWishlistId?: string | null;
     createdAt: string;
 }
 
@@ -160,17 +162,22 @@ export async function getTransactions(walletId: string, offset = 0, limit = 100)
     });
     
     // Преобразуем WalletTransaction[] в TransactionItem[]
-    const items: TransactionItem[] = (data || []).map((tx: WalletTransaction) => ({
-        id: tx.id,
-        userId: tx.userId,
-        transactionId: tx.sourceId,
-        category: tx.category,
-        description: tx.description,
-        miles: tx.amount,
-        type: tx.type === "Credit" ? "Earn" : "Spend",
-        status: tx.status === "Confirmed" ? "Confirmed" : "Pending",
-        createdAt: tx.createdAt,
-    }));
+    const items: TransactionItem[] = (data || []).map((tx: WalletTransaction) => {
+        // Используем тип и статус напрямую из API
+        return {
+            id: tx.id,
+            userId: tx.userId,
+            transactionId: tx.sourceId || "",
+            category: tx.category,
+            description: tx.description,
+            miles: tx.amount,
+            type: tx.type,
+            status: tx.status,
+            fromWishlistId: tx.fromWishlistId,
+            toWishlistId: tx.toWishlistId,
+            createdAt: tx.createdAt,
+        };
+    });
     
     return {
         items,
@@ -299,14 +306,16 @@ export interface WalletTransaction {
     id: string;
     walletId: string;
     userId: string;
-    type: "Debit" | "Credit";
-    status: "Pending" | "Confirmed";
+    type: "TopUp" | "Transfer" | "Spent";
+    status: "Pending" | "Paid" | "Cancelled";
     amount: number;
     wishlistId?: string;
     category: string;
     description: string;
     sourceType: string;
-    sourceId: string;
+    sourceId: string | null;
+    fromWishlistId?: string | null;
+    toWishlistId?: string | null;
     createdAt: string;
 }
 

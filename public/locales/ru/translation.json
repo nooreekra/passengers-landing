@@ -1143,7 +1143,17 @@
             "loading": "Загрузка...",
             "membership": "Участник",
             "progressThisMonth": "Прогресс за {{month}}",
-            "achieveNextStatus": "Достигните следующего статуса, выполнив определенное количество:"
+            "achieveNextStatus": "Достигните следующего статуса, выполнив определенное количество:",
+            "transactionTypes": {
+                "topup": "Пополнение",
+                "transfer": "Перевод",
+                "spent": "Платеж"
+            },
+            "transactionStatuses": {
+                "pending": "В ожидании",
+                "paid": "Оплачено",
+                "cancelled": "Отменено"
+            }
         },
         "more": {
             "title": "Еще",
@@ -1245,12 +1255,13 @@
             "saving": "Сохранение...",
             "save": "Сохранить",
             "transactionTypes": {
-                "credit": "Начисление",
-                "debit": "Списание"
+                "topup": "Пополнение",
+                "transfer": "Перевод",
+                "spent": "Платеж"
             },
             "transactionStatuses": {
-                "confirmed": "Подтверждено",
                 "pending": "В ожидании",
+                "paid": "Оплачено",
                 "cancelled": "Отменено"
             },
             "transactionCategories": {

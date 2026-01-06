@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Wallet, Plus, ArrowRightLeft } from "lucide-react";
+import { Wallet, Plus, ArrowRightLeft, ChevronDown, ChevronUp } from "lucide-react";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
@@ -77,9 +77,11 @@ const WalletPage = () => {
     const [activeTab, setActiveTab] = useState<"accounts" | "history">("accounts");
     const [wallet, setWallet] = useState<{ id: string; allTimeBalance: number; availableBalance: number; pendingBalance: number } | null>(null);
     const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
+    const [wishlistsMap, setWishlistsMap] = useState<Map<string, string>>(new Map()); // Map для быстрого поиска названий вишлистов по ID
     const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
     const [loading, setLoading] = useState(true);
     const [loadingTransactions, setLoadingTransactions] = useState(false);
+    const [expandedTransactions, setExpandedTransactions] = useState<Set<string>>(new Set());
     const accountsTabRef = useRef<HTMLButtonElement>(null);
     const historyTabRef = useRef<HTMLButtonElement>(null);
 
@@ -128,6 +130,13 @@ const WalletPage = () => {
                 );
                 
                 setWishlistItems(wishlistItemsWithNames);
+                
+                // Создаем мапу вишлистов по ID для быстрого поиска
+                const wishlistsMap = new Map<string, string>();
+                wishlistItemsWithNames.forEach(w => {
+                    wishlistsMap.set(w.id, w.name);
+                });
+                setWishlistsMap(wishlistsMap);
             } catch (error) {
                 console.error("Failed to load wallet data:", error);
             } finally {
@@ -157,6 +166,24 @@ const WalletPage = () => {
 
         loadTransactions();
     }, [activeTab, wallet?.id]);
+
+    const toggleTransaction = (id: string) => {
+        setExpandedTransactions(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(id)) {
+                newSet.delete(id);
+            } else {
+                newSet.add(id);
+            }
+            return newSet;
+        });
+    };
+
+    // Функция для получения последней части sourceId после последнего дефиса
+    const getSourceIdSuffix = (sourceId: string) => {
+        const parts = sourceId.split('-');
+        return parts[parts.length - 1];
+    };
 
     const allTimeMiles = wallet?.allTimeBalance ?? 0;
     const availableToRedeem = wallet?.availableBalance ?? 0;
@@ -362,67 +389,143 @@ const WalletPage = () => {
                                     </p>
                                 ) : (
                                     <div className="space-y-3">
-                                        {transactions.map((transaction) => (
-                                            <div
-                                                key={transaction.id}
-                                                className="p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/10"
-                                            >
-                                                <div className="flex items-start justify-between mb-2">
-                                                    <div className="flex-1">
-                                                        <p className="font-semibold text-sm text-white">
-                                                            {transaction.description || (transaction.category ? (() => {
-                                                                const categoryKey = transaction.category.toLowerCase().replace(/\s+/g, '');
-                                                                const translated = t(`passenger.wallet.transactionCategories.${categoryKey}`, { defaultValue: transaction.category });
-                                                                return translated !== `passenger.wallet.transactionCategories.${categoryKey}` ? translated : transaction.category;
-                                                            })() : '')}
+                                        {transactions.map((transaction) => {
+                                            // Используем тип транзакции напрямую из API
+                                            const transactionType = transaction.type;
+                                            const transactionStatus = transaction.status;
+                                            
+                                            const typeKey = transactionType.toLowerCase();
+                                            const statusKey = transactionStatus.toLowerCase();
+                                            
+                                            // Определяем, положительная ли операция (TopUp и Transfer всегда положительные)
+                                            const isPositive = transactionType === "TopUp" || transactionType === "Transfer";
+                                            
+                                            const isExpanded = expandedTransactions.has(transaction.id);
+                                            // Для Transfer проверяем fromWishlistId/toWishlistId, для остальных - description/sourceId
+                                            const hasDetails = transactionType === "Transfer" 
+                                                ? !!(transaction.fromWishlistId || transaction.toWishlistId || transaction.sourceId)
+                                                : !!(transaction.description || transaction.sourceId);
+                                            
+                                            return (
+                                                <div
+                                                    key={transaction.id}
+                                                    className={`relative p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/10 ${hasDetails ? 'cursor-pointer hover:bg-white/15 transition-all' : ''}`}
+                                                    onClick={() => hasDetails && toggleTransaction(transaction.id)}
+                                                >
+                                                    {/* Дата и Статус на одной строке сверху (статус только для TopUp) */}
+                                                    <div className="flex items-center justify-between gap-2 mb-3">
+                                                        <p className="text-xs text-gray-300">
+                                                            {new Date(transaction.createdAt).toLocaleDateString(
+                                                                i18n.language === 'ru' ? 'ru-RU' : 
+                                                                i18n.language === 'kk' ? 'kk-KZ' : 'en-US',
+                                                                {
+                                                                    year: "numeric",
+                                                                    month: "long",
+                                                                    day: "numeric",
+                                                                    hour: "2-digit",
+                                                                    minute: "2-digit",
+                                                                }
+                                                            )}
                                                         </p>
-                                                        {transaction.category && (
-                                                            <p className="text-xs text-gray-200 mt-1">
-                                                                {(() => {
-                                                                    const categoryKey = transaction.category.toLowerCase().replace(/\s+/g, '');
-                                                                    const translated = t(`passenger.wallet.transactionCategories.${categoryKey}`, { defaultValue: transaction.category });
-                                                                    return translated !== `passenger.wallet.transactionCategories.${categoryKey}` ? translated : transaction.category;
-                                                                })()}
-                                                            </p>
+                                                        {/* Статус справа (только для TopUp) */}
+                                                        {transactionType === "TopUp" && (
+                                                            <span className={`text-xs font-medium px-2 py-1 rounded flex-shrink-0 ${
+                                                                transactionStatus === "Paid"
+                                                                    ? "text-green-400 bg-green-400/20"
+                                                                    : transactionStatus === "Cancelled"
+                                                                    ? "text-red-400 bg-red-400/20"
+                                                                    : "text-yellow-400 bg-yellow-400/20"
+                                                            }`}>
+                                                                {t(`passenger.wallet.transactionStatuses.${statusKey}`, { defaultValue: transactionStatus })}
+                                                            </span>
                                                         )}
                                                     </div>
-                                                    <div className="text-right">
-                                                        <p className={`font-bold text-sm ${
-                                                            transaction.type === "Credit" 
-                                                                ? "text-green-600" 
-                                                                : "text-red-600"
-                                                        }`}>
-                                                            {transaction.type === "Credit" ? "+" : "-"}
-                                                            {Math.abs(transaction.amount).toLocaleString()}
-                                                        </p>
-                                                        <p className={`text-xs mt-1 ${
-                                                            transaction.status === "Confirmed"
-                                                                ? "text-green-600"
-                                                                : "text-yellow-600"
-                                                        }`}>
-                                                            {(() => {
-                                                                const statusKey = transaction.status.toLowerCase();
-                                                                const translated = t(`passenger.wallet.transactionStatuses.${statusKey}`, { defaultValue: transaction.status });
-                                                                return translated !== `passenger.wallet.transactionStatuses.${statusKey}` ? translated : transaction.status;
-                                                            })()}
+                                                    
+                                                    {/* Тип • Категория */}
+                                                    <div className="mb-2">
+                                                        <p className="text-sm font-semibold text-white">
+                                                            {t(`passenger.wallet.transactionTypes.${typeKey}`, { defaultValue: transactionType })}
+                                                            {transaction.category && (
+                                                                <>
+                                                                    {" • "}
+                                                                    {(() => {
+                                                                        const categoryKey = transaction.category.toLowerCase().replace(/\s+/g, '');
+                                                                        const translated = t(`passenger.wallet.transactionCategories.${categoryKey}`, { defaultValue: transaction.category });
+                                                                        return translated !== `passenger.wallet.transactionCategories.${categoryKey}` ? translated : transaction.category;
+                                                                    })()}
+                                                                </>
+                                                            )}
                                                         </p>
                                                     </div>
-                                                </div>
-                                                <p className="text-xs text-gray-300 mt-2">
-                                                    {new Date(transaction.createdAt).toLocaleDateString(
-                                                        i18n.language === 'ru' ? 'ru-RU' : 
-                                                        i18n.language === 'kk' ? 'kk-KZ' : 'en-US',
-                                                        {
-                                                            year: "numeric",
-                                                            month: "long",
-                                                            day: "numeric",
-                                                            hour: "2-digit",
-                                                            minute: "2-digit",
-                                                        }
+                                                    
+                                                    {/* Expanded details */}
+                                                    {isExpanded && (
+                                                        <div className="mt-3 mb-2">
+                                                            {transactionType === "Transfer" ? (
+                                                                <>
+                                                                    {/* Для Transfer показываем from → to */}
+                                                                    {transaction.fromWishlistId && transaction.toWishlistId && (
+                                                                        <p className="text-sm text-gray-300 mb-2">
+                                                                            {wishlistsMap.get(transaction.fromWishlistId) || transaction.fromWishlistId} → {wishlistsMap.get(transaction.toWishlistId) || transaction.toWishlistId}
+                                                                        </p>
+                                                                    )}
+                                                                    {transaction.fromWishlistId && !transaction.toWishlistId && (
+                                                                        <p className="text-sm text-gray-300 mb-2">
+                                                                            {wishlistsMap.get(transaction.fromWishlistId) || transaction.fromWishlistId} →
+                                                                        </p>
+                                                                    )}
+                                                                    {!transaction.fromWishlistId && transaction.toWishlistId && (
+                                                                        <p className="text-sm text-gray-300 mb-2">
+                                                                            → {wishlistsMap.get(transaction.toWishlistId) || transaction.toWishlistId}
+                                                                        </p>
+                                                                    )}
+                                                                    {transaction.sourceId && (
+                                                                        <p className="text-xs text-gray-400">
+                                                                            {getSourceIdSuffix(transaction.sourceId)}
+                                                                        </p>
+                                                                    )}
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    {/* Для других типов показываем description и sourceId */}
+                                                                    {transaction.description && (
+                                                                        <p className="text-sm text-gray-300 mb-2">
+                                                                            {transaction.description}
+                                                                        </p>
+                                                                    )}
+                                                                    {transaction.sourceId && (
+                                                                        <p className="text-xs text-gray-400">
+                                                                            {getSourceIdSuffix(transaction.sourceId)}
+                                                                        </p>
+                                                                    )}
+                                                                </>
+                                                            )}
+                                                        </div>
                                                     )}
-                                                </p>
-                                            </div>
-                                        ))}
+                                                    
+                                                    {/* Сумма внизу */}
+                                                    <p className={`font-bold text-base ${
+                                                        isPositive 
+                                                            ? "text-green-400" 
+                                                            : "text-red-400"
+                                                    }`}>
+                                                        {isPositive ? "+" : "-"}
+                                                        {Math.abs(transaction.amount).toLocaleString()} Miles
+                                                    </p>
+                                                    
+                                                    {/* Chevron icon */}
+                                                    {hasDetails && (
+                                                        <div className="absolute bottom-4 right-4">
+                                                            {isExpanded ? (
+                                                                <ChevronUp className="h-5 w-5 text-gray-300" />
+                                                            ) : (
+                                                                <ChevronDown className="h-5 w-5 text-gray-300" />
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 )}
                             </div>
