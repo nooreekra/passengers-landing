@@ -281,11 +281,11 @@ const MorePage = () => {
                                     <div className="flex-1 overflow-y-auto p-6">
                                         {loadingAgreements ? (
                                             <div className="text-center py-8">
-                                                <div className="text-gray-500">{t("passenger.more.loadingAgreements")}</div>
+                                                <div className="text-white">{t("passenger.more.loadingAgreements")}</div>
                                             </div>
                                         ) : agreements.length === 0 ? (
                                             <div className="text-center py-8">
-                                                <div className="text-gray-500">{t("passenger.more.noAgreements")}</div>
+                                                <div className="text-white">{t("passenger.more.noAgreements")}</div>
                                             </div>
                                         ) : (
                                             <div className="space-y-2">

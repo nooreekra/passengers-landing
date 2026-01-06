@@ -1050,9 +1050,9 @@ const AccountPage = () => {
                                         </div>
                                         <div className="relative">
                                             {loadingTierHistories ? (
-                                                <div className="text-center py-4 text-gray-500 text-sm">{t("passenger.account.loadingTierHistories")}</div>
+                                                <div className="text-center py-4 text-white text-sm">{t("passenger.account.loadingTierHistories")}</div>
                                             ) : lastThreeMonths.length === 0 ? (
-                                                <div className="text-center py-4 text-gray-500 text-sm">{t("passenger.account.noTierData")}</div>
+                                                <div className="text-center py-4 text-white text-sm">{t("passenger.account.noTierData")}</div>
                                             ) : (
                                                 <>
                                                     <div className="h-8 overflow-visible flex gap-1">
@@ -1559,11 +1559,11 @@ const AccountPage = () => {
                         <>
                             {loadingTransactions ? (
                                 <div className="text-center py-8">
-                                    <div className="text-gray-500">{t("passenger.account.loadingTransactions")}</div>
+                                    <div className="text-white">{t("passenger.account.loadingTransactions")}</div>
                                 </div>
                             ) : transactions.length === 0 ? (
                                 <div className="text-center py-8">
-                                    <div className="text-gray-500">{t("passenger.account.noTransactions")}</div>
+                                    <div className="text-white">{t("passenger.account.noTransactions")}</div>
                                 </div>
                             ) : (
                                 <div className="space-y-4">

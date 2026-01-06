@@ -384,7 +384,7 @@ const WalletPage = () => {
                                         <Loader text={t("passenger.wallet.loading") || "Loading..."} />
                                     </div>
                                 ) : transactions.length === 0 ? (
-                                    <p className="text-gray-200 text-sm text-center py-8">
+                                    <p className="text-white text-sm text-center py-8">
                                         {t("passenger.wallet.noTransactions")}
                                     </p>
                                 ) : (
