@@ -92,13 +92,13 @@ const NewWishlistPage = () => {
         }));
     }, [cities]);
 
-    const nameOptions = [
-        "Dream Holiday",
-        "Family Vacation",
-        "Friends Trip",
-        "Weekend Escape",
-        "Choose your own"
-    ];
+    const nameOptions = useMemo(() => [
+        { value: "dreamHoliday", label: t("passenger.wallet.nameOptions.dreamHoliday") },
+        { value: "familyVacation", label: t("passenger.wallet.nameOptions.familyVacation") },
+        { value: "friendsTrip", label: t("passenger.wallet.nameOptions.friendsTrip") },
+        { value: "weekendEscape", label: t("passenger.wallet.nameOptions.weekendEscape") },
+        { value: "chooseYourOwn", label: t("passenger.wallet.nameOptions.chooseYourOwn") }
+    ], [t]);
 
     const rulesOptions = useMemo(() => [
         { value: "no rules set", label: t("passenger.wallet.noRulesSet") || "no rules set" },
@@ -107,8 +107,8 @@ const NewWishlistPage = () => {
 
     const handleNameChange = (value: string) => {
         setName(value);
-        setIsCustomName(value === "Choose your own");
-        if (value !== "Choose your own") {
+        setIsCustomName(value === "chooseYourOwn");
+        if (value !== "chooseYourOwn") {
             setCustomName("");
         }
     };
@@ -122,7 +122,7 @@ const NewWishlistPage = () => {
 
         try {
             setLoading(true);
-            const finalName = isCustomName ? customName : name;
+            const finalName = isCustomName ? customName : nameOptions.find(opt => opt.value === name)?.label || name;
             
             await createWishlist(walletId, {
                 title: finalName,
@@ -197,8 +197,8 @@ const NewWishlistPage = () => {
                                     >
                                         <option value="">{t("passenger.wallet.selectName")}</option>
                                         {nameOptions.map((option) => (
-                                            <option key={option} value={option}>
-                                                {option}
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
                                             </option>
                                         ))}
                                     </select>

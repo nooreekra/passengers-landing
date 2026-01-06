@@ -1206,6 +1206,13 @@
             "enterAmount": "Введите сумму",
             "name": "Название",
             "selectName": "Выберите название",
+            "nameOptions": {
+                "dreamHoliday": "Поездка мечты",
+                "familyVacation": "Семейный отпуск",
+                "friendsTrip": "Поездка с друзьями",
+                "weekendEscape": "Выходные на природе",
+                "chooseYourOwn": "Выберите свое"
+            },
             "typeIn": "Введите",
             "typeNumber": "Введите число",
             "max15Letters": "максимум 15 букв",

@@ -488,6 +488,13 @@
       "enterAmount": "Соманы енгізіңіз",
       "name": "Атауы",
       "selectName": "Атауды таңдаңыз",
+      "nameOptions": {
+        "dreamHoliday": "Армандаған демалыс",
+        "familyVacation": "Отбасылық демалыс",
+        "friendsTrip": "Достармен саяхат",
+        "weekendEscape": "Демалыс күндері",
+        "chooseYourOwn": "Өзіңіз таңдаңыз"
+      },
       "typeIn": "Енгізіңіз",
       "typeNumber": "Санды енгізіңіз",
       "max15Letters": "максимум 15 әріп",

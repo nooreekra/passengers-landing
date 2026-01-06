@@ -1169,6 +1169,13 @@
             "enterAmount": "Enter amount",
             "name": "Name",
             "selectName": "Select name",
+            "nameOptions": {
+                "dreamHoliday": "Dream Holiday",
+                "familyVacation": "Family Vacation",
+                "friendsTrip": "Friends Trip",
+                "weekendEscape": "Weekend Escape",
+                "chooseYourOwn": "Choose your own"
+            },
             "typeIn": "Type in",
             "typeNumber": "Enter number",
             "max15Letters": "max 15 letters",
