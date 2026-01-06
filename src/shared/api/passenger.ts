@@ -34,6 +34,10 @@ export interface Tier {
     levelOrder: number;
 }
 
+export interface CurrentTier extends Tier {
+    validFrom: string;
+}
+
 export interface TierHistory {
     id: string;
     userId: string;
@@ -192,6 +196,14 @@ export async function getTransactions(walletId: string, offset = 0, limit = 100)
  */
 export async function getTiers(): Promise<Tier[]> {
     const { data } = await axiosInstance.get<Tier[]>('/api/tiers');
+    return data;
+}
+
+/**
+ * Получение текущего уровня лояльности пользователя
+ */
+export async function getCurrentTier(): Promise<CurrentTier> {
+    const { data } = await axiosInstance.get<CurrentTier>('/api/tiers/me');
     return data;
 }
 

@@ -10,7 +10,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import InfoTooltip from "@/shared/ui/InfoTooltip";
 import Loader from "@/shared/ui/Loader";
-import { getTransactions, TransactionItem, getTierHistories, TierHistory, getTransactionsSummary, TransactionsSummary, getMilesSummary, MilesSummary, getTiers, Tier, getWallet, getWishlists } from "@/shared/api/passenger";
+import { getTransactions, TransactionItem, getTierHistories, TierHistory, getTransactionsSummary, TransactionsSummary, getMilesSummary, MilesSummary, getTiers, Tier, getCurrentTier, CurrentTier, getWallet, getWishlists } from "@/shared/api/passenger";
 import { useTranslation } from "react-i18next";
 import i18n from "@/shared/i18n";
 import { Html5Qrcode } from "html5-qrcode";
@@ -145,6 +145,8 @@ const AccountPage = () => {
     const [loadingTierHistories, setLoadingTierHistories] = useState(false);
     const [tiers, setTiers] = useState<Tier[]>([]);
     const [loadingTiers, setLoadingTiers] = useState(false);
+    const [currentTierData, setCurrentTierData] = useState<CurrentTier | null>(null);
+    const [loadingCurrentTier, setLoadingCurrentTier] = useState(false);
     const [transactionsSummary, setTransactionsSummary] = useState<TransactionsSummary | null>(null);
     const [loadingSummary, setLoadingSummary] = useState(false);
     const [milesSummary, setMilesSummary] = useState<MilesSummary | null>(null);
@@ -197,6 +199,23 @@ const AccountPage = () => {
         };
 
         fetchTiers();
+    }, []);
+
+    // Загрузка текущего тира пользователя
+    useEffect(() => {
+        const fetchCurrentTier = async () => {
+            try {
+                setLoadingCurrentTier(true);
+                const tierData = await getCurrentTier();
+                setCurrentTierData(tierData);
+            } catch (error) {
+                console.error('Ошибка при загрузке текущего тира:', error);
+            } finally {
+                setLoadingCurrentTier(false);
+            }
+        };
+
+        fetchCurrentTier();
     }, []);
 
     // Загрузка истории уровней лояльности
@@ -319,13 +338,17 @@ const AccountPage = () => {
         });
     }, [tierHistories]);
 
-    // Получение текущего тира из user.tier (из auth/me)
+    // Получение текущего тира из API /api/tiers/me (приоритет) или из user.tier (fallback)
     const currentTier = React.useMemo(() => {
+        if (currentTierData) {
+            return currentTierData;
+        }
+        // Fallback на user.tier, если API еще не загрузился
         if (user?.tier) {
             return user.tier;
         }
         return null;
-    }, [user]);
+    }, [currentTierData, user]);
 
     // Получение фона карты в зависимости от статуса
     const getCardBackground = () => {
@@ -631,7 +654,7 @@ const AccountPage = () => {
     const nextIndex = currentIndex < statusOrder.length - 1 ? currentIndex + 1 : currentIndex;
 
     // Проверка загрузки основных данных
-    const isLoading = loadingTiers || loadingSummary || loadingMilesSummary;
+    const isLoading = loadingTiers || loadingSummary || loadingMilesSummary || loadingCurrentTier;
 
     return (
         <div className="relative min-h-screen pb-20">
@@ -722,11 +745,20 @@ const AccountPage = () => {
                                                 {user ? `${user.firstName} ${user.lastName}` : mockData.name}
                                             </h2>
                                             {currentTier && (
-                                                <div
-                                                    className="inline-block px-3 py-1 rounded-md text-white text-sm font-medium"
-                                                    style={{ backgroundColor: currentTier.color }}
-                                                >
-                                                    {currentTier.name}
+                                                <div className="inline-block relative px-3 py-1 rounded-md text-white text-sm font-medium overflow-hidden">
+                                                    {/* Background image */}
+                                                    <div className="absolute inset-0">
+                                                        <Image
+                                                            src={getCardBackground()}
+                                                            alt={`${currentTier.name} tier background`}
+                                                            fill
+                                                            className="object-cover"
+                                                        />
+                                                    </div>
+                                                    {/* Overlay for better text readability */}
+                                                    <div className="absolute inset-0 bg-black/30" />
+                                                    {/* Status text */}
+                                                    <span className="relative z-10">{currentTier.name}</span>
                                                 </div>
                                             )}
                                             <div className="mt-3">
