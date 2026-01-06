@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, ChevronDown, ArrowRightLeft } from "lucide-react";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import { getWallet, getWishlists, reserveFunds, releaseFunds } from "@/shared/api/passenger";
+import { getWallet, getWishlists, reserveFunds, releaseFunds, transferFunds } from "@/shared/api/passenger";
 
 const TransferPage = () => {
     const { t } = useTranslation();
@@ -74,11 +74,10 @@ const TransferPage = () => {
                 const wishlistId = from.replace("wishlist_", "");
                 await releaseFunds(walletId, wishlistId, { amount: amountNum });
             } else if (from.startsWith("wishlist_") && to.startsWith("wishlist_")) {
-                // Перевод между wishlists: сначала release, потом reserve
+                // Перевод между wishlists
                 const fromWishlistId = from.replace("wishlist_", "");
                 const toWishlistId = to.replace("wishlist_", "");
-                await releaseFunds(walletId, fromWishlistId, { amount: amountNum });
-                await reserveFunds(walletId, toWishlistId, { amount: amountNum });
+                await transferFunds(walletId, fromWishlistId, { toWishlistId, amount: amountNum });
             }
             
             router.push("/passenger/wallet");

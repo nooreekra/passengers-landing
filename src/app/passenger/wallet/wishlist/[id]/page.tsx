@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { getWallet, getWishlists, deleteWishlist, releaseFunds, reserveFunds } from "@/shared/api/passenger";
+import { getWallet, getWishlists, deleteWishlist, releaseFunds, reserveFunds, transferFunds } from "@/shared/api/passenger";
 import { getCountries, getCitiesByCountry } from "@/shared/api/locations";
 import Loader from "@/shared/ui/Loader";
 import { Dialog, Transition } from "@headlessui/react";
@@ -168,8 +168,7 @@ const WishlistProgressPage = () => {
                 } else if (transferTo.startsWith("wishlist_")) {
                     // Переводим в другой wishlist
                     const targetWishlistId = transferTo.replace("wishlist_", "");
-                    await releaseFunds(walletId, wishlistData.id, { amount: wishlistData.progress });
-                    await reserveFunds(walletId, targetWishlistId, { amount: wishlistData.progress });
+                    await transferFunds(walletId, wishlistData.id, { toWishlistId: targetWishlistId, amount: wishlistData.progress });
                 }
             }
             

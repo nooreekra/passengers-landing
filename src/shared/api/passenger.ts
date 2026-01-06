@@ -314,6 +314,18 @@ export async function releaseFunds(walletId: string, wishlistId: string, payload
     await axiosInstance.post(`/api/wallets/${walletId}/wishlists/${wishlistId}/release`, payload);
 }
 
+export interface TransferFundsPayload {
+    toWishlistId: string;
+    amount: number;
+}
+
+/**
+ * Перевод средств между wishlists
+ */
+export async function transferFunds(walletId: string, fromWishlistId: string, payload: TransferFundsPayload): Promise<void> {
+    await axiosInstance.post(`/api/wallets/${walletId}/wishlists/${fromWishlistId}/transfer`, payload);
+}
+
 export interface WalletTransaction {
     id: string;
     walletId: string;
