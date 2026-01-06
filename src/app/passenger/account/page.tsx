@@ -1621,21 +1621,15 @@ const AccountPage = () => {
                                                                     {transactionType === "Transfer" ? (
                                                                         <>
                                                                             {/* Для Transfer показываем from → to */}
-                                                                            {transaction.fromWishlistId && transaction.toWishlistId && (
-                                                                                <p className="text-sm text-gray-300 mb-2">
-                                                                                    {wishlistsMap.get(transaction.fromWishlistId) || transaction.fromWishlistId} → {wishlistsMap.get(transaction.toWishlistId) || transaction.toWishlistId}
-                                                                                </p>
-                                                                            )}
-                                                                            {transaction.fromWishlistId && !transaction.toWishlistId && (
-                                                                                <p className="text-sm text-gray-300 mb-2">
-                                                                                    {wishlistsMap.get(transaction.fromWishlistId) || transaction.fromWishlistId} →
-                                                                                </p>
-                                                                            )}
-                                                                            {!transaction.fromWishlistId && transaction.toWishlistId && (
-                                                                                <p className="text-sm text-gray-300 mb-2">
-                                                                                    → {wishlistsMap.get(transaction.toWishlistId) || transaction.toWishlistId}
-                                                                                </p>
-                                                                            )}
+                                                                            <p className="text-sm text-gray-300 mb-2">
+                                                                                {transaction.fromWishlistId 
+                                                                                    ? (wishlistsMap.get(transaction.fromWishlistId) || transaction.fromWishlistId)
+                                                                                    : t("passenger.wallet.availableToRedeem")
+                                                                                } → {transaction.toWishlistId 
+                                                                                    ? (wishlistsMap.get(transaction.toWishlistId) || transaction.toWishlistId)
+                                                                                    : t("passenger.wallet.availableToRedeem")
+                                                                                }
+                                                                            </p>
                                                                             {transaction.transactionId && (
                                                                                 <p className="text-xs text-gray-400">
                                                                                     {getSourceIdSuffix(transaction.transactionId)}
