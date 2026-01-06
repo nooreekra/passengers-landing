@@ -35,6 +35,7 @@ const EditWishlistPage = () => {
     const [target, setTarget] = useState("");
     const [rules, setRules] = useState("");
     const [percentage, setPercentage] = useState("");
+    const [pendingCityId, setPendingCityId] = useState<string | null>(null);
 
     useEffect(() => {
         const loadCountries = async () => {
@@ -65,6 +66,15 @@ const EditWishlistPage = () => {
                 setName(wishlist.title);
                 setTarget(wishlist.targetAmount.toString());
                 
+                // Устанавливаем страну и город
+                if (wishlist.country) {
+                    setSelectedCountry(wishlist.country);
+                    // Если есть город, сохраняем его id для установки после загрузки городов
+                    if (wishlist.city) {
+                        setPendingCityId(wishlist.city);
+                    }
+                }
+                
                 // Устанавливаем правила
                 if (wishlist.rule === "None" || !wishlist.rule) {
                     setRules("no rules set");
@@ -86,55 +96,12 @@ const EditWishlistPage = () => {
         loadData();
     }, [wishlistId, router]);
 
-    // Парсим destination после загрузки стран и вишлиста
-    useEffect(() => {
-        const parseDestination = async () => {
-            if (countries.length === 0 || !wishlistId) return;
-            
-            try {
-                const wallet = await getWallet();
-                const wishlists = await getWishlists(wallet.id);
-                const wishlist = wishlists.find(w => w.id === wishlistId);
-                
-                if (!wishlist) return;
-                
-                // Парсим destination для установки страны и города
-                // Формат: "Country, City" или "Country"
-                const destinationParts = wishlist.destination.split(", ");
-                if (destinationParts.length > 0) {
-                    const countryName = destinationParts[0].trim();
-                    const country = countries.find(c => c.name === countryName);
-                    if (country) {
-                        setSelectedCountry(country.id);
-                        
-                        // Если есть город
-                        if (destinationParts.length > 1) {
-                            const cityName = destinationParts.slice(1).join(", ").trim();
-                            try {
-                                const citiesData = await getCitiesByCountry(country.id);
-                                setCities(citiesData);
-                                const city = citiesData.find(c => c.name === cityName);
-                                if (city) {
-                                    setSelectedCity(city.id);
-                                }
-                            } catch (error) {
-                                console.error("Failed to load cities:", error);
-                            }
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error("Failed to parse destination:", error);
-            }
-        };
-        parseDestination();
-    }, [countries, wishlistId]);
-
     useEffect(() => {
         const loadCities = async () => {
             if (!selectedCountry) {
                 setCities([]);
                 setSelectedCity("");
+                setPendingCityId(null);
                 return;
             }
 
@@ -142,7 +109,15 @@ const EditWishlistPage = () => {
                 setLoadingCities(true);
                 const citiesData = await getCitiesByCountry(selectedCountry);
                 setCities(citiesData);
-                // Не сбрасываем выбранный город, если он уже был выбран
+                
+                // Если есть ожидающий город, устанавливаем его после загрузки
+                if (pendingCityId) {
+                    const city = citiesData.find(c => c.id === pendingCityId);
+                    if (city) {
+                        setSelectedCity(pendingCityId);
+                        setPendingCityId(null);
+                    }
+                }
             } catch (error) {
                 console.error("Failed to load cities:", error);
                 setCities([]);
@@ -151,7 +126,7 @@ const EditWishlistPage = () => {
             }
         };
         loadCities();
-    }, [selectedCountry]);
+    }, [selectedCountry, pendingCityId]);
 
     // Преобразуем countries в формат для SearchableSelect
     const countryOptions = useMemo(() => {
@@ -179,14 +154,10 @@ const EditWishlistPage = () => {
         try {
             setSaving(true);
             
-            // Формируем destination: "Country, City" или только "Country"
-            const countryName = countries.find(c => c.id === selectedCountry)?.name || "";
-            const cityName = selectedCity ? cities.find(c => c.id === selectedCity)?.name : null;
-            const destination = cityName ? `${countryName}, ${cityName}` : countryName;
-            
             await updateWishlist(walletId, wishlistId, {
                 title: name,
-                destination: destination,
+                country: selectedCountry,
+                city: selectedCity || undefined,
                 targetAmount: parseInt(target),
                 rule: rules === "no rules set" ? "None" : rules === "% of each transaction" ? "Percent" : rules,
                 rulePercent: rules === "% of each transaction" ? parseInt(percentage) : 0,
@@ -333,7 +304,7 @@ const EditWishlistPage = () => {
                                     >
                                         <option value="">{t("passenger.wallet.selectRule")}</option>
                                         <option value="no rules set">{t("passenger.wallet.noRulesSet") || "no rules set"}</option>
-                                        <option value="% of each transaction">% of each transaction</option>
+                                        <option value="% of each transaction">{t("passenger.wallet.percentOfEachTransaction") || "% of each transaction"}</option>
                                     </select>
                                     <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
                                 </div>

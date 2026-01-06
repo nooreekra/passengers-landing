@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { getWallet, getWishlists, deleteWishlist, releaseFunds, reserveFunds } from "@/shared/api/passenger";
+import { getCountries, getCitiesByCountry } from "@/shared/api/locations";
 import Loader from "@/shared/ui/Loader";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
@@ -27,11 +28,14 @@ const WishlistProgressPage = () => {
     const [wishlistData, setWishlistData] = useState<{
         id: string;
         name: string;
-        destination: string;
+        country: string;
+        city?: string;
         target: number;
         progress: number;
         rules: string;
     } | null>(null);
+    const [countryName, setCountryName] = useState<string>("");
+    const [cityName, setCityName] = useState<string>("");
     const [loading, setLoading] = useState(true);
     const [walletId, setWalletId] = useState<string | null>(null);
     const [allWishlists, setAllWishlists] = useState<Array<{ id: string; title: string }>>([]);
@@ -65,11 +69,37 @@ const WishlistProgressPage = () => {
                 setWishlistData({
                     id: wishlist.id,
                     name: wishlist.title,
-                    destination: wishlist.destination,
+                    country: wishlist.country,
+                    city: wishlist.city,
                     target: wishlist.targetAmount,
                     progress: wishlist.currentAmount,
                     rules: rulesText,
                 });
+
+                // Загружаем названия страны и города
+                if (wishlist.country) {
+                    try {
+                        const countries = await getCountries();
+                        const country = countries.find(c => c.id === wishlist.country);
+                        if (country) {
+                            setCountryName(country.name);
+                        }
+                    } catch (error) {
+                        console.error("Failed to load country name:", error);
+                    }
+                }
+
+                if (wishlist.city && wishlist.country) {
+                    try {
+                        const cities = await getCitiesByCountry(wishlist.country);
+                        const city = cities.find(c => c.id === wishlist.city);
+                        if (city) {
+                            setCityName(city.name);
+                        }
+                    } catch (error) {
+                        console.error("Failed to load city name:", error);
+                    }
+                }
             } catch (error) {
                 console.error("Failed to load wishlist:", error);
                 router.push("/passenger/wallet");

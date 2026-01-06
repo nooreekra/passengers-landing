@@ -10,11 +10,13 @@ import { motion } from "framer-motion";
 import InfoTooltip from "@/shared/ui/InfoTooltip";
 import Loader from "@/shared/ui/Loader";
 import { getWallet, getWishlists, getWalletTransactions, type Wishlist as WishlistType, type WalletTransaction } from "@/shared/api/passenger";
+import { getCountries, getCitiesByCountry } from "@/shared/api/locations";
 
 interface WishlistItem {
     id: string;
     name: string;
-    destination: string;
+    country: string;
+    city?: string;
     target: number;
     progress: number;
 }
@@ -94,15 +96,38 @@ const WalletPage = () => {
                 });
 
                 const wishlists = await getWishlists(walletData.id);
-                setWishlistItems(
-                    wishlists.map((w) => ({
-                        id: w.id,
-                        name: w.title,
-                        destination: w.destination,
-                        target: w.targetAmount,
-                        progress: w.currentAmount,
-                    }))
+                
+                // Загружаем страны для получения названий
+                const countries = await getCountries();
+                
+                // Формируем список wishlist items с названиями стран и городов
+                const wishlistItemsWithNames = await Promise.all(
+                    wishlists.map(async (w) => {
+                        const country = countries.find(c => c.id === w.country);
+                        let cityName: string | undefined;
+                        
+                        if (w.city && w.country) {
+                            try {
+                                const cities = await getCitiesByCountry(w.country);
+                                const city = cities.find(c => c.id === w.city);
+                                cityName = city?.name;
+                            } catch (error) {
+                                console.error("Failed to load city name:", error);
+                            }
+                        }
+                        
+                        return {
+                            id: w.id,
+                            name: w.title,
+                            country: country?.name || w.country,
+                            city: cityName,
+                            target: w.targetAmount,
+                            progress: w.currentAmount,
+                        };
+                    })
                 );
+                
+                setWishlistItems(wishlistItemsWithNames);
             } catch (error) {
                 console.error("Failed to load wallet data:", error);
             } finally {
@@ -299,7 +324,9 @@ const WalletPage = () => {
                                                             {/* Content */}
                                                             <div className="flex-1 min-w-0">
                                                                 <p className="font-semibold text-sm text-white">{item.name}</p>
-                                                                <p className="text-xs text-gray-200 underline">{item.destination}</p>
+                                                                <p className="text-xs text-gray-200 underline">
+                                                                    {item.city ? `${item.country}, ${item.city}` : item.country}
+                                                                </p>
                                                             </div>
                                                             
                                                             {/* Circular Progress on the right */}

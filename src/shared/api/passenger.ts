@@ -211,7 +211,8 @@ export interface Wishlist {
     walletId: string;
     userId: string;
     title: string;
-    destination: string;
+    country: string;
+    city?: string;
     targetAmount: number;
     currentAmount: number;
     rule: string;
@@ -236,7 +237,8 @@ export async function getWishlist(walletId: string, wishlistId: string): Promise
 
 export interface CreateWishlistPayload {
     title: string;
-    destination: string;
+    country: string;
+    city?: string;
     targetAmount: number;
     rule?: string;
     rulePercent?: number;
@@ -253,7 +255,8 @@ export async function createWishlist(walletId: string, payload: CreateWishlistPa
 export interface UpdateWishlistPayload {
     title?: string;
     description?: string;
-    destination?: string;
+    country?: string;
+    city?: string;
     targetAmount?: number;
     rule?: string;
     rulePercent?: number;

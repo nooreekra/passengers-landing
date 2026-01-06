@@ -100,10 +100,10 @@ const NewWishlistPage = () => {
         "Choose your own"
     ];
 
-    const rulesOptions = [
-        "no rules set",
-        "% of each transaction"
-    ];
+    const rulesOptions = useMemo(() => [
+        { value: "no rules set", label: t("passenger.wallet.noRulesSet") || "no rules set" },
+        { value: "% of each transaction", label: t("passenger.wallet.percentOfEachTransaction") || "% of each transaction" }
+    ], [t]);
 
     const handleNameChange = (value: string) => {
         setName(value);
@@ -124,14 +124,10 @@ const NewWishlistPage = () => {
             setLoading(true);
             const finalName = isCustomName ? customName : name;
             
-            // Формируем destination: "Country, City" или только "Country"
-            const countryName = countries.find(c => c.id === selectedCountry)?.name || "";
-            const cityName = selectedCity ? cities.find(c => c.id === selectedCity)?.name : null;
-            const destination = cityName ? `${countryName}, ${cityName}` : countryName;
-            
             await createWishlist(walletId, {
                 title: finalName,
-                destination: destination,
+                country: selectedCountry,
+                city: selectedCity || undefined,
                 targetAmount: parseInt(target),
                 rule: rules === "no rules set" ? "None" : rules === "% of each transaction" ? "Percent" : rules,
                 rulePercent: rules === "% of each transaction" ? parseInt(percentage) : 0,
@@ -295,8 +291,8 @@ const NewWishlistPage = () => {
                                     >
                                         <option value="">{t("passenger.wallet.selectRule")}</option>
                                         {rulesOptions.map((option) => (
-                                            <option key={option} value={option}>
-                                                {option}
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
                                             </option>
                                         ))}
                                     </select>
