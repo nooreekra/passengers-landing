@@ -707,7 +707,7 @@ const AccountPage = () => {
                                                 />
                                             </div>
                                             <p className="text-base sm:text-xl font-bold text-white">
-                                                {milesSummary ? milesSummary.totalMiles.toLocaleString() : mockData.totalMiles.toLocaleString()}
+                                                {(milesSummary?.totalMiles ?? mockData.totalMiles).toLocaleString()}
                                             </p>
                                         </div>
                                         <div className="bg-white/10 backdrop-blur-md rounded-xl p-2 sm:p-4 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)] flex items-center justify-between gap-1 sm:gap-3">
@@ -721,7 +721,7 @@ const AccountPage = () => {
                                                 />
                                             </div>
                                             <p className="text-base sm:text-xl font-bold text-white">
-                                                {milesSummary ? milesSummary.unconfirmed.toLocaleString() : mockData.pendingMiles.toLocaleString()}
+                                                {(milesSummary?.unconfirmed ?? mockData.pendingMiles).toLocaleString()}
                                             </p>
                                         </div>
                                     </div>
