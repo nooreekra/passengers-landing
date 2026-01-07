@@ -1444,6 +1444,8 @@
         "statusBenefits": {
             "title": "status benefits",
             "subtitle": "Hit monthly targets\nto achive higher status",
+            "footerText": "even if you are not taking enough flights to get to desired status, you can alternatively hit you monthly targets with our Partner Network",
+            "discountLabel": "DISCOUNT",
             "statuses": {
                 "silver": {
                     "name": "Silver",
