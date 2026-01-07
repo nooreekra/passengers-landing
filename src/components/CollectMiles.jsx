@@ -59,14 +59,14 @@ const CollectMiles = () => {
 
     const activities = [
         { id: 1, title: t('landing.collectMiles.activities.banking'), description: t('landing.collectMiles.activities.bankingDesc'), miles: `1960 ${t('landing.collectMiles.activities.miles')}` },
-        { id: 2, title: t('landing.collectMiles.activities.gasStation'), description: t('landing.collectMiles.activities.gasStationDesc'), miles: `30 ${t('landing.collectMiles.activities.miles')}` },
-        { id: 3, title: t('landing.collectMiles.activities.restaurant'), description: t('landing.collectMiles.activities.restaurantDinner'), miles: `300 ${t('landing.collectMiles.activities.miles')}` },
-        { id: 4, title: t('landing.collectMiles.activities.flight'), description: t('landing.collectMiles.activities.flightDesc'), miles: `1500 ${t('landing.collectMiles.activities.miles')}` },
-        { id: 5, title: t('landing.collectMiles.activities.restaurant'), description: t('landing.collectMiles.activities.restaurantLunch'), miles: `400 ${t('landing.collectMiles.activities.miles')}` },
+        { id: 2, title: t('landing.collectMiles.activities.hotel'), description: t('landing.collectMiles.activities.hotelDesc'), miles: `500 ${t('landing.collectMiles.activities.miles')}` },
+        { id: 3, title: t('landing.collectMiles.activities.gasStation'), description: t('landing.collectMiles.activities.gasStationDesc'), miles: `30 ${t('landing.collectMiles.activities.miles')}` },
+        { id: 4, title: t('landing.collectMiles.activities.restaurant'), description: t('landing.collectMiles.activities.restaurantLunch'), miles: `400 ${t('landing.collectMiles.activities.miles')}` },
+        { id: 5, title: t('landing.collectMiles.activities.flight'), description: `${t('landing.collectMiles.activities.flightDesc')} 1`, miles: `1500 ${t('landing.collectMiles.activities.miles')}` },
         { id: 6, title: t('landing.collectMiles.activities.gym'), description: t('landing.collectMiles.activities.gymDesc'), miles: `200 ${t('landing.collectMiles.activities.miles')}` },
-        { id: 7, title: t('landing.collectMiles.activities.hotel'), description: t('landing.collectMiles.activities.hotelDesc'), miles: `500 ${t('landing.collectMiles.activities.miles')}` },
+        { id: 7, title: t('landing.collectMiles.activities.flight'), description: `${t('landing.collectMiles.activities.flightDesc')} 2`, miles: `1500 ${t('landing.collectMiles.activities.miles')}` },
         { id: 8, title: t('landing.collectMiles.activities.coffee'), description: t('landing.collectMiles.activities.coffeeDesc'), miles: `50 ${t('landing.collectMiles.activities.miles')}` },
-        { id: 9, title: t('landing.collectMiles.activities.flight'), description: t('landing.collectMiles.activities.flightDesc'), miles: `800 ${t('landing.collectMiles.activities.miles')}` },
+        { id: 9, title: t('landing.collectMiles.activities.flight'), description: `${t('landing.collectMiles.activities.flightDesc')} 3`, miles: `800 ${t('landing.collectMiles.activities.miles')}` },
     ].map((activity, index) => ({
         ...activity,
         angle: index * angleStep, // Равномерное распределение по кругу
@@ -112,7 +112,7 @@ const CollectMiles = () => {
                                 }}
                             >
                                 <div className="activity-card-content">
-                                    <div className="activity-title">{activity.title}</div>
+                                    <div className={`activity-title ${activity.title === t('landing.collectMiles.activities.flight') ? 'activity-title-flight' : ''}`}>{activity.title}</div>
                                     <div className="activity-description">{activity.description}</div>
                                     <div className="activity-miles">{activity.miles}</div>
                                 </div>

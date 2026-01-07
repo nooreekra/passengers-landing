@@ -1948,6 +1948,7 @@ div[id^="react-select"] {
   line-height: 1.6;
   max-width: 800px;
   margin-bottom: 12px;
+  padding: 0 20px;
 }
 
 .collect-section .section-title,
@@ -2086,6 +2087,11 @@ div[id^="react-select"] {
   color: #2d3748;
   margin-bottom: 4px;
   line-height: 1.2;
+}
+
+.activity-title-flight {
+  color: #2563eb;
+  font-weight: 700;
 }
 
 .activity-description {
