@@ -1127,6 +1127,7 @@
             "copyMembershipId": "Копировать ID участника",
             "loadingTierHistories": "Загрузка истории статусов...",
             "noTierData": "Нет данных о статусах",
+            "noStatus": "Без статуса",
             "active": "Активна",
             "subscription": "Подписка",
             "discount": "скидка",

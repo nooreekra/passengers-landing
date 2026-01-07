@@ -41,9 +41,9 @@ export interface CurrentTier extends Tier {
 export interface TierHistory {
     id: string;
     userId: string;
-    tier: Tier;
+    tier: Tier | null;
     validFrom: string;
-    validTo: string;
+    validTo: string | null;
 }
 
 /**

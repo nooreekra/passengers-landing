@@ -309,32 +309,50 @@ const AccountPage = () => {
 
     // Преобразование tier histories в формат lastThreeMonths
     const lastThreeMonths = React.useMemo(() => {
-        if (tierHistories.length === 0) {
-            return []; // Возвращаем пустой массив если нет данных
-        }
-
-        // Берем последние 3 месяца из истории
+        // Всегда возвращаем 3 элемента
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        
+        // Сортируем истории по дате
         const sortedHistories = [...tierHistories].sort((a, b) =>
             new Date(a.validFrom).getTime() - new Date(b.validFrom).getTime()
         );
-
-        const lastThree = sortedHistories.slice(-3);
-
+        
+        // Берем последние 3 записи
+        let lastThree = sortedHistories.slice(-3);
+        
+        // Если записей меньше 3, дополняем до 3 с null
+        const now = new Date();
+        while (lastThree.length < 3) {
+            const date = new Date(now.getFullYear(), now.getMonth() - (2 - lastThree.length), 1);
+            lastThree.push({
+                id: "",
+                userId: "",
+                tier: null,
+                validFrom: date.toISOString(),
+                validTo: null
+            });
+        }
+        
         return lastThree.map(history => {
             const date = new Date(history.validFrom);
-            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             const month = monthNames[date.getMonth()];
-
-            // Преобразуем code tier в статус
-            const tierCode = history.tier.code.toLowerCase();
-            let status: "Bronze" | "Silver" | "Gold" = "Bronze";
-            if (tierCode === "silver") {
-                status = "Silver";
-            } else if (tierCode === "gold") {
-                status = "Gold";
+            
+            if (history.tier) {
+                // Преобразуем code tier в статус
+                const tierCode = history.tier.code.toLowerCase();
+                let status: "Bronze" | "Silver" | "Gold" | "Platinum" | "No Status" = "Bronze";
+                if (tierCode === "silver") {
+                    status = "Silver";
+                } else if (tierCode === "gold") {
+                    status = "Gold";
+                } else if (tierCode === "platinum") {
+                    status = "Platinum";
+                }
+                return { month, status, tier: history.tier };
+            } else {
+                // Если tier равен null, показываем "Без статуса"
+                return { month, status: "No Status" as const, tier: null };
             }
-
-            return { month, status, tier: history.tier };
         });
     }, [tierHistories]);
 
@@ -1057,6 +1075,10 @@ const AccountPage = () => {
                                                 <>
                                                     <div className="h-8 overflow-visible flex gap-1">
                                                         {lastThreeMonths.map((monthData, index) => {
+                                                            const isFirst = index === 0;
+                                                            const isLast = index === lastThreeMonths.length - 1;
+                                                            const hasNoStatus = !monthData.tier || monthData.status === "No Status";
+                                                            
                                                             // Получаем фон из тира
                                                             const getTierBackground = () => {
                                                                 if (monthData.tier) {
@@ -1073,8 +1095,7 @@ const AccountPage = () => {
                                                                 }
                                                                 return "/images/membership/bronze.jpg";
                                                             };
-                                                            const isFirst = index === 0;
-                                                            const isLast = index === lastThreeMonths.length - 1;
+                                                            
                                                             return (
                                                                 <div
                                                                     key={index}
@@ -1082,21 +1103,28 @@ const AccountPage = () => {
                                                                         } ${isLast ? 'rounded-r-full' : ''
                                                                         }`}
                                                                 >
-                                                                    {/* Background image */}
-                                                                    <div className="absolute inset-0">
-                                                                        <Image
-                                                                            src={getTierBackground()}
-                                                                            alt={`${monthData.status} tier background`}
-                                                                            fill
-                                                                            className="object-cover"
-                                                                        />
-                                                                    </div>
-                                                                    {/* Overlay for better text readability */}
-                                                                    <div className="absolute inset-0 bg-black/30 py-3" />
+                                                                    {hasNoStatus ? (
+                                                                        // Серый фон для отсутствующего статуса
+                                                                        <div className="absolute inset-0 bg-gray-500" />
+                                                                    ) : (
+                                                                        <>
+                                                                            {/* Background image */}
+                                                                            <div className="absolute inset-0">
+                                                                                <Image
+                                                                                    src={getTierBackground()}
+                                                                                    alt={`${monthData.status} tier background`}
+                                                                                    fill
+                                                                                    className="object-cover"
+                                                                                />
+                                                                            </div>
+                                                                            {/* Overlay for better text readability */}
+                                                                            <div className="absolute inset-0 bg-black/30 py-3" />
+                                                                        </>
+                                                                    )}
                                                                     {/* Status label inside segment */}
                                                                     <div className="absolute inset-0 flex items-center justify-center z-10">
                                                                         <span className="text-[12px] font-medium text-white">
-                                                                            {monthData.status}
+                                                                            {hasNoStatus ? (t("passenger.account.noStatus") || "No Status") : monthData.status}
                                                                         </span>
                                                                     </div>
                                                                 </div>

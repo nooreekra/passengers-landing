@@ -1093,6 +1093,7 @@
             "pendingTooltip": "Total number of miles expected from partners",
             "lastThreeMonthsTooltip": "Statuses separately achieved each month over the last 3 months period",
             "statusBenefitsNote": "To use status benefits, you have to achieve at least the same status for the last 3 months",
+            "noStatus": "No Status",
             "loyaltyRewards": "Loyalty Rewards",
             "completeTicketTransactions": "Complete ticket transactions quickly by scanning your digital card.",
             "scanQRCode": "Scan QR Code",
