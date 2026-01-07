@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Wallet, Plus, ArrowRightLeft, ChevronDown, ChevronUp } from "lucide-react";
@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import InfoTooltip from "@/shared/ui/InfoTooltip";
 import Loader from "@/shared/ui/Loader";
-import { getWallet, getWishlists, getWalletTransactions, type Wishlist as WishlistType, type WalletTransaction } from "@/shared/api/passenger";
+import { getWallet, getWishlists, getTransactions, type Wishlist as WishlistType, type WalletTransaction, type TransactionItem } from "@/shared/api/passenger";
 import { getCountries, getCitiesByCountry } from "@/shared/api/locations";
 
 interface WishlistItem {
@@ -78,10 +78,14 @@ const WalletPage = () => {
     const [wallet, setWallet] = useState<{ id: string; allTimeBalance: number; availableBalance: number; pendingBalance: number } | null>(null);
     const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
     const [wishlistsMap, setWishlistsMap] = useState<Map<string, string>>(new Map()); // Map для быстрого поиска названий вишлистов по ID
-    const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
+    const [transactions, setTransactions] = useState<TransactionItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [loadingTransactions, setLoadingTransactions] = useState(false);
+    const [loadingMoreTransactions, setLoadingMoreTransactions] = useState(false);
+    const [transactionsOffset, setTransactionsOffset] = useState(0);
+    const [hasMoreTransactions, setHasMoreTransactions] = useState(true);
     const [expandedTransactions, setExpandedTransactions] = useState<Set<string>>(new Set());
+    const loadMoreTriggerRef = useRef<HTMLDivElement>(null);
     const accountsTabRef = useRef<HTMLButtonElement>(null);
     const historyTabRef = useRef<HTMLButtonElement>(null);
 
@@ -153,8 +157,12 @@ const WalletPage = () => {
             if (activeTab === "history" && wallet?.id) {
                 try {
                     setLoadingTransactions(true);
-                    const transactionsData = await getWalletTransactions(wallet.id);
-                    setTransactions(transactionsData);
+                    setTransactionsOffset(0);
+                    setHasMoreTransactions(true);
+                    const response = await getTransactions(wallet.id, 0, 10);
+                    setTransactions(response.items);
+                    setTransactionsOffset(10);
+                    setHasMoreTransactions(response.items.length === 10);
                 } catch (error) {
                     console.error("Failed to load transactions:", error);
                     setTransactions([]);
@@ -166,6 +174,53 @@ const WalletPage = () => {
 
         loadTransactions();
     }, [activeTab, wallet?.id]);
+
+    // Функция для загрузки следующих транзакций
+    const loadMoreTransactions = useCallback(async () => {
+        if (loadingMoreTransactions || !hasMoreTransactions || !wallet?.id) return;
+        
+        try {
+            setLoadingMoreTransactions(true);
+            const response = await getTransactions(wallet.id, transactionsOffset, 10);
+            
+            if (response.items.length > 0) {
+                setTransactions(prev => [...prev, ...response.items]);
+                setTransactionsOffset(prev => prev + response.items.length);
+                setHasMoreTransactions(response.items.length === 10);
+            } else {
+                setHasMoreTransactions(false);
+            }
+        } catch (error) {
+            console.error("Failed to load more transactions:", error);
+        } finally {
+            setLoadingMoreTransactions(false);
+        }
+    }, [loadingMoreTransactions, hasMoreTransactions, wallet?.id, transactionsOffset]);
+
+    // Intersection Observer для автоматической загрузки при прокрутке
+    useEffect(() => {
+        if (activeTab !== "history" || !hasMoreTransactions) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !loadingMoreTransactions) {
+                    loadMoreTransactions();
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        const triggerElement = loadMoreTriggerRef.current;
+        if (triggerElement) {
+            observer.observe(triggerElement);
+        }
+
+        return () => {
+            if (triggerElement) {
+                observer.unobserve(triggerElement);
+            }
+        };
+    }, [activeTab, hasMoreTransactions, loadingMoreTransactions, loadMoreTransactions]);
 
     const toggleTransaction = (id: string) => {
         setExpandedTransactions(prev => {
@@ -401,10 +456,10 @@ const WalletPage = () => {
                                             const isPositive = transactionType === "TopUp" || transactionType === "Transfer";
                                             
                                             const isExpanded = expandedTransactions.has(transaction.id);
-                                            // Для Transfer проверяем fromWishlistId/toWishlistId, для остальных - description/sourceId
+                                            // Для Transfer проверяем fromWishlistId/toWishlistId, для остальных - description/transactionId
                                             const hasDetails = transactionType === "Transfer" 
-                                                ? !!(transaction.fromWishlistId || transaction.toWishlistId || transaction.sourceId)
-                                                : !!(transaction.description || transaction.sourceId);
+                                                ? !!(transaction.fromWishlistId || transaction.toWishlistId || transaction.transactionId)
+                                                : !!(transaction.description || transaction.transactionId);
                                             
                                             return (
                                                 <div
@@ -473,23 +528,23 @@ const WalletPage = () => {
                                                                             : t("passenger.wallet.availableToRedeem")
                                                                         }
                                                                     </p>
-                                                                    {transaction.sourceId && (
+                                                                    {transaction.transactionId && (
                                                                         <p className="text-xs text-gray-400">
-                                                                            {getSourceIdSuffix(transaction.sourceId)}
+                                                                            {getSourceIdSuffix(transaction.transactionId)}
                                                                         </p>
                                                                     )}
                                                                 </>
                                                             ) : (
                                                                 <>
-                                                                    {/* Для других типов показываем description и sourceId */}
+                                                                    {/* Для других типов показываем description и transactionId */}
                                                                     {transaction.description && (
                                                                         <p className="text-sm text-gray-300 mb-2">
                                                                             {transaction.description}
                                                                         </p>
                                                                     )}
-                                                                    {transaction.sourceId && (
+                                                                    {transaction.transactionId && (
                                                                         <p className="text-xs text-gray-400">
-                                                                            {getSourceIdSuffix(transaction.sourceId)}
+                                                                            {getSourceIdSuffix(transaction.transactionId)}
                                                                         </p>
                                                                     )}
                                                                 </>
@@ -504,7 +559,7 @@ const WalletPage = () => {
                                                             : "text-red-400"
                                                     }`}>
                                                         {isPositive ? "+" : "-"}
-                                                        {Math.abs(transaction.amount).toLocaleString()} Miles
+                                                        {Math.abs(transaction.miles).toLocaleString()} Miles
                                                     </p>
                                                     
                                                     {/* Chevron icon */}
@@ -520,6 +575,16 @@ const WalletPage = () => {
                                                 </div>
                                             );
                                         })}
+                                        {/* Триггер для lazy load */}
+                                        {hasMoreTransactions && (
+                                            <div ref={loadMoreTriggerRef} className="py-4">
+                                                {loadingMoreTransactions && (
+                                                    <div className="text-center">
+                                                        <Loader text={t("passenger.wallet.loadingMore") || "Загрузка..."} />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>

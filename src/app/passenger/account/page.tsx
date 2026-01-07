@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, Fragment, useEffect, useRef } from "react";
+import React, { useState, Fragment, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -141,6 +141,10 @@ const AccountPage = () => {
     const qrCodeScannerRef = useRef<Html5Qrcode | null>(null);
     const [transactionsData, setTransactionsData] = useState<TransactionItem[]>([]);
     const [loadingTransactions, setLoadingTransactions] = useState(false);
+    const [loadingMoreTransactions, setLoadingMoreTransactions] = useState(false);
+    const [transactionsOffset, setTransactionsOffset] = useState(0);
+    const [hasMoreTransactions, setHasMoreTransactions] = useState(true);
+    const loadMoreTriggerRef = useRef<HTMLDivElement>(null);
     const [tierHistories, setTierHistories] = useState<TierHistory[]>([]);
     const [loadingTierHistories, setLoadingTierHistories] = useState(false);
     const [tiers, setTiers] = useState<Tier[]>([]);
@@ -274,9 +278,13 @@ const AccountPage = () => {
         const fetchTransactions = async () => {
             try {
                 setLoadingTransactions(true);
+                setTransactionsOffset(0);
+                setHasMoreTransactions(true);
                 const wallet = await getWallet();
-                const response = await getTransactions(wallet.id, 0, 100);
+                const response = await getTransactions(wallet.id, 0, 10);
                 setTransactionsData(response.items);
+                setTransactionsOffset(10);
+                setHasMoreTransactions(response.items.length === 10);
                 
                 // Загружаем вишлисты для отображения названий в Transfer транзакциях
                 try {
@@ -306,6 +314,54 @@ const AccountPage = () => {
             fetchTransactions();
         }
     }, [activeTab]);
+
+    // Функция для загрузки следующих транзакций
+    const loadMoreTransactions = useCallback(async () => {
+        if (loadingMoreTransactions || !hasMoreTransactions) return;
+        
+        try {
+            setLoadingMoreTransactions(true);
+            const wallet = await getWallet();
+            const response = await getTransactions(wallet.id, transactionsOffset, 10);
+            
+            if (response.items.length > 0) {
+                setTransactionsData(prev => [...prev, ...response.items]);
+                setTransactionsOffset(prev => prev + response.items.length);
+                setHasMoreTransactions(response.items.length === 10);
+            } else {
+                setHasMoreTransactions(false);
+            }
+        } catch (error) {
+            console.error('Ошибка при загрузке дополнительных транзакций:', error);
+        } finally {
+            setLoadingMoreTransactions(false);
+        }
+    }, [loadingMoreTransactions, hasMoreTransactions, transactionsOffset]);
+
+    // Intersection Observer для автоматической загрузки при прокрутке
+    useEffect(() => {
+        if (activeTab !== "transactions" || !hasMoreTransactions) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !loadingMoreTransactions) {
+                    loadMoreTransactions();
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        const triggerElement = loadMoreTriggerRef.current;
+        if (triggerElement) {
+            observer.observe(triggerElement);
+        }
+
+        return () => {
+            if (triggerElement) {
+                observer.unobserve(triggerElement);
+            }
+        };
+    }, [activeTab, hasMoreTransactions, loadingMoreTransactions, loadMoreTransactions]);
 
     // Преобразование tier histories в формат lastThreeMonths
     const lastThreeMonths = React.useMemo(() => {
@@ -499,19 +555,21 @@ const AccountPage = () => {
     }, [transactionsSummary, categoriesData]);
 
     // Преобразование данных API в формат компонента для транзакций
-    const transactions: Transaction[] = (transactionsData || []).map(item => ({
-        id: item.id,
-        date: new Date(item.createdAt),
-        type: item.type === "TopUp" || item.type === "Transfer" ? "income" : "expense",
-        category: item.category,
-        miles: Math.abs(item.miles), // Используем абсолютное значение, знак определяется типом
-        description: item.description,
-        transactionType: item.type, // Сохраняем тип транзакции
-        status: item.status, // Сохраняем статус
-        transactionId: item.transactionId, // Сохраняем sourceId
-        fromWishlistId: item.fromWishlistId, // Сохраняем fromWishlistId
-        toWishlistId: item.toWishlistId, // Сохраняем toWishlistId
-    }));
+    const transactions: Transaction[] = (transactionsData || [])
+        .filter(item => item.type !== "Transfer") // Исключаем транзакции типа Transfer
+        .map(item => ({
+            id: item.id,
+            date: new Date(item.createdAt),
+            type: item.type === "TopUp" || item.type === "Transfer" ? "income" : "expense",
+            category: item.category,
+            miles: Math.abs(item.miles), // Используем абсолютное значение, знак определяется типом
+            description: item.description,
+            transactionType: item.type, // Сохраняем тип транзакции
+            status: item.status, // Сохраняем статус
+            transactionId: item.transactionId, // Сохраняем sourceId
+            fromWishlistId: item.fromWishlistId, // Сохраняем fromWishlistId
+            toWishlistId: item.toWishlistId, // Сохраняем toWishlistId
+        }));
 
     // Group transactions by month
     const groupedTransactions = transactions.reduce((acc, transaction) => {
@@ -1710,6 +1768,16 @@ const AccountPage = () => {
                                             </div>
                                         </div>
                                     ))}
+                                    {/* Триггер для lazy load */}
+                                    {hasMoreTransactions && (
+                                        <div ref={loadMoreTriggerRef} className="py-4">
+                                            {loadingMoreTransactions && (
+                                                <div className="text-center">
+                                                    <Loader text={t("passenger.account.loadingMore") || "Загрузка..."} />
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </>
