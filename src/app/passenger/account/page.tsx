@@ -726,7 +726,10 @@ const AccountPage = () => {
     };
 
     const statusOrder: ("Bronze" | "Silver" | "Gold")[] = ["Bronze", "Silver", "Gold"];
-    const currentIndex = statusOrder.indexOf(currentStatus);
+    // Проверяем, что currentStatus входит в statusOrder, иначе используем индекс 0
+    const currentIndex = (statusOrder as readonly string[]).includes(currentStatus)
+        ? statusOrder.indexOf(currentStatus as "Bronze" | "Silver" | "Gold")
+        : 0;
     const nextIndex = currentIndex < statusOrder.length - 1 ? currentIndex + 1 : currentIndex;
 
     // Проверка загрузки основных данных
@@ -1135,7 +1138,7 @@ const AccountPage = () => {
                                                         {lastThreeMonths.map((monthData, index) => {
                                                             const isFirst = index === 0;
                                                             const isLast = index === lastThreeMonths.length - 1;
-                                                            const hasNoStatus = !monthData.tier || monthData.status === "No Status";
+                                                            const hasNoStatus = !monthData.tier;
                                                             
                                                             // Получаем фон из тира
                                                             const getTierBackground = () => {
