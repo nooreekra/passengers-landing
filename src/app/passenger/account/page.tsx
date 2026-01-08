@@ -365,37 +365,32 @@ const AccountPage = () => {
 
     // Преобразование tier histories в формат lastThreeMonths
     const lastThreeMonths = React.useMemo(() => {
-        // Всегда возвращаем 3 элемента
+        // Всегда возвращаем 3 элемента - последние 3 месяца от текущей даты
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        
-        // Сортируем истории по дате
-        const sortedHistories = [...tierHistories].sort((a, b) =>
-            new Date(a.validFrom).getTime() - new Date(b.validFrom).getTime()
-        );
-        
-        // Берем последние 3 записи
-        let lastThree = sortedHistories.slice(-3);
-        
-        // Если записей меньше 3, дополняем до 3 с null
         const now = new Date();
-        while (lastThree.length < 3) {
-            const date = new Date(now.getFullYear(), now.getMonth() - (2 - lastThree.length), 1);
-            lastThree.push({
-                id: "",
-                userId: "",
-                tier: null,
-                validFrom: date.toISOString(),
-                validTo: null
+        
+        // Вычисляем последние 3 месяца (не включая текущий месяц)
+        const months: Array<{ year: number; month: number; monthName: string }> = [];
+        for (let i = 3; i >= 1; i--) {
+            const targetDate = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            months.push({
+                year: targetDate.getFullYear(),
+                month: targetDate.getMonth(),
+                monthName: monthNames[targetDate.getMonth()]
             });
         }
         
-        return lastThree.map(history => {
-            const date = new Date(history.validFrom);
-            const month = monthNames[date.getMonth()];
+        // Для каждого месяца ищем соответствующий статус в tierHistories
+        return months.map(({ year, month, monthName }) => {
+            // Ищем историю, которая соответствует этому месяцу и году
+            const matchingHistory = tierHistories.find(history => {
+                const historyDate = new Date(history.validFrom);
+                return historyDate.getFullYear() === year && historyDate.getMonth() === month;
+            });
             
-            if (history.tier) {
+            if (matchingHistory && matchingHistory.tier) {
                 // Преобразуем code tier в статус
-                const tierCode = history.tier.code.toLowerCase();
+                const tierCode = matchingHistory.tier.code.toLowerCase();
                 let status: "Bronze" | "Silver" | "Gold" | "Platinum" | "No Status" = "Bronze";
                 if (tierCode === "silver") {
                     status = "Silver";
@@ -404,10 +399,10 @@ const AccountPage = () => {
                 } else if (tierCode === "platinum") {
                     status = "Platinum";
                 }
-                return { month, status, tier: history.tier };
+                return { month: monthName, status, tier: matchingHistory.tier };
             } else {
-                // Если tier равен null, показываем "Без статуса"
-                return { month, status: "No Status" as const, tier: null };
+                // Если статус не найден для месяца, показываем "No Status"
+                return { month: monthName, status: "No Status" as const, tier: null };
             }
         });
     }, [tierHistories]);

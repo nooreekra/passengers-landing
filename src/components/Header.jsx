@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import i18n from '../shared/i18n'
 import { Globe, X, ChevronLeft } from 'lucide-react'
 
-const Header = () => {
+const Header = ({ autoOpenAuth = false }) => {
   const { t } = useTranslation()
   const router = useRouter()
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
@@ -195,6 +195,13 @@ const Header = () => {
       document.body.style.overflow = 'unset'
     }
   }, [isMenuOpen])
+
+  // Автоматическое открытие модалки авторизации при загрузке страницы через QR
+  useEffect(() => {
+    if (autoOpenAuth) {
+      setIsAuthModalOpen(true)
+    }
+  }, [autoOpenAuth])
 
   return (
     <>

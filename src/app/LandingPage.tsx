@@ -12,7 +12,7 @@ import StatusBenefits from '../components/StatusBenefits'
 import PartnersBenefits from '../components/PartnersBenefits'
 import Footer from '../components/Footer'
 
-const LandingPage = () => {
+const LandingPage = ({ autoOpenAuth = false, qrCode = null }) => {
   const { t } = useTranslation()
   
   return (
@@ -20,7 +20,7 @@ const LandingPage = () => {
       {/* Hero Section with Carousel */}
       <section className="hero-section">
         <BackgroundCarousel />
-        <Header />
+        <Header autoOpenAuth={autoOpenAuth} />
         <div className="hero-content">
           <div className="landing-content-wrapper">
             <div className="landing-content">
