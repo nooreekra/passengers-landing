@@ -1372,7 +1372,7 @@
                 "description": "Every time you use your card or QR from our partner bank to pay, you collect IMS Miles automatically.",
                 "benefits": "Monthly card payments and purchases all contribute to your miles balance. Make your daily spending work for you and bring you closer to your next vacation.",
                 "howItWorks": "How It Works",
-                "step1": "Use the card for QR from our partner banks for everyday purchases",
+                "step1": "Use the card or QR payments from our partner banks to make everyday purchases",
                 "step2": "Every transaction automatically earns you IMS Miles",
                 "step3": "Track your monthly card payments and accumulated miles in one place",
                 "step4": "Redeem your miles for flights, hotels, or other travel rewards"
@@ -1504,6 +1504,12 @@
                 "banking": "Banking",
                 "flightAlmatyDubai": "Flight Almaty - Dubai"
             }
+        }
+    },
+    "transaction": {
+        "confirm": {
+            "success": "Transaction credited",
+            "sessionExpired": "Session expired"
         }
     }
 }

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 import LoginForm from './LoginForm'
 import RegistrationForm from './RegistrationForm'
 import ConfirmForm from './ConfirmForm'
@@ -13,6 +14,7 @@ import AgreementsModal from './AgreementsModal'
 import authService from '../services/authService'
 import { login, getMe } from '@/shared/api/auth'
 import { getCurrentBusiness } from '@/shared/api/business'
+import { confirmDraftTransaction } from '@/shared/api/ingestion'
 import { setTokens } from '@/store/slices/authSlice'
 import { setUser } from '@/store/slices/userSlice'
 import { setBusiness } from '@/store/slices/businessSlice'
@@ -63,6 +65,37 @@ const AuthModal = ({ isOpen, onClose }) => {
     }
   }, [isOpen])
 
+  // Функция для подтверждения транзакции после авторизации
+  const confirmPendingTransaction = async () => {
+    try {
+      const pendingCode = sessionStorage.getItem('pendingTransactionCode')
+      if (!pendingCode) {
+        return // Нет ожидающей транзакции
+      }
+
+      await confirmDraftTransaction(pendingCode)
+      
+      // Успешное подтверждение
+      toast.success(t('transaction.confirm.success') || 'Транзакция начислена')
+      
+      // Удаляем код из sessionStorage после успешного подтверждения
+      sessionStorage.removeItem('pendingTransactionCode')
+    } catch (err) {
+      console.error('Transaction confirmation error:', err)
+      
+      const statusCode = err?.response?.status
+      
+      if (statusCode === 404) {
+        // Сессия истекла
+        toast.error(t('transaction.confirm.sessionExpired') || 'Сессия истекла')
+        sessionStorage.removeItem('pendingTransactionCode')
+      } else {
+        // Другие ошибки - просто удаляем код, чтобы не пытаться снова
+        sessionStorage.removeItem('pendingTransactionCode')
+      }
+    }
+  }
+
   const handleLogin = async (credentials) => {
     setIsLoading(true)
     setError('')
@@ -101,6 +134,9 @@ const AuthModal = ({ isOpen, onClose }) => {
         body: JSON.stringify({ accessToken, role: user.role.type }),
         credentials: 'include',
       })
+      
+      // Подтверждаем транзакцию, если есть ожидающая транзакция
+      await confirmPendingTransaction()
       
       // Перенаправляем на соответствующий дашборд
       const path = roleToPath[user.role.type] ?? '/'
@@ -234,6 +270,9 @@ const AuthModal = ({ isOpen, onClose }) => {
           body: JSON.stringify({ accessToken, role: user.role.type }),
           credentials: 'include',
         })
+        
+        // Подтверждаем транзакцию, если есть ожидающая транзакция
+        await confirmPendingTransaction()
         
         // Перенаправляем на соответствующий дашборд
         const path = roleToPath[user.role.type] ?? '/'
