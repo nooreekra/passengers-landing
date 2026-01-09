@@ -42,32 +42,32 @@ export default function SilverPage() {
               marginBottom: '15px',
               textTransform: 'uppercase'
             }}>
-              Benefits
+              {t('landing.statusBenefits.benefits', 'Benefits')}
             </h2>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <Percent size={24} />
                 </span>
-                15% {t('landing.statusBenefits.discountLabel', 'DISCOUNT')} on flights and hotels
+                {t('landing.statusBenefits.statuses.silver.benefit1', '15% DISCOUNT on flights and hotels')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <Award size={24} />
                 </span>
-                Book with only 85% of trip cost in miles
+                {t('landing.statusBenefits.statuses.silver.benefit2', 'Book with only 85% of trip cost in miles')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <Award size={24} />
                 </span>
-                Access to exclusive Silver member benefits
+                {t('landing.statusBenefits.statuses.silver.benefit3', 'Access to exclusive Silver member benefits')}
               </li>
               <li className="section-description" style={{ paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <Award size={24} />
                 </span>
-                Priority customer support
+                {t('landing.statusBenefits.statuses.silver.benefit4', 'Priority customer support')}
               </li>
             </ul>
           </div>

@@ -1423,6 +1423,24 @@
             "subtitle": "choose your next getaway",
             "description": "spend collected miles to book your weekend trip, annual family vacation or that exclusive dream holiday you've been thinking about for some time. All paid by miles from our partners!!!",
             "bookFor": "Book for",
+            "flights": {
+                "title": "Flights",
+                "description": "Use your accumulated IMS Miles to book flights with our partner airlines. Whether you're planning a weekend getaway or a dream vacation, your miles can take you anywhere.",
+                "howItWorks": "How It Works",
+                "step1": "Choose your destination and travel dates",
+                "step2": "Select your flight and pay with IMS Miles",
+                "step3": "Receive your booking confirmation",
+                "step4": "Enjoy your trip paid entirely with miles"
+            },
+            "hotels": {
+                "title": "Hotels",
+                "description": "Redeem your IMS Miles for hotel stays at our partner properties. From luxury resorts to boutique hotels, your miles unlock amazing accommodation options worldwide.",
+                "howItWorks": "How It Works",
+                "step1": "Browse partner hotels and select your destination",
+                "step2": "Choose your check-in and check-out dates",
+                "step3": "Pay for your stay using IMS Miles",
+                "step4": "Enjoy your hotel stay paid with miles"
+            },
             "options": {
                 "weekendEscape": {
                     "destination": "Book your weekend",
@@ -1446,18 +1464,39 @@
             "subtitle": "Hit monthly targets\nto achive higher status",
             "footerText": "even if you are not taking enough flights to get to desired status, you can alternatively hit you monthly targets with our Partner Network",
             "discountLabel": "DISCOUNT",
+            "benefits": "Benefits",
             "statuses": {
+                "bronze": {
+                    "name": "Bronze",
+                    "description": "Start your journey with Bronze status. As a Bronze member, you begin earning IMS Miles and working towards higher status levels with exclusive benefits.",
+                    "benefit1": "Start earning IMS Miles from all partner activities",
+                    "benefit2": "Access to unified loyalty platform",
+                    "benefit3": "Track your progress towards Silver status",
+                    "benefit4": "Even if you are not taking enough flights to get to desired status, you can alternatively hit your monthly targets with our Partner Network"
+                },
                 "silver": {
                     "name": "Silver",
-                    "description": "all you need is 85% of the trip cost to book your flight/hotel"
+                    "description": "all you need is 85% of the trip cost to book your flight/hotel",
+                    "benefit1": "15% DISCOUNT on flights and hotels",
+                    "benefit2": "Book with only 85% of trip cost in miles",
+                    "benefit3": "Access to exclusive Silver member benefits",
+                    "benefit4": "Priority customer support"
                 },
                 "gold": {
                     "name": "Gold",
-                    "description": "all you need is 75% of the trip cost to book your flight/hotel"
+                    "description": "all you need is 75% of the trip cost to book your flight/hotel",
+                    "benefit1": "25% DISCOUNT on flights and hotels",
+                    "benefit2": "Book with only 75% of trip cost in miles",
+                    "benefit3": "Access to exclusive Gold member benefits",
+                    "benefit4": "Premium customer support and priority booking"
                 },
                 "platinum": {
                     "name": "Platinum",
-                    "description": "all you need is 65% of the trip cost to book your flight/hotel"
+                    "description": "all you need is 65% of the trip cost to book your flight/hotel",
+                    "benefit1": "35% DISCOUNT on flights and hotels",
+                    "benefit2": "Book with only 65% of trip cost in miles",
+                    "benefit3": "Access to exclusive Platinum member benefits",
+                    "benefit4": "VIP customer support and highest priority booking"
                 }
             }
         },

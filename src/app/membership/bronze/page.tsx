@@ -18,7 +18,7 @@ export default function BronzePage() {
             marginBottom: '20px',
             textTransform: 'uppercase'
           }}>
-            Bronze Status
+            {t('landing.statusBenefits.statuses.bronze.name', 'Bronze')} Status
           </h1>
           
           <div style={{ maxWidth: '900px', marginLeft: 'auto', marginRight: 'auto', marginBottom: '20px' }}>
@@ -26,7 +26,7 @@ export default function BronzePage() {
               {t('landing.statusBenefits.subtitle', 'Hit monthly targets to achieve higher status')}
             </p>
             <p className="section-description">
-              Start your journey with Bronze status. As a Bronze member, you begin earning IMS Miles and working towards higher status levels with exclusive benefits.
+              {t('landing.statusBenefits.statuses.bronze.description', 'Start your journey with Bronze status. As a Bronze member, you begin earning IMS Miles and working towards higher status levels with exclusive benefits.')}
             </p>
           </div>
 
@@ -42,32 +42,32 @@ export default function BronzePage() {
               marginBottom: '15px',
               textTransform: 'uppercase'
             }}>
-              Benefits
+              {t('landing.statusBenefits.benefits', 'Benefits')}
             </h2>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <Award size={24} />
                 </span>
-                Start earning IMS Miles from all partner activities
+                {t('landing.statusBenefits.statuses.bronze.benefit1', 'Start earning IMS Miles from all partner activities')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <Award size={24} />
                 </span>
-                Access to unified loyalty platform
+                {t('landing.statusBenefits.statuses.bronze.benefit2', 'Access to unified loyalty platform')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <Award size={24} />
                 </span>
-                Track your progress towards Silver status
+                {t('landing.statusBenefits.statuses.bronze.benefit3', 'Track your progress towards Silver status')}
               </li>
               <li className="section-description" style={{ paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <Award size={24} />
                 </span>
-                {t('landing.statusBenefits.footerText', 'Even if you are not taking enough flights to get to desired status, you can alternatively hit your monthly targets with our Partner Network')}
+                {t('landing.statusBenefits.statuses.bronze.benefit4', 'Even if you are not taking enough flights to get to desired status, you can alternatively hit your monthly targets with our Partner Network')}
               </li>
             </ul>
           </div>

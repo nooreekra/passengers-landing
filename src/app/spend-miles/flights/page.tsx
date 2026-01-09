@@ -18,7 +18,7 @@ export default function FlightsPage() {
             marginBottom: '20px',
             textTransform: 'uppercase'
           }}>
-            {t('landing.spendMiles.title', 'Spend Miles')} - Flights
+            {t('landing.spendMiles.title', 'Spend Miles')} - {t('landing.spendMiles.flights.title', 'Flights')}
           </h1>
           
           <div style={{ maxWidth: '900px', marginLeft: 'auto', marginRight: 'auto', marginBottom: '20px' }}>
@@ -27,7 +27,7 @@ export default function FlightsPage() {
                 'Spend collected miles to book your weekend trip, annual family vacation or that exclusive dream holiday you\'ve been thinking about for some time. All paid by miles from our partners!!!')}
             </p>
             <p className="section-description">
-              Use your accumulated IMS Miles to book flights with our partner airlines. Whether you're planning a weekend getaway or a dream vacation, your miles can take you anywhere.
+              {t('landing.spendMiles.flights.description', 'Use your accumulated IMS Miles to book flights with our partner airlines. Whether you\'re planning a weekend getaway or a dream vacation, your miles can take you anywhere.')}
             </p>
           </div>
 
@@ -43,32 +43,32 @@ export default function FlightsPage() {
               marginBottom: '15px',
               textTransform: 'uppercase'
             }}>
-              How It Works
+              {t('landing.spendMiles.flights.howItWorks', 'How It Works')}
             </h2>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <Plane size={24} />
                 </span>
-                Choose your destination and travel dates
+                {t('landing.spendMiles.flights.step1', 'Choose your destination and travel dates')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <CreditCard size={24} />
                 </span>
-                Select your flight and pay with IMS Miles
+                {t('landing.spendMiles.flights.step2', 'Select your flight and pay with IMS Miles')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <Ticket size={24} />
                 </span>
-                Receive your booking confirmation
+                {t('landing.spendMiles.flights.step3', 'Receive your booking confirmation')}
               </li>
               <li className="section-description" style={{ paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <Globe size={24} />
                 </span>
-                Enjoy your trip paid entirely with miles
+                {t('landing.spendMiles.flights.step4', 'Enjoy your trip paid entirely with miles')}
               </li>
             </ul>
           </div>

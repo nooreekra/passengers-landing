@@ -18,7 +18,7 @@ export default function HotelsPage() {
             marginBottom: '20px',
             textTransform: 'uppercase'
           }}>
-            {t('landing.spendMiles.title', 'Spend Miles')} - Hotels
+            {t('landing.spendMiles.title', 'Spend Miles')} - {t('landing.spendMiles.hotels.title', 'Hotels')}
           </h1>
           
           <div style={{ maxWidth: '900px', marginLeft: 'auto', marginRight: 'auto', marginBottom: '20px' }}>
@@ -27,7 +27,7 @@ export default function HotelsPage() {
                 'Spend collected miles to book your weekend trip, annual family vacation or that exclusive dream holiday you\'ve been thinking about for some time. All paid by miles from our partners!!!')}
             </p>
             <p className="section-description">
-              Redeem your IMS Miles for hotel stays at our partner properties. From luxury resorts to boutique hotels, your miles unlock amazing accommodation options worldwide.
+              {t('landing.spendMiles.hotels.description', 'Redeem your IMS Miles for hotel stays at our partner properties. From luxury resorts to boutique hotels, your miles unlock amazing accommodation options worldwide.')}
             </p>
           </div>
 
@@ -43,32 +43,32 @@ export default function HotelsPage() {
               marginBottom: '15px',
               textTransform: 'uppercase'
             }}>
-              How It Works
+              {t('landing.spendMiles.hotels.howItWorks', 'How It Works')}
             </h2>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <Building size={24} />
                 </span>
-                Browse partner hotels and select your destination
+                {t('landing.spendMiles.hotels.step1', 'Browse partner hotels and select your destination')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <Calendar size={24} />
                 </span>
-                Choose your check-in and check-out dates
+                {t('landing.spendMiles.hotels.step2', 'Choose your check-in and check-out dates')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <CreditCard size={24} />
                 </span>
-                Pay for your stay using IMS Miles
+                {t('landing.spendMiles.hotels.step3', 'Pay for your stay using IMS Miles')}
               </li>
               <li className="section-description" style={{ paddingLeft: '30px', position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
                   <Key size={24} />
                 </span>
-                Enjoy your hotel stay paid with miles
+                {t('landing.spendMiles.hotels.step4', 'Enjoy your hotel stay paid with miles')}
               </li>
             </ul>
           </div>
