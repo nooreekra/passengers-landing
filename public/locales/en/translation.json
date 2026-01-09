@@ -1383,7 +1383,7 @@
                 "benefits": "No need to join separate restaurant loyalty programs. All your dining experiences are unified in your IMS Miles account, making every meal a step closer to your next vacation.",
                 "howItWorks": "How It Works",
                 "step1": "Dine at any of our partner restaurants",
-                "step2": "Pay with your linked card or account",
+                "step2": "Present your IMS number or QR from your account to the waiter",
                 "step3": "Miles are automatically credited to your account",
                 "step4": "Use your miles for flights and hotels"
             },
@@ -1393,8 +1393,8 @@
                 "benefits": "Grab your morning coffee with friends, enjoy a takeaway, or relax with a pastry - all while collecting miles that bring you closer to your dream destination.",
                 "howItWorks": "How It Works",
                 "step1": "Visit any of our partner coffee shops",
-                "step2": "Buy your coffee, croissant, or any item",
-                "step3": "Pay and automatically earn IMS Miles",
+                "step2": "Present your IMS number or QR from your account to the waiter",
+                "step3": "Your activity automatically earn IMS Miles",
                 "step4": "Watch your miles accumulate with every visit"
             },
             "gyms": {
@@ -1494,6 +1494,7 @@
             "copyright": "All rights reserved"
         },
         "milesAnimation": {
+            "myAccount": "My account",
             "milesTotal": "Miles, total",
             "operations": {
                 "airlineAlmatyAstana": "Airline Almaty - Astana",

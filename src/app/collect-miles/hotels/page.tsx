@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Building, Key, CreditCard, Gift } from 'lucide-react'
 import Header from '../../../components/Header'
 import Footer from '../../../components/Footer'
 
@@ -47,19 +48,27 @@ export default function HotelsPage() {
             </h2>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🏨</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Building size={24} />
+                </span>
                 {t('landing.collectMiles.hotels.step1', 'Book a stay at any of our partner hotels')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🔑</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Key size={24} />
+                </span>
                 {t('landing.collectMiles.hotels.step2', 'Check in and enjoy your stay')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>💳</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <CreditCard size={24} />
+                </span>
                 {t('landing.collectMiles.hotels.step3', 'Your stay is automatically tracked and miles are credited')}
               </li>
               <li className="section-description" style={{ paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🎁</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Gift size={24} />
+                </span>
                 {t('landing.collectMiles.hotels.step4', 'Use your accumulated miles for future hotel stays or other rewards')}
               </li>
             </ul>

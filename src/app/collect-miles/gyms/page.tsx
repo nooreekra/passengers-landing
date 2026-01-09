@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Dumbbell, CreditCard, Activity, Plane } from 'lucide-react'
 import Header from '../../../components/Header'
 import Footer from '../../../components/Footer'
 
@@ -47,19 +48,27 @@ export default function GymsPage() {
             </h2>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>💪</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Dumbbell size={24} />
+                </span>
                 {t('landing.collectMiles.gyms.step1', 'Join or visit any of our partner gyms')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>💳</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <CreditCard size={24} />
+                </span>
                 {t('landing.collectMiles.gyms.step2', 'Pay your monthly membership fee')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🏋️</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Activity size={24} />
+                </span>
                 {t('landing.collectMiles.gyms.step3', 'Stay active and earn miles with every payment')}
               </li>
               <li className="section-description" style={{ paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>✈️</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Plane size={24} />
+                </span>
                 {t('landing.collectMiles.gyms.step4', 'Use your fitness miles for your next travel adventure')}
               </li>
             </ul>

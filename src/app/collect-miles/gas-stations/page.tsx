@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Fuel, CreditCard, Gift, Car } from 'lucide-react'
 import Header from '../../../components/Header'
 import Footer from '../../../components/Footer'
 
@@ -47,19 +48,27 @@ export default function GasStationsPage() {
             </h2>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>⛽</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Fuel size={24} />
+                </span>
                 {t('landing.collectMiles.gasStations.step1', 'Fill up your tank at any of our partner gas stations')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>💳</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <CreditCard size={24} />
+                </span>
                 {t('landing.collectMiles.gasStations.step2', 'Pay for your fuel purchase')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🎁</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Gift size={24} />
+                </span>
                 {t('landing.collectMiles.gasStations.step3', 'Miles are automatically credited to your IMS account')}
               </li>
               <li className="section-description" style={{ paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🚗</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Car size={24} />
+                </span>
                 {t('landing.collectMiles.gasStations.step4', 'Use your miles to fuel your next travel adventure')}
               </li>
             </ul>

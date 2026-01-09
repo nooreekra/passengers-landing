@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Coffee, QrCode, CreditCard, Sparkles } from 'lucide-react'
 import Header from '../../../components/Header'
 import Footer from '../../../components/Footer'
 
@@ -47,19 +48,27 @@ export default function CoffeeShopsPage() {
             </h2>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>☕</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Coffee size={24} />
+                </span>
                 {t('landing.collectMiles.coffeeShops.step1', 'Visit any of our partner coffee shops')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🥐</span>
-                {t('landing.collectMiles.coffeeShops.step2', 'Buy your coffee, croissant, or any item')}
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <QrCode size={24} />
+                </span>
+                {t('landing.collectMiles.coffeeShops.step2', 'Present your IMS number or QR from your account to the waiter')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>💳</span>
-                {t('landing.collectMiles.coffeeShops.step3', 'Pay and automatically earn IMS Miles')}
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <CreditCard size={24} />
+                </span>
+                {t('landing.collectMiles.coffeeShops.step3', 'Your activity automatically earn IMS Miles')}
               </li>
               <li className="section-description" style={{ paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🎉</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Sparkles size={24} />
+                </span>
                 {t('landing.collectMiles.coffeeShops.step4', 'Watch your miles accumulate with every visit')}
               </li>
             </ul>

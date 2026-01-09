@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Plane, Ticket, Coins, Sparkles } from 'lucide-react'
 import Header from '../../../components/Header'
 import Footer from '../../../components/Footer'
 
@@ -47,19 +48,27 @@ export default function AirlinesPage() {
             </h2>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>✈️</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Plane size={24} />
+                </span>
                 {t('landing.collectMiles.airlines.step1', 'Book your flight with any of our airline partners')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🎫</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Ticket size={24} />
+                </span>
                 {t('landing.collectMiles.airlines.step2', 'Your flight is automatically tracked in the system')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>💰</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Coins size={24} />
+                </span>
                 {t('landing.collectMiles.airlines.step3', 'Miles are credited to your unified IMS Miles account')}
               </li>
               <li className="section-description" style={{ paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🎉</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Sparkles size={24} />
+                </span>
                 {t('landing.collectMiles.airlines.step4', 'Use your miles for your next trip or save them for your dream destination')}
               </li>
             </ul>

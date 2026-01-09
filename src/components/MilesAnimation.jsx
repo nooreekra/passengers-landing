@@ -113,7 +113,7 @@ const MilesAnimation = () => {
     <div className="miles-animation-container">
       <div className="miles-balance">
         <div className="miles-balance-content">
-          <div className="my-account-label">My account</div>
+          <div className="my-account-label">{t('landing.milesAnimation.myAccount')}</div>
           <div className="miles-label">{t('landing.milesAnimation.milesTotal')}</div>
           <div className="miles-total">{displayTotal.toLocaleString()}</div>
         </div>

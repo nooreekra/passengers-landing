@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { CreditCard, DollarSign, BarChart, Plane } from 'lucide-react'
 import Header from '../../../components/Header'
 import Footer from '../../../components/Footer'
 
@@ -47,19 +48,27 @@ export default function BanksPage() {
             </h2>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>💳</span>
-                {t('landing.collectMiles.banks.step1', 'Use your partner bank credit card for everyday purchases')}
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <CreditCard size={24} />
+                </span>
+                {t('landing.collectMiles.banks.step1', 'Use the card or QR payments from our partner banks to make everyday purchases')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>💵</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <DollarSign size={24} />
+                </span>
                 {t('landing.collectMiles.banks.step2', 'Every transaction automatically earns you IMS Miles')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>📊</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <BarChart size={24} />
+                </span>
                 {t('landing.collectMiles.banks.step3', 'Track your monthly card payments and accumulated miles in one place')}
               </li>
               <li className="section-description" style={{ paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>✈️</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Plane size={24} />
+                </span>
                 {t('landing.collectMiles.banks.step4', 'Redeem your miles for flights, hotels, or other travel rewards')}
               </li>
             </ul>

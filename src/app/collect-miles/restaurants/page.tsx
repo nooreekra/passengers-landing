@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Utensils, QrCode, Gift, Plane } from 'lucide-react'
 import Header from '../../../components/Header'
 import Footer from '../../../components/Footer'
 
@@ -47,20 +48,28 @@ export default function RestaurantsPage() {
             </h2>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🍽️</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Utensils size={24} />
+                </span>
                 {t('landing.collectMiles.restaurants.step1', 'Dine at any of our partner restaurants')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>💳</span>
-                {t('landing.collectMiles.restaurants.step2', 'Pay with your linked card or account')}
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <QrCode size={24} />
+                </span>
+                {t('landing.collectMiles.restaurants.step2', 'Present your IMS number or QR from your account to the waiter')}
               </li>
               <li className="section-description" style={{ marginBottom: '10px', paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>🎁</span>
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Gift size={24} />
+                </span>
                 {t('landing.collectMiles.restaurants.step3', 'Miles are automatically credited to your account')}
               </li>
               <li className="section-description" style={{ paddingLeft: '30px', position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 0, fontSize: '24px' }}>✈️</span>
-                {t('landing.collectMiles.restaurants.step4', 'Use your miles for flights, hotels, or more dining experiences')}
+                <span style={{ position: 'absolute', left: 0, display: 'flex', alignItems: 'center' }}>
+                  <Plane size={24} />
+                </span>
+                {t('landing.collectMiles.restaurants.step4', 'Use your miles for flights and hotels')}
               </li>
             </ul>
           </div>
