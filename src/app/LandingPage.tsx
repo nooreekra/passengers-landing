@@ -12,7 +12,7 @@ import StatusBenefits from '../components/StatusBenefits'
 import PartnersBenefits from '../components/PartnersBenefits'
 import Footer from '../components/Footer'
 
-const LandingPage = ({ autoOpenAuth = false, qrCode = null }) => {
+const LandingPage = ({ autoOpenAuth = false, qrCode = null }: { autoOpenAuth?: boolean; qrCode?: string | null }) => {
   const { t } = useTranslation()
   
   return (
