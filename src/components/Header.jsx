@@ -93,16 +93,17 @@ const Header = ({ autoOpenAuth = false }) => {
     spend: {
       title: t('landing.header.menu.spendMiles'),
       items: [
-        { label: 'Flights', action: () => scrollToSection('spend-section') },
-        { label: 'Hotels', action: () => scrollToSection('spend-section') },
+        { label: 'Flights', action: () => navigateToPage('/spend-miles/flights') },
+        { label: 'Hotels', action: () => navigateToPage('/spend-miles/hotels') },
       ]
     },
     membership: {
       title: t('landing.header.menu.membership'),
       items: [
-        { label: 'Bronze', action: () => scrollToSection('status-section') },
-        { label: 'Silver', action: () => scrollToSection('status-section') },
-        { label: 'Gold', action: () => scrollToSection('status-section') },
+        { label: 'Bronze', action: () => navigateToPage('/membership/bronze') },
+        { label: 'Silver', action: () => navigateToPage('/membership/silver') },
+        { label: 'Gold', action: () => navigateToPage('/membership/gold') },
+        { label: 'Platinum', action: () => navigateToPage('/membership/platinum') },
       ]
     }
   }
