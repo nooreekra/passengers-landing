@@ -5,12 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 const MilesAnimation = () => {
   const { t } = useTranslation()
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [displayTotal, setDisplayTotal] = useState(52000)
-  const [hasCompletedCycle, setHasCompletedCycle] = useState(false)
-  const animationTimerRef = useRef(null)
-  const displayTotalRef = useRef(52000) // Храним текущее значение для синхронного доступа
-
+  
   // Операции в порядке по нумерации (против часовой стрелки)
   const operations = [
     { id: 1, textKey: 'airlineAlmatyAstana', amount: +500, type: 'earning' },
@@ -23,6 +18,23 @@ const MilesAnimation = () => {
   ]
 
   const baseTotal = 52000
+
+  // Определяем начальный активный индекс (операция, которая будет отображаться как активная)
+  // Активный индекс определяется как (currentIndex + 3) % operations.length
+  // Чтобы начать с определенного активного индекса, нужно вычислить соответствующий currentIndex
+  const initialActiveIndex = 3 // Начинаем с операции с индексом 3 (Airline Astana - London)
+  // Вычисляем currentIndex, который даст нужный активный индекс
+  // (currentIndex + 3) % operations.length = initialActiveIndex
+  // currentIndex = (initialActiveIndex - 3 + operations.length) % operations.length
+  const initialCurrentIndex = (initialActiveIndex - 3 + operations.length) % operations.length
+  // Начальная сумма всегда базовая (52000), независимо от активного индекса
+  const initialTotal = baseTotal
+
+  const [currentIndex, setCurrentIndex] = useState(initialCurrentIndex)
+  const [displayTotal, setDisplayTotal] = useState(initialTotal)
+  const [hasCompletedCycle, setHasCompletedCycle] = useState(false)
+  const animationTimerRef = useRef(null)
+  const displayTotalRef = useRef(initialTotal) // Храним текущее значение для синхронного доступа
 
   // Функция для запуска анимации счетчика
   const animateCounter = (targetTotal, startTotal) => {
@@ -72,19 +84,21 @@ const MilesAnimation = () => {
       setCurrentIndex((prevIndex) => {
         const nextIndex = (prevIndex + 1) >= operations.length ? 0 : prevIndex + 1
         
-        // Вычисляем целевую сумму для следующей операции
+        // Вычисляем активный индекс для следующей операции (которая будет показана после переключения)
+        const nextActiveIndex = (nextIndex + 3) % operations.length
+        
+        // Получаем операцию, которая будет активна после переключения
+        const nextActiveOperation = operations[nextActiveIndex]
+        
+        // Вычисляем целевую сумму
         let targetTotal
-        if (nextIndex === 0) {
-          // Возвращаемся к базовой сумме
+        if (nextActiveIndex === 0) {
+          // Когда возвращаемся к началу, сбрасываем к базовой сумме
           setHasCompletedCycle(true)
           targetTotal = baseTotal
         } else {
-          // Вычисляем накопленную сумму до следующей операции
-          let accumulated = baseTotal
-          operations.slice(0, nextIndex + 1).forEach(op => {
-            accumulated += op.amount
-          })
-          targetTotal = accumulated
+          // Добавляем сумму следующей активной операции (которая будет показана)
+          targetTotal = currentTotal + nextActiveOperation.amount
         }
 
         // Запускаем анимацию счетчика синхронно с переключением операции
