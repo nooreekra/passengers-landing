@@ -282,7 +282,7 @@ const AccountPage = () => {
                 setTransactionsOffset(0);
                 setHasMoreTransactions(true);
                 const wallet = await getWallet();
-                const response = await getTransactions(wallet.id, 0, 10);
+                const response = await getTransactions(wallet.id, 0, 10, true); // excludeTransfers = true
                 setTransactionsData(response.items);
                 setTransactionsOffset(response.offset + response.items.length);
                 // Проверяем, есть ли еще транзакции для загрузки
@@ -324,7 +324,7 @@ const AccountPage = () => {
         try {
             setLoadingMoreTransactions(true);
             const wallet = await getWallet();
-            const response = await getTransactions(wallet.id, transactionsOffset, 10);
+            const response = await getTransactions(wallet.id, transactionsOffset, 10, true); // excludeTransfers = true
             
             if (response.items.length > 0) {
                 setTransactionsData(prev => [...prev, ...response.items]);

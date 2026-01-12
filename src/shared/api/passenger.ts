@@ -167,9 +167,9 @@ interface TransactionsApiResponse {
 /**
  * Получение транзакций пользователя
  */
-export async function getTransactions(walletId: string, offset = 0, limit = 100): Promise<TransactionsResponse> {
+export async function getTransactions(walletId: string, offset = 0, limit = 100, excludeTransfers = false): Promise<TransactionsResponse> {
     const { data } = await axiosInstance.get<TransactionsApiResponse | WalletTransaction[]>(`/api/wallets/${walletId}/transactions`, {
-        params: { offset, limit, sortBy: 'createdAt:desc' }
+        params: { offset, limit, sortBy: 'createdAt:desc', excludeTransfers }
     });
     
     // Проверяем, является ли ответ объектом с полями items, total, offset, limit (новый формат)
