@@ -14,6 +14,7 @@ import { getTransactions, TransactionItem, getTierHistories, TierHistory, getTra
 import { useTranslation } from "react-i18next";
 import i18n from "@/shared/i18n";
 import { Html5Qrcode } from "html5-qrcode";
+import { QRCodeSVG } from "qrcode.react";
 
 // Transaction types
 interface Transaction {
@@ -881,7 +882,16 @@ const AccountPage = () => {
                                         <div className="relative">
                                             <div className="bg-white rounded-lg p-4 shadow-sm">
                                                 <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center">
-                                                    <QrCode className="h-16 w-16 text-gray-400" />
+                                                    {user?.imsNumber ? (
+                                                        <QRCodeSVG 
+                                                            value={user.imsNumber} 
+                                                            size={128}
+                                                            level="M"
+                                                            includeMargin={false}
+                                                        />
+                                                    ) : (
+                                                        <QrCode className="h-16 w-16 text-gray-400" />
+                                                    )}
                                                 </div>
                                             </div>
 
@@ -1000,7 +1010,16 @@ const AccountPage = () => {
                                                             <div className="flex flex-col items-center flex-shrink-0 gap-4">
                                                                 <div className="bg-white rounded-lg p-4 shadow-md">
                                                                     <div className="w-64 h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-                                                                        <QrCode className="h-48 w-48 text-gray-400" />
+                                                                        {user?.imsNumber ? (
+                                                                            <QRCodeSVG 
+                                                                                value={user.imsNumber} 
+                                                                                size={256}
+                                                                                level="M"
+                                                                                includeMargin={false}
+                                                                            />
+                                                                        ) : (
+                                                                            <QrCode className="h-48 w-48 text-gray-400" />
+                                                                        )}
                                                                     </div>
                                                                 </div>
                                                                 
