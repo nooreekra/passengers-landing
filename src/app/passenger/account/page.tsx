@@ -284,8 +284,9 @@ const AccountPage = () => {
                 const wallet = await getWallet();
                 const response = await getTransactions(wallet.id, 0, 10);
                 setTransactionsData(response.items);
-                setTransactionsOffset(10);
-                setHasMoreTransactions(response.items.length === 10);
+                setTransactionsOffset(response.offset + response.items.length);
+                // Проверяем, есть ли еще транзакции для загрузки
+                setHasMoreTransactions(response.offset + response.items.length < response.total);
                 
                 // Загружаем вишлисты для отображения названий в Transfer транзакциях
                 try {
@@ -327,13 +328,16 @@ const AccountPage = () => {
             
             if (response.items.length > 0) {
                 setTransactionsData(prev => [...prev, ...response.items]);
-                setTransactionsOffset(prev => prev + response.items.length);
-                setHasMoreTransactions(response.items.length === 10);
+                const newOffset = response.offset + response.items.length;
+                setTransactionsOffset(newOffset);
+                // Проверяем, есть ли еще транзакции для загрузки
+                setHasMoreTransactions(newOffset < response.total);
             } else {
                 setHasMoreTransactions(false);
             }
         } catch (error) {
             console.error('Ошибка при загрузке дополнительных транзакций:', error);
+            setHasMoreTransactions(false);
         } finally {
             setLoadingMoreTransactions(false);
         }
@@ -341,26 +345,27 @@ const AccountPage = () => {
 
     // Intersection Observer для автоматической загрузки при прокрутке
     useEffect(() => {
-        if (activeTab !== "transactions" || !hasMoreTransactions) return;
+        if (activeTab !== "transactions" || !hasMoreTransactions || loadingMoreTransactions) return;
+
+        const triggerElement = loadMoreTriggerRef.current;
+        if (!triggerElement) return;
 
         const observer = new IntersectionObserver(
             (entries) => {
-                if (entries[0].isIntersecting && !loadingMoreTransactions) {
+                if (entries[0].isIntersecting && !loadingMoreTransactions && hasMoreTransactions) {
                     loadMoreTransactions();
                 }
             },
-            { threshold: 0.1 }
+            { 
+                threshold: 0.1,
+                rootMargin: '100px' // Начинаем загрузку за 100px до появления элемента
+            }
         );
 
-        const triggerElement = loadMoreTriggerRef.current;
-        if (triggerElement) {
-            observer.observe(triggerElement);
-        }
+        observer.observe(triggerElement);
 
         return () => {
-            if (triggerElement) {
-                observer.unobserve(triggerElement);
-            }
+            observer.disconnect();
         };
     }, [activeTab, hasMoreTransactions, loadingMoreTransactions, loadMoreTransactions]);
 
@@ -552,7 +557,6 @@ const AccountPage = () => {
 
     // Преобразование данных API в формат компонента для транзакций
     const transactions: Transaction[] = (transactionsData || [])
-        .filter(item => item.type !== "Transfer") // Исключаем транзакции типа Transfer
         .map(item => ({
             id: item.id,
             date: new Date(item.createdAt),
@@ -1723,6 +1727,12 @@ const AccountPage = () => {
                                                                 <div className="mt-3 mb-2">
                                                                     {transactionType === "Transfer" ? (
                                                                         <>
+                                                                            {/* Для Transfer показываем описание, если есть */}
+                                                                            {transaction.description && (
+                                                                                <p className="text-sm text-gray-300 mb-2">
+                                                                                    {transaction.description}
+                                                                                </p>
+                                                                            )}
                                                                             {/* Для Transfer показываем from → to */}
                                                                             <p className="text-sm text-gray-300 mb-2">
                                                                                 {transaction.fromWishlistId 
@@ -1787,7 +1797,7 @@ const AccountPage = () => {
                                     ))}
                                     {/* Триггер для lazy load */}
                                     {hasMoreTransactions && (
-                                        <div ref={loadMoreTriggerRef} className="py-4">
+                                        <div ref={loadMoreTriggerRef} className="py-4 min-h-[50px]">
                                             {loadingMoreTransactions && (
                                                 <div className="text-center">
                                                     <Loader text={t("passenger.account.loadingMore") || "Загрузка..."} />

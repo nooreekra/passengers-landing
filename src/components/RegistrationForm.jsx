@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { PhoneInput } from 'react-international-phone'
+import 'react-international-phone/style.css'
 import SearchableSelect from '../shared/ui/SearchableSelect'
 import { getCountries } from '../shared/api/locations'
 
@@ -76,6 +78,21 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
     }
   }
 
+  const handlePhoneChange = (value) => {
+    setFormData(prev => ({
+      ...prev,
+      phone: value
+    }))
+    
+    // Очистка ошибки при изменении поля
+    if (errors.phone) {
+      setErrors(prev => ({
+        ...prev,
+        phone: ''
+      }))
+    }
+  }
+
   const validateForm = () => {
     const newErrors = {}
     
@@ -119,9 +136,7 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
     e.preventDefault()
     
     if (validateForm()) {
-      // Пока не отправляем phone и country в запросе
-      const { phone, country, ...dataToSubmit } = formData
-      onSubmit(dataToSubmit)
+      onSubmit(formData)
     }
   }
 
@@ -169,20 +184,21 @@ const RegistrationForm = ({ onSubmit, isLoading }) => {
         )}
       </div>
 
-      <div className="form-group">
+      <div className="form-group" style={{ position: 'relative', zIndex: 1000 }}>
         <label htmlFor="phone" className="form-label">
           {t('auth.registrationForm.phone')}
         </label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          className={`form-input ${errors.phone ? 'error' : ''}`}
-          placeholder={t('auth.registrationForm.enterPhone')}
-          disabled={isLoading}
-        />
+        <div style={{ position: 'relative', zIndex: 1000 }}>
+          <PhoneInput
+            value={formData.phone}
+            onChange={handlePhoneChange}
+            defaultCountry="kz"
+            disabled={isLoading}
+            inputClassName="form-input"
+            containerClassName={`phone-input-container ${errors.phone ? 'error' : ''}`}
+            placeholder={t('auth.registrationForm.enterPhone')}
+          />
+        </div>
         {errors.phone && (
           <div className="field-error">{errors.phone}</div>
         )}

@@ -165,7 +165,9 @@ class AuthService {
           firstName: userData.firstName,
           lastName: userData.lastName,
           email: userData.email,
-          password: userData.password
+          password: userData.password,
+          phone: userData.phone,
+          country: userData.country // ID страны (string)
         })
       })
 

@@ -157,17 +157,50 @@ export interface TransactionsResponse {
     limit: number;
 }
 
+interface TransactionsApiResponse {
+    items: WalletTransaction[];
+    total: number;
+    offset: number;
+    limit: number;
+}
+
 /**
  * Получение транзакций пользователя
  */
 export async function getTransactions(walletId: string, offset = 0, limit = 100): Promise<TransactionsResponse> {
-    const { data } = await axiosInstance.get<WalletTransaction[]>(`/api/wallets/${walletId}/transactions`, {
+    const { data } = await axiosInstance.get<TransactionsApiResponse | WalletTransaction[]>(`/api/wallets/${walletId}/transactions`, {
         params: { offset, limit, sortBy: 'createdAt:desc' }
     });
     
-    // Преобразуем WalletTransaction[] в TransactionItem[]
-    const items: TransactionItem[] = (data || []).map((tx: WalletTransaction) => {
-        // Используем тип и статус напрямую из API
+    // Проверяем, является ли ответ объектом с полями items, total, offset, limit (новый формат)
+    if (data && !Array.isArray(data) && typeof data === 'object' && 'items' in data && Array.isArray((data as any).items)) {
+        const apiResponse = data as TransactionsApiResponse;
+        const items: TransactionItem[] = (apiResponse.items || []).map((tx: WalletTransaction) => {
+            return {
+                id: tx.id,
+                userId: tx.userId,
+                transactionId: tx.sourceId || "",
+                category: tx.category,
+                description: tx.description,
+                miles: tx.amount,
+                type: tx.type,
+                status: tx.status,
+                fromWishlistId: tx.fromWishlistId,
+                toWishlistId: tx.toWishlistId,
+                createdAt: tx.createdAt,
+            };
+        });
+        
+        return {
+            items,
+            total: apiResponse.total ?? items.length,
+            offset: apiResponse.offset ?? offset,
+            limit: apiResponse.limit ?? limit,
+        };
+    }
+    
+    // Fallback для старого формата (массив)
+    const items: TransactionItem[] = (Array.isArray(data) ? data : []).map((tx: WalletTransaction) => {
         return {
             id: tx.id,
             userId: tx.userId,
