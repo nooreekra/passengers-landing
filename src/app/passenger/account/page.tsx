@@ -118,7 +118,7 @@ const CircularProgress = ({
                         </>
                     ) : (
                         <>
-                            <div className="text-xs font-semibold text-brand-blue">{value}</div>
+                            <div className="text-xs font-semibold text-brand-blue">{target}</div>
                             {unit && <div className="text-[10px] text-brand-blue">{unit}</div>}
                         </>
                     )}
