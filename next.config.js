@@ -8,7 +8,7 @@ const nextConfig = {
             }
         ]
     },
-    transpilePackages: ['react-international-phone']
+    transpilePackages: ['react-international-phone', 'qrcode.react']
 };
 
 module.exports = nextConfig;

@@ -21,6 +21,7 @@
     "framer-motion": "^11.0.0",
     "html5-qrcode": "^2.3.8",
     "i18next": "^25.3.2",
+    "qrcode.react": "^3.1.0",
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-http-backend": "^3.0.2",
     "jose": "^6.0.13",
