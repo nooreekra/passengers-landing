@@ -7,7 +7,8 @@ const nextConfig = {
                 pathname: "**"
             }
         ]
-    }
+    },
+    transpilePackages: ['react-international-phone']
 };
 
 module.exports = nextConfig;
