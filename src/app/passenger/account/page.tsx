@@ -1261,7 +1261,7 @@ const AccountPage = () => {
                                             })()}
                                         </h3>
                                     </div>
-                                    <div className="flex items-center justify-between mb-8" style={{ gap: 'clamp(8px, 2vw, 16px)' }}>
+                                    <div className={`flex items-center mb-8 ${currentTier?.code.toLowerCase() === 'platinum' ? 'justify-center' : 'justify-between'}`} style={{ gap: 'clamp(8px, 2vw, 16px)' }}>
                                         {/* Current status card on the left */}
                                         <div style={{ width: '40%', flexShrink: 0 }}>
                                             {currentTier ? (
@@ -1388,14 +1388,17 @@ const AccountPage = () => {
                                         </div>
 
                                         {/* Arrow between cards */}
-                                        <div className="flex items-center justify-center" style={{ width: '12%', flexShrink: 0 }}>
-                                            <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
-                                            <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
-                                            <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
-                                        </div>
+                                        {currentTier?.code.toLowerCase() !== 'platinum' && (
+                                            <div className="flex items-center justify-center" style={{ width: '12%', flexShrink: 0 }}>
+                                                <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
+                                                <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
+                                                <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
+                                            </div>
+                                        )}
 
                                         {/* Next status card on the right */}
-                                        <div style={{ width: '40%', flexShrink: 0 }}>
+                                        {currentTier?.code.toLowerCase() !== 'platinum' && (
+                                            <div style={{ width: '40%', flexShrink: 0 }}>
                                             {nextTier && nextTier.id !== currentTier?.id ? (
                                                 <div className="relative shadow-lg overflow-hidden w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.3rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
                                                     {/* Background image */}
@@ -1532,7 +1535,8 @@ const AccountPage = () => {
                                                     </div>
                                                 </div>
                                             )}
-                                        </div>
+                                            </div>
+                                        )}
                                     </div>
                                     
                                     {/* Achieve next status text */}
