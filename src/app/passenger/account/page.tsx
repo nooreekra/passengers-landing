@@ -369,6 +369,20 @@ const AccountPage = () => {
         };
     }, [activeTab, hasMoreTransactions, loadingMoreTransactions, loadMoreTransactions]);
 
+    // Вспомогательная функция для получения кода/типа тира (поддержка обоих форматов)
+    const getTierCode = (tier: any): string => {
+        if (!tier) return '';
+        // Новый формат с type
+        if ('type' in tier && tier.type) {
+            return tier.type.toLowerCase();
+        }
+        // Старый формат с code
+        if ('code' in tier && tier.code) {
+            return tier.code.toLowerCase();
+        }
+        return '';
+    };
+
     // Преобразование tier histories в формат lastThreeMonths
     const lastThreeMonths = React.useMemo(() => {
         // Всегда возвращаем 3 элемента - последние 3 месяца от текущей даты
@@ -395,8 +409,8 @@ const AccountPage = () => {
             });
             
             if (matchingHistory && matchingHistory.tier) {
-                // Преобразуем code tier в статус
-                const tierCode = matchingHistory.tier.code.toLowerCase();
+                // Преобразуем code/type tier в статус
+                const tierCode = getTierCode(matchingHistory.tier);
                 let status: "Bronze" | "Silver" | "Gold" | "Platinum" | "No Status" = "Bronze";
                 if (tierCode === "silver") {
                     status = "Silver";
@@ -430,7 +444,7 @@ const AccountPage = () => {
         if (!currentTier) {
             return "/images/membership/bronze.jpg";
         }
-        const tierCode = currentTier.code.toLowerCase();
+        const tierCode = getTierCode(currentTier);
         const validTiers = ["bronze", "silver", "gold", "platinum"];
         if (validTiers.includes(tierCode)) {
             return `/images/membership/${tierCode}.jpg`;
@@ -441,8 +455,8 @@ const AccountPage = () => {
     // Определение текущего статуса на основе user.tier
     const currentStatus = React.useMemo(() => {
         if (currentTier) {
-            const tierCode = currentTier.code.toLowerCase();
-            // Преобразуем code в статус для обратной совместимости
+            const tierCode = getTierCode(currentTier);
+            // Преобразуем type/code в статус для обратной совместимости
             if (tierCode === "bronze") return "Bronze";
             if (tierCode === "silver") return "Silver";
             if (tierCode === "gold") return "Gold";
@@ -464,15 +478,16 @@ const AccountPage = () => {
         // Находим текущий тир в справочнике по id
         const currentIndex = sortedTiers.findIndex(t => t.id === currentTier.id);
 
-        // Если текущий тир не найден в справочнике, пытаемся найти по code
+        // Если текущий тир не найден в справочнике, пытаемся найти по type/code
         if (currentIndex === -1) {
-            const foundByCode = sortedTiers.findIndex(t => t.code.toLowerCase() === currentTier.code.toLowerCase());
-            if (foundByCode === -1) {
+            const currentTierCode = getTierCode(currentTier);
+            const foundByType = sortedTiers.findIndex(t => t.code.toLowerCase() === currentTierCode);
+            if (foundByType === -1) {
                 // Если не нашли вообще, возвращаем null
                 return null;
             }
-            // Если нашли по code, используем этот индекс
-            const actualIndex = foundByCode;
+            // Если нашли по type/code, используем этот индекс
+            const actualIndex = foundByType;
             // Если текущий тир - последний, следующий остается тем же
             if (actualIndex >= sortedTiers.length - 1) {
                 return currentTier;
@@ -493,7 +508,7 @@ const AccountPage = () => {
     // Определение следующего статуса для обратной совместимости
     const nextStatus = React.useMemo(() => {
         if (nextTier) {
-            const tierCode = nextTier.code.toLowerCase();
+            const tierCode = getTierCode(nextTier);
             if (tierCode === "bronze") return "Bronze";
             if (tierCode === "silver") return "Silver";
             if (tierCode === "gold") return "Gold";
@@ -503,22 +518,22 @@ const AccountPage = () => {
 
     // Преобразование summary данных в формат компонента
     const tripsData = React.useMemo(() => {
-        if (transactionsSummary) {
+        if (transactionsSummary?.progressSummary) {
             return {
-                current: transactionsSummary.tripsCompleted,
-                target: transactionsSummary.tripsRequired,
+                current: transactionsSummary.progressSummary.tripsCompleted,
+                target: transactionsSummary.progressSummary.tripsRequired,
             };
         }
         return mockData.trips;
     }, [transactionsSummary]);
 
     const monthlyActivityGoal = React.useMemo(() => {
-        return transactionsSummary?.monthlyActivityRequired || mockData.monthlyActivityGoal;
+        return transactionsSummary?.progressSummary?.monthlyActivityRequired || mockData.monthlyActivityGoal;
     }, [transactionsSummary]);
 
     const categoriesData = React.useMemo(() => {
-        if (transactionsSummary && transactionsSummary.activities) {
-            return transactionsSummary.activities.map(activity => {
+        if (transactionsSummary?.progressSummary && transactionsSummary.progressSummary.activities) {
+            return transactionsSummary.progressSummary.activities.map(activity => {
                 // Преобразуем metric в unit для отображения
                 let unit = activity.metric;
                 if (activity.metric === "miles") {
@@ -549,8 +564,8 @@ const AccountPage = () => {
     }, [transactionsSummary]);
 
     const monthlyActivityCompleted = React.useMemo(() => {
-        if (transactionsSummary) {
-            return transactionsSummary.monthlyActivityCompleted;
+        if (transactionsSummary?.progressSummary) {
+            return transactionsSummary.progressSummary.monthlyActivityCompleted;
         }
         return categoriesData.filter(cat => cat.value >= cat.target).length;
     }, [transactionsSummary, categoriesData]);
@@ -1161,7 +1176,7 @@ const AccountPage = () => {
                                                             // Получаем фон из тира
                                                             const getTierBackground = () => {
                                                                 if (monthData.tier) {
-                                                                    const tierCode = monthData.tier.code.toLowerCase();
+                                                                    const tierCode = getTierCode(monthData.tier);
                                                                     const validTiers = ["bronze", "silver", "gold", "platinum"];
                                                                     if (validTiers.includes(tierCode)) {
                                                                         return `/images/membership/${tierCode}.jpg`;
@@ -1261,7 +1276,7 @@ const AccountPage = () => {
                                             })()}
                                         </h3>
                                     </div>
-                                    <div className={`flex items-center mb-8 ${currentTier?.code.toLowerCase() === 'platinum' ? 'justify-center' : 'justify-between'}`} style={{ gap: 'clamp(8px, 2vw, 16px)' }}>
+                                    <div className={`flex items-center mb-8 ${getTierCode(currentTier) === 'platinum' ? 'justify-center' : 'justify-between'}`} style={{ gap: 'clamp(8px, 2vw, 16px)' }}>
                                         {/* Current status card on the left */}
                                         <div style={{ width: '40%', flexShrink: 0 }}>
                                             {currentTier ? (
@@ -1388,7 +1403,7 @@ const AccountPage = () => {
                                         </div>
 
                                         {/* Arrow between cards */}
-                                        {currentTier?.code.toLowerCase() !== 'platinum' && (
+                                        {getTierCode(currentTier) !== 'platinum' && (
                                             <div className="flex items-center justify-center" style={{ width: '12%', flexShrink: 0 }}>
                                                 <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
                                                 <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
@@ -1397,7 +1412,7 @@ const AccountPage = () => {
                                         )}
 
                                         {/* Next status card on the right */}
-                                        {currentTier?.code.toLowerCase() !== 'platinum' && (
+                                        {getTierCode(currentTier) !== 'platinum' && (
                                             <div style={{ width: '40%', flexShrink: 0 }}>
                                             {nextTier && nextTier.id !== currentTier?.id ? (
                                                 <div className="relative shadow-lg overflow-hidden w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.3rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
@@ -1405,7 +1420,7 @@ const AccountPage = () => {
                                                     <div className="absolute inset-0">
                                                         <Image
                                                             src={(() => {
-                                                                const tierCode = nextTier.code.toLowerCase();
+                                                                const tierCode = getTierCode(nextTier);
                                                                 const validTiers = ["bronze", "silver", "gold", "platinum"];
                                                                 if (validTiers.includes(tierCode)) {
                                                                     return `/images/membership/${tierCode}.jpg`;

@@ -34,14 +34,30 @@ export interface Tier {
     levelOrder: number;
 }
 
-export interface CurrentTier extends Tier {
+export interface CurrentTier {
+    id: string;
+    type: string;
+    name: string;
+    color: string;
+    discountPercent: number;
+    levelOrder: number;
     validFrom: string;
+}
+
+// Tier в истории теперь тоже использует type вместо code
+export interface TierInHistory {
+    id: string;
+    type: string;
+    name: string;
+    color: string;
+    discountPercent: number;
+    levelOrder: number;
 }
 
 export interface TierHistory {
     id: string;
     userId: string;
-    tier: Tier | null;
+    tier: TierInHistory | null;
     validFrom: string;
     validTo: string | null;
 }
@@ -63,7 +79,16 @@ export interface Activity {
     required: number;
 }
 
-export interface TransactionsSummary {
+export interface ProgressTier {
+    id: string;
+    type: string;
+    name: string;
+    color: string;
+    discountPercent: number;
+    levelOrder: number;
+}
+
+export interface ProgressSummary {
     tripsCompleted: number;
     tripsRequired: number;
     monthlyActivityCompleted: number;
@@ -71,15 +96,22 @@ export interface TransactionsSummary {
     activities: Activity[];
 }
 
+export interface TransactionsSummary {
+    year: number;
+    month: number;
+    progressTier: ProgressTier;
+    progressSummary: ProgressSummary;
+}
+
 /**
- * Сводка по транзакциям пользователя
+ * Сводка по прогрессу пользователя
  */
-export async function getTransactionsSummary(from?: string, to?: string): Promise<TransactionsSummary> {
-    const params: { from?: string; to?: string } = {};
-    if (from) params.from = from;
-    if (to) params.to = to;
+export async function getTransactionsSummary(year?: number, month?: number): Promise<TransactionsSummary> {
+    const params: { year?: number; month?: number } = {};
+    if (year) params.year = year;
+    if (month) params.month = month;
     
-    const { data } = await axiosInstance.get('/api/transactions/me/summary', { params });
+    const { data } = await axiosInstance.get('/api/tiers/me/summary', { params });
     return data;
 }
 

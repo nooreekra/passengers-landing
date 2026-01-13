@@ -793,12 +793,26 @@ const PassengerDashboardPage = () => {
         return null;
     }, [user]);
 
+    // Вспомогательная функция для получения кода/типа тира (поддержка обоих форматов)
+    const getTierCode = (tier: any): string => {
+        if (!tier) return '';
+        // Новый формат с type
+        if ('type' in tier && tier.type) {
+            return tier.type.toLowerCase();
+        }
+        // Старый формат с code
+        if ('code' in tier && tier.code) {
+            return tier.code.toLowerCase();
+        }
+        return '';
+    };
+
     // Функция для получения фона карточки
     const getCardBackground = () => {
         if (!currentTier) {
             return "/images/membership/bronze.jpg";
         }
-        const tierCode = currentTier.code.toLowerCase();
+        const tierCode = getTierCode(currentTier);
         const validTiers = ["bronze", "silver", "gold", "platinum"];
         if (validTiers.includes(tierCode)) {
             return `/images/membership/${tierCode}.jpg`;
