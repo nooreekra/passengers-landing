@@ -1289,8 +1289,8 @@
         },
         "collectMiles": {
             "title": "collect miles",
-            "subtitle": "your daily activity turns\ninto your next Holiday",
-            "description": "every time you take your business trip flight, stay at hotel, pay for a dinner with your partners or family, and even grab your takeaway coffee, you collect miles from our partners",
+            "subtitle": "your daily activity turns\ninto your next holiday",
+            "description": "Every time you book a flight, stay at a hotel, enjoy dinner with family or friends, or even grab your takeaway coffee — you collect miles from our Partners.",
             "activities": {
                 "banking": "Banking",
                 "bankingDesc": "Monthly card payments",
@@ -1420,9 +1420,9 @@
         },
         "spendMiles": {
             "title": "spend miles",
-            "subtitle": "choose your next getaway",
-            "description": "spend collected miles to book your weekend trip, annual family vacation or that exclusive dream holiday you've been thinking about for some time. All paid by miles from our partners!!!",
-            "bookFor": "Book for",
+            "subtitle": "Choose your next getaway",
+            "description": "Use your collected miles to book a weekend trip, a family vacation, or that dream holiday you’ve been planning for years — all paid for with miles from our partners!",
+            "bookFor": "From",
             "flights": {
                 "title": "Flights",
                 "description": "Use your accumulated IMS Miles to book flights with our partner airlines. Whether you're planning a weekend getaway or a dream vacation, your miles can take you anywhere.",
@@ -1444,26 +1444,26 @@
             "options": {
                 "weekendEscape": {
                     "destination": "Book your weekend",
-                    "subtitle": "ESCAPE",
+                    "subtitle": "Weekend Escape",
                     "type": "Weekend Escape"
                 },
                 "teamUp": {
                     "destination": "Team Up with your",
-                    "subtitle": "BUDDIES",
+                    "subtitle": "Trip with Friends",
                     "type": "Round Trip"
                 },
                 "dreamHoliday": {
                     "destination": "Save up for your",
-                    "subtitle": "DREAM HOLIDAY",
+                    "subtitle": "Dream Holiday",
                     "type": "Holiday Pack"
                 }
             }
         },
         "statusBenefits": {
             "title": "status benefits",
-            "subtitle": "Hit monthly targets\nto achive higher status",
-            "footerText": "even if you are not taking enough flights to get to desired status, you can alternatively hit you monthly targets with our Partner Network",
-            "discountLabel": "DISCOUNT",
+            "subtitle": "Grow your status. \nUnlock greater benefits.",
+            "footerText": "As your status rises, IMS Savvy covers more of your travel — month after month. Even if you don’t fly often, you can grow and maintain your status through activity within our Partner Network.",
+            "discountLabel": "covered by IMS Savvy",
             "benefits": "Benefits",
             "statuses": {
                 "bronze": {
@@ -1476,7 +1476,7 @@
                 },
                 "silver": {
                     "name": "Silver",
-                    "description": "all you need is 85% of the trip cost to book your flight/hotel",
+                    "description": "15% covered by IMS Savvy\nYou pay only 85% of your trip cost to book your flight or hotel",
                     "benefit1": "15% DISCOUNT on flights and hotels",
                     "benefit2": "Book with only 85% of trip cost in miles",
                     "benefit3": "Access to exclusive Silver member benefits",
@@ -1484,7 +1484,7 @@
                 },
                 "gold": {
                     "name": "Gold",
-                    "description": "all you need is 75% of the trip cost to book your flight/hotel",
+                    "description": "25% covered by IMS Savvy\nYou pay only 75% of your trip cost to book your flight or hotel",
                     "benefit1": "25% DISCOUNT on flights and hotels",
                     "benefit2": "Book with only 75% of trip cost in miles",
                     "benefit3": "Access to exclusive Gold member benefits",
@@ -1492,7 +1492,7 @@
                 },
                 "platinum": {
                     "name": "Platinum",
-                    "description": "all you need is 65% of the trip cost to book your flight/hotel",
+                    "description": "35% covered by IMS Savvy\nYou pay only 65% of your trip cost to book your flight or hotel",
                     "benefit1": "35% DISCOUNT on flights and hotels",
                     "benefit2": "Book with only 65% of trip cost in miles",
                     "benefit3": "Access to exclusive Platinum member benefits",
@@ -1502,8 +1502,8 @@
         },
         "allExtras": {
             "title": "extras",
-            "subtitle": "all extras at your fingertip",
-            "description": "redeem miles for your favorite Extras while on business trip, even if it's out of company policy",
+            "subtitle": "All Extras at your fingertips",
+            "description": "Redeem your miles for additional travel services whenever you need them: upgrades, lounge access, extra baggage and more.",
             "benefits": {
                 "freeWifi": "Free Wifi",
                 "priorityCheckIn": "Priority Check in",
@@ -1519,8 +1519,8 @@
         },
         "partnersBenefits": {
             "title": "perks from partners",
-            "subtitle": "exclusive perks based on your status",
-            "description": "receive welcome bonus, access to business class lounge in the airport or an monthly treat from our partners",
+            "subtitle": "Exclusive Perks with your status",
+            "description": "Enjoy automatic benefits based on your level — from welcome bonuses to priority services and special partner privileges.",
             "benefits": {
                 "welcomeBonus": "Welcome Bonus",
                 "freeMonthlyTreat": "Free monthly treat",

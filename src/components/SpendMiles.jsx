@@ -83,7 +83,7 @@ const SpendMiles = () => {
                         >
                             <div className="spend-option-overlay"></div>
                             <div className="spend-option-header">
-                            <div className="spend-option-destination text-center">{option.destination}</div>
+                            {/* <div className="spend-option-destination text-center">{option.destination}</div> */}
                                 <div className="spend-option-subtitle">{option.subtitle}</div>
                             </div>
                             <div className="price-tag">

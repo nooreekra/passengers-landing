@@ -372,13 +372,21 @@ const AccountPage = () => {
     // Вспомогательная функция для получения кода/типа тира (поддержка обоих форматов)
     const getTierCode = (tier: any): string => {
         if (!tier) return '';
-        // Новый формат с type
+        // Новый формат с type (приоритет для progressTier)
         if ('type' in tier && tier.type) {
-            return tier.type.toLowerCase();
+            const typeStr = String(tier.type).toLowerCase().trim();
+            // Извлекаем код тира из составных значений типа "Gold Member" -> "gold"
+            const tierCodes = ["bronze", "silver", "gold", "platinum"];
+            for (const code of tierCodes) {
+                if (typeStr.includes(code)) {
+                    return code;
+                }
+            }
+            return typeStr;
         }
         // Старый формат с code
         if ('code' in tier && tier.code) {
-            return tier.code.toLowerCase();
+            return String(tier.code).toLowerCase().trim();
         }
         return '';
     };
@@ -427,8 +435,9 @@ const AccountPage = () => {
         });
     }, [tierHistories]);
 
-    // Получение текущего тира из API /api/tiers/me (приоритет) или из user.tier (fallback)
+    // Получение текущего тира из API /api/tiers/me или из user.tier (fallback) - для всех мест кроме карт
     const currentTier = React.useMemo(() => {
+        // Приоритет: currentTierData из /api/tiers/me
         if (currentTierData) {
             return currentTierData;
         }
@@ -439,16 +448,37 @@ const AccountPage = () => {
         return null;
     }, [currentTierData, user]);
 
-    // Получение фона карты в зависимости от статуса
-    const getCardBackground = () => {
-        if (!currentTier) {
+    // Получение текущего тира для карт из transactionsSummary.progressTier
+    // Всегда используем данные из /api/tiers/me/summary для карт, чтобы цвета совпадали
+    const currentTierForCards = React.useMemo(() => {
+        // Используем progressTier из /api/tiers/me/summary для карт
+        return transactionsSummary?.progressTier || null;
+    }, [transactionsSummary?.progressTier]);
+
+    // Получение фона карты в зависимости от статуса (для карт)
+    const getCardBackground = (tier: any) => {
+        if (!tier) {
             return "/images/membership/bronze.jpg";
         }
-        const tierCode = getTierCode(currentTier);
+        // Получаем код тира (getTierCode уже делает toLowerCase и trim)
+        const tierCode = getTierCode(tier);
         const validTiers = ["bronze", "silver", "gold", "platinum"];
-        if (validTiers.includes(tierCode)) {
+        
+        // Проверяем, есть ли код тира в списке валидных
+        if (tierCode && validTiers.includes(tierCode)) {
             return `/images/membership/${tierCode}.jpg`;
         }
+        
+        // Если код не найден, пытаемся определить по name
+        if (tier.name) {
+            const nameLower = tier.name.toLowerCase().trim();
+            if (nameLower.includes("gold")) return "/images/membership/gold.jpg";
+            if (nameLower.includes("silver")) return "/images/membership/silver.jpg";
+            if (nameLower.includes("platinum")) return "/images/membership/platinum.jpg";
+            if (nameLower.includes("bronze")) return "/images/membership/bronze.jpg";
+        }
+        
+        // Fallback на бронзу
         return "/images/membership/bronze.jpg";
     };
 
@@ -468,7 +498,7 @@ const AccountPage = () => {
         return "Bronze"; // Дефолтный статус
     }, [currentTier, lastThreeMonths]);
 
-    // Определение следующего тира на основе levelOrder из справочника
+    // Определение следующего тира на основе levelOrder из справочника (для остальных мест)
     const nextTier = React.useMemo(() => {
         if (!currentTier || tiers.length === 0) return null;
 
@@ -504,6 +534,43 @@ const AccountPage = () => {
         // Возвращаем следующий тир по порядку (более высокий levelOrder)
         return sortedTiers[currentIndex + 1];
     }, [currentTier, tiers]);
+
+    // Определение следующего тира для карт на основе currentTierForCards
+    const nextTierForCards = React.useMemo(() => {
+        if (!currentTierForCards || tiers.length === 0) return null;
+
+        // Сортируем тиры по levelOrder (от меньшего к большему: Bronze=1, Silver=2, Gold=3)
+        const sortedTiers = [...tiers].sort((a, b) => a.levelOrder - b.levelOrder);
+
+        // Находим текущий тир в справочнике по id
+        const currentIndex = sortedTiers.findIndex(t => t.id === currentTierForCards.id);
+
+        // Если текущий тир не найден в справочнике, пытаемся найти по type/code
+        if (currentIndex === -1) {
+            const currentTierCode = getTierCode(currentTierForCards);
+            const foundByType = sortedTiers.findIndex(t => t.code.toLowerCase() === currentTierCode);
+            if (foundByType === -1) {
+                // Если не нашли вообще, возвращаем null
+                return null;
+            }
+            // Если нашли по type/code, используем этот индекс
+            const actualIndex = foundByType;
+            // Если текущий тир - последний, следующий остается тем же
+            if (actualIndex >= sortedTiers.length - 1) {
+                return currentTierForCards;
+            }
+            // Возвращаем следующий тир по порядку
+            return sortedTiers[actualIndex + 1];
+        }
+
+        // Если текущий тир - последний, следующий остается тем же
+        if (currentIndex >= sortedTiers.length - 1) {
+            return currentTierForCards;
+        }
+
+        // Возвращаем следующий тир по порядку (более высокий levelOrder)
+        return sortedTiers[currentIndex + 1];
+    }, [currentTierForCards, tiers]);
 
     // Определение следующего статуса для обратной совместимости
     const nextStatus = React.useMemo(() => {
@@ -843,7 +910,7 @@ const AccountPage = () => {
                                                     {/* Background image */}
                                                     <div className="absolute inset-0">
                                                         <Image
-                                                            src={getCardBackground()}
+                                                            src={getCardBackground(currentTier)}
                                                             alt={`${currentTier.name} tier background`}
                                                             fill
                                                             className="object-cover"
@@ -966,7 +1033,7 @@ const AccountPage = () => {
                                                                 {/* Background image based on tier */}
                                                                 <div className="absolute inset-0">
                                                                     <Image
-                                                                        src={getCardBackground()}
+                                                                        src={getCardBackground(currentTier)}
                                                                         alt="Membership card background"
                                                                         fill
                                                                         className="object-cover"
@@ -1276,15 +1343,15 @@ const AccountPage = () => {
                                             })()}
                                         </h3>
                                     </div>
-                                    <div className={`flex items-center mb-8 ${getTierCode(currentTier) === 'platinum' ? 'justify-center' : 'justify-between'}`} style={{ gap: 'clamp(8px, 2vw, 16px)' }}>
+                                    <div className={`flex items-center mb-8 ${getTierCode(currentTierForCards) === 'platinum' ? 'justify-center' : 'justify-between'}`} style={{ gap: 'clamp(8px, 2vw, 16px)' }}>
                                         {/* Current status card on the left */}
                                         <div style={{ width: '40%', flexShrink: 0 }}>
-                                            {currentTier ? (
+                                            {currentTierForCards ? (
                                                 <div className="relative shadow-lg overflow-hidden w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.3rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
                                                     {/* Background image */}
                                                     <div className="absolute inset-0">
                                                         <Image
-                                                            src={getCardBackground()}
+                                                            src={getCardBackground(currentTierForCards)}
                                                             alt={`${currentStatus} tier background`}
                                                             fill
                                                             className="object-cover"
@@ -1319,7 +1386,7 @@ const AccountPage = () => {
                                                         {/* Discount */}
                                                         <div className="flex-1 flex flex-col justify-center">
                                                             <div className="text-white card-discount-container" style={{ textShadow: '0 0.0625rem 0.125rem rgba(0,0,0,0.5)' }}>
-                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(.8rem, 2vw, 1.125rem)' }}>{Math.round(currentTier.discountPercent * 100)}%</span>
+                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(.8rem, 2vw, 1.125rem)' }}>{Math.round(currentTierForCards.discountPercent * 100)}%</span>
                                                                 <span className="font-medium card-discount-text" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.8875rem)', marginLeft: '0.1875rem' }}>{t("passenger.account.discount")}</span>
                                                             </div>
                                                         </div>
@@ -1346,12 +1413,12 @@ const AccountPage = () => {
                                                                     fontSize: 'clamp(0.45rem, .8vw, 0.3625rem)',
                                                                     padding: '0.125rem 0.275rem',
                                                                     borderRadius: '9999px',
-                                                                    backgroundColor: currentTier.color,
-                                                                    boxShadow: `0 0.125rem 0.4375rem 0 ${currentTier.color}40`,
+                                                                    backgroundColor: currentTierForCards.color,
+                                                                    boxShadow: `0 0.125rem 0.4375rem 0 ${currentTierForCards.color}40`,
                                                                     textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.5)'
                                                                 }}
                                                             >
-                                                                {currentTier.name.split(' ')[0]}
+                                                                {currentTierForCards.name.split(' ')[0]}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -1403,7 +1470,7 @@ const AccountPage = () => {
                                         </div>
 
                                         {/* Arrow between cards */}
-                                        {getTierCode(currentTier) !== 'platinum' && (
+                                        {getTierCode(currentTierForCards) !== 'platinum' && (
                                             <div className="flex items-center justify-center" style={{ width: '12%', flexShrink: 0 }}>
                                                 <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
                                                 <ChevronRight className="text-blue-600" style={{ width: 'clamp(20px, 4vw, 32px)', height: 'clamp(20px, 4vw, 32px)' }} />
@@ -1412,21 +1479,14 @@ const AccountPage = () => {
                                         )}
 
                                         {/* Next status card on the right */}
-                                        {getTierCode(currentTier) !== 'platinum' && (
+                                        {getTierCode(currentTierForCards) !== 'platinum' && (
                                             <div style={{ width: '40%', flexShrink: 0 }}>
-                                            {nextTier && nextTier.id !== currentTier?.id ? (
+                                            {nextTierForCards && nextTierForCards.id !== currentTierForCards?.id ? (
                                                 <div className="relative shadow-lg overflow-hidden w-full card-padding" style={{ aspectRatio: '86/54', padding: '0.3rem', maxWidth: '100%', borderRadius: '0.5rem' }}>
                                                     {/* Background image */}
                                                     <div className="absolute inset-0">
                                                         <Image
-                                                            src={(() => {
-                                                                const tierCode = getTierCode(nextTier);
-                                                                const validTiers = ["bronze", "silver", "gold", "platinum"];
-                                                                if (validTiers.includes(tierCode)) {
-                                                                    return `/images/membership/${tierCode}.jpg`;
-                                                                }
-                                                                return "/images/membership/bronze.jpg";
-                                                            })()}
+                                                            src={getCardBackground(nextTierForCards)}
                                                             alt={`${nextStatus} tier background`}
                                                             fill
                                                             className="object-cover"
@@ -1466,7 +1526,7 @@ const AccountPage = () => {
                                                         {/* Discount */}
                                                         <div className="flex-1 flex flex-col justify-center">
                                                             <div className="text-white card-discount-container" style={{ textShadow: '0 0.0625rem 0.125rem rgba(0,0,0,0.5)' }}>
-                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(.8rem, 2vw, 1.125rem)' }}>{Math.round(nextTier.discountPercent * 100)}%</span>
+                                                                <span className="font-bold card-discount-percent" style={{ fontSize: 'clamp(.8rem, 2vw, 1.125rem)' }}>{Math.round(nextTierForCards.discountPercent * 100)}%</span>
                                                                 <span className="font-medium card-discount-text" style={{ fontSize: 'clamp(0.4rem, 2vw, 0.8875rem)', marginLeft: '0.1875rem' }}>{t("passenger.account.discount")}</span>
                                                             </div>
                                                         </div>
@@ -1493,17 +1553,17 @@ const AccountPage = () => {
                                                                     fontSize: 'clamp(0.45rem, .8vw, 0.3625rem)',
                                                                     padding: '0.125rem 0.275rem',
                                                                     borderRadius: '9999px',
-                                                                    backgroundColor: nextTier.color,
-                                                                    boxShadow: `0 0.125rem 0.4375rem 0 ${nextTier.color}40`,
+                                                                    backgroundColor: nextTierForCards.color,
+                                                                    boxShadow: `0 0.125rem 0.4375rem 0 ${nextTierForCards.color}40`,
                                                                     textShadow: '0 0.03125rem 0.0625rem rgba(0,0,0,0.5)'
                                                                 }}
                                                             >
-                                                                {nextTier.name.split(' ')[0]}
+                                                                {nextTierForCards.name.split(' ')[0]}
                                                             </span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            ) : nextTier ? (
+                                            ) : nextTierForCards ? (
                                                 // Если следующий тир равен текущему (максимальный уровень), не показываем
                                                 null
                                             ) : (

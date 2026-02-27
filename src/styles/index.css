@@ -2360,7 +2360,7 @@ div[id^="react-select"] {
 
 .spend-option-subtitle {
   font-weight: 700;
-  font-size: 34px;
+  font-size: 18px;
   color: #ffffff;
   line-height: 1.4;
   font-family: var(--font-play), sans-serif;
@@ -2844,7 +2844,7 @@ div[id^="react-select"] {
 .status-benefits-footer-text {
   font-size: 16px;
   text-align: center;
-  margin-top: 40px;
+  margin-top: 100px;
   font-weight: 400;
   line-height: 1.6;
   max-width: 800px;
@@ -3189,7 +3189,7 @@ div[id^="react-select"] {
   .status-benefits-footer-text {
     font-size: 14px;
     padding: 0 20px;
-    margin-top: 30px;
+    margin-top: 40px;
   }
 
   .collect-miles-visualization {
@@ -3217,7 +3217,7 @@ div[id^="react-select"] {
   }
 
   .spend-option-subtitle {
-    font-size: 24px;
+    font-size: 14px;
   }
 
   .price-text-medium {
@@ -3361,7 +3361,7 @@ div[id^="react-select"] {
   }
 
   .spend-option-subtitle {
-    font-size: 16px;
+    font-size: 12px;
   }
 
   .price-text-medium {
@@ -3405,7 +3405,7 @@ div[id^="react-select"] {
   .status-benefits-footer-text {
     font-size: 14px;
     padding: 0 15px;
-    margin-top: 30px;
+    margin-top: 80px;
   }
 
   .collect-miles-visualization {
@@ -3511,5 +3511,11 @@ div[id^="react-select"] {
 
   .footer-copyright {
     font-size: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .status-benefits-footer-text {
+    margin-top: 100px;
   }
 }
