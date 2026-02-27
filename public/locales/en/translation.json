@@ -1521,6 +1521,39 @@
                     "benefit7": "Highest booking priority",
                     "benefit8": "VIP exclusive partner perks"
                 }
+            },
+            "faq": {
+                "title": "Frequently Asked Questions",
+                "items": {
+                    "0": {
+                        "question": "How does my membership start?",
+                        "answer": "Once you register with IMS Savvy, you are automatically assigned Bronze status. Bronze is your starting level in the program. From this point, you begin earning IMS Miles and progressing toward higher status tiers with expanded benefits. There is no minimum requirement to enter the program — your journey starts immediately after registration."
+                    },
+                    "1": {
+                        "question": "What are IMS Miles?",
+                        "answer": "IMS Miles are unified reward miles earned across all participating partners — airlines, hotels, restaurants and lifestyle services. Every eligible transaction earns IMS Miles into one single account, allowing you to accumulate faster and redeem across the network. IMS Miles are used to partially pay for flights and hotel bookings within the IMS Savvy ecosystem."
+                    },
+                    "2": {
+                        "question": "How do I reach and maintain a higher status level?",
+                        "answer": "Your status is determined by your monthly qualified activity within IMS Savvy. You can progress through: • Eligible flight activity • Earning miles via the Partner Network • Combined monthly accumulation. The more active you are, the higher your level becomes. Specific qualification thresholds are available in your personal dashboard."
+                    },
+                    "3": {
+                        "question": "Do I need to fly frequently to maintain my status?",
+                        "answer": "No. Even if you do not fly regularly, you can maintain or upgrade your status through eligible partner transactions. IMS Savvy rewards both frequent travelers and active lifestyle participants."
+                    },
+                    "4": {
+                        "question": "Is my status reviewed monthly?",
+                        "answer": "Yes. Status is evaluated based on your monthly qualified activity. Consistent activity allows you to preserve or increase your level and continue enjoying benefits."
+                    },
+                    "5": {
+                        "question": "How does IMS Savvy cover part of my trip?",
+                        "answer": "Depending on your current status: • Silver — IMS Savvy covers 15% of your booking cost • Gold — 25% • Platinum — 35%. You only need to accumulate the remaining percentage in miles to complete your booking."
+                    },
+                    "6": {
+                        "question": "Do IMS Miles expire?",
+                        "answer": "IMS Miles do not expire and have no time limitations, giving you full flexibility and control over your rewards. With a broad ecosystem of partners, you can continue earning miles through everyday activities — at home or abroad, whether during business trips or personal travel. As long as your account remains active in accordance with program terms, your miles remain available for redemption."
+                    }
+                }
             }
         },
         "allExtras": {
