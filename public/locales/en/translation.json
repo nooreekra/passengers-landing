@@ -1460,8 +1460,8 @@
             }
         },
         "statusBenefits": {
-            "title": "status benefits",
-            "subtitle": "Grow your status. \nUnlock greater benefits.",
+            "title": "Membership Levels",
+            "subtitle": "As your status grows, IMS Savvy covers a larger part of your trip.",
             "footerText": "As your status rises, IMS Savvy covers more of your travel — month after month. Even if you don’t fly often, you can grow and maintain your status through activity within our Partner Network.",
             "discountLabel": "covered by IMS Savvy",
             "benefits": "Benefits",
@@ -1469,34 +1469,57 @@
                 "bronze": {
                     "name": "Bronze",
                     "description": "Start your journey with Bronze status. As a Bronze member, you begin earning IMS Miles and working towards higher status levels with exclusive benefits.",
-                    "benefit1": "Start earning IMS Miles from all partner activities",
-                    "benefit2": "Access to unified loyalty platform",
-                    "benefit3": "Track your progress towards Silver status",
-                    "benefit4": "Even if you are not taking enough flights to get to desired status, you can alternatively hit your monthly targets with our Partner Network"
+                    "coversPercent": "0",
+                    "youPayPercent": "100",
+                    "coversText": "IMS Savvy covers 0% of your trip",
+                    "youPayText": "You pay 100%",
+                    "benefit1": "Earn IMS Miles from partners",
+                    "benefit2": "Track progress to the next level",
+                    "benefit3": "Maintain your status via Partner Network"
                 },
                 "silver": {
                     "name": "Silver",
                     "description": "15% covered by IMS Savvy\nYou pay only 85% of your trip cost to book your flight or hotel",
-                    "benefit1": "15% DISCOUNT on flights and hotels",
-                    "benefit2": "Book with only 85% of trip cost in miles",
-                    "benefit3": "Access to exclusive Silver member benefits",
-                    "benefit4": "Priority customer support"
+                    "coversPercent": "15",
+                    "youPayPercent": "85",
+                    "coversText": "IMS Savvy covers 15% of your trip",
+                    "youPayText": "You pay only 85%",
+                    "benefit1": "Earn IMS Miles from partners",
+                    "benefit2": "Track progress to the next level",
+                    "benefit3": "Maintain your status via Partner Network",
+                    "benefit4": "Priority support",
+                    "benefit5": "Exclusive partner perks"
                 },
                 "gold": {
                     "name": "Gold",
                     "description": "25% covered by IMS Savvy\nYou pay only 75% of your trip cost to book your flight or hotel",
-                    "benefit1": "25% DISCOUNT on flights and hotels",
-                    "benefit2": "Book with only 75% of trip cost in miles",
-                    "benefit3": "Access to exclusive Gold member benefits",
-                    "benefit4": "Premium customer support and priority booking"
+                    "coversPercent": "25",
+                    "youPayPercent": "75",
+                    "coversText": "IMS Savvy covers 25% of your trip",
+                    "youPayText": "You pay only 75%",
+                    "benefit1": "Earn IMS Miles from partners",
+                    "benefit2": "Track progress to the next level",
+                    "benefit3": "Maintain your status via Partner Network",
+                    "benefit4": "Priority support",
+                    "benefit5": "Premium support",
+                    "benefit6": "Priority booking",
+                    "benefit7": "Premium partner perks"
                 },
                 "platinum": {
                     "name": "Platinum",
                     "description": "35% covered by IMS Savvy\nYou pay only 65% of your trip cost to book your flight or hotel",
-                    "benefit1": "35% DISCOUNT on flights and hotels",
-                    "benefit2": "Book with only 65% of trip cost in miles",
-                    "benefit3": "Access to exclusive Platinum member benefits",
-                    "benefit4": "VIP customer support and highest priority booking"
+                    "coversPercent": "35",
+                    "youPayPercent": "65",
+                    "coversText": "IMS Savvy covers 35% of your trip",
+                    "youPayText": "You pay only 65%",
+                    "benefit1": "Earn IMS Miles from partners",
+                    "benefit2": "Track progress to the next level",
+                    "benefit3": "Maintain your status via Partner Network",
+                    "benefit4": "Priority support",
+                    "benefit5": "Premium support",
+                    "benefit6": "VIP support",
+                    "benefit7": "Highest booking priority",
+                    "benefit8": "VIP exclusive partner perks"
                 }
             }
         },

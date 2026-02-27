@@ -16,10 +16,13 @@ const Header = ({ autoOpenAuth = false }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language || 'en')
   const [activeSubmenu, setActiveSubmenu] = useState(null)
+  const [visibleCards, setVisibleCards] = useState({})
+  const [animatedPercentages, setAnimatedPercentages] = useState({})
   const burgerMenuRef = useRef(null)
   const burgerButtonRef = useRef(null)
   const clickOutsideHandlerRef = useRef(null)
   const isClickingInsideMenuRef = useRef(false)
+  const cardRefs = useRef({})
 
   const handleSignInClick = () => {
     setIsAuthModalOpen(true)
@@ -74,6 +77,84 @@ const Header = ({ autoOpenAuth = false }) => {
     closeMenu()
   }
 
+  // Данные для карточек статусов в меню
+  const getMembershipStatusData = (label) => {
+    // Сопоставляем английские названия с переводами
+    const statusKeyMap = {
+      'Bronze': 'bronze',
+      'Silver': 'silver',
+      'Gold': 'gold',
+      'Platinum': 'platinum',
+      // Русские названия
+      [t('landing.statusBenefits.statuses.bronze.name')]: 'bronze',
+      [t('landing.statusBenefits.statuses.silver.name')]: 'silver',
+      [t('landing.statusBenefits.statuses.gold.name')]: 'gold',
+      [t('landing.statusBenefits.statuses.platinum.name')]: 'platinum',
+    }
+    
+    const statusKey = statusKeyMap[label] || 'bronze'
+    
+    const statusData = {
+      bronze: {
+        type: 'bronze',
+        percent: '0',
+        coversText: t('landing.statusBenefits.statuses.bronze.coversText'),
+        youPayText: t('landing.statusBenefits.statuses.bronze.youPayText'),
+        benefits: [
+          t('landing.statusBenefits.statuses.bronze.benefit1'),
+          t('landing.statusBenefits.statuses.bronze.benefit2'),
+          t('landing.statusBenefits.statuses.bronze.benefit3'),
+        ]
+      },
+      silver: {
+        type: 'silver',
+        percent: '15',
+        coversText: t('landing.statusBenefits.statuses.silver.coversText'),
+        youPayText: t('landing.statusBenefits.statuses.silver.youPayText'),
+        benefits: [
+          t('landing.statusBenefits.statuses.silver.benefit1'),
+          t('landing.statusBenefits.statuses.silver.benefit2'),
+          t('landing.statusBenefits.statuses.silver.benefit3'),
+          t('landing.statusBenefits.statuses.silver.benefit4'),
+          t('landing.statusBenefits.statuses.silver.benefit5'),
+        ]
+      },
+      gold: {
+        type: 'gold',
+        percent: '25',
+        coversText: t('landing.statusBenefits.statuses.gold.coversText'),
+        youPayText: t('landing.statusBenefits.statuses.gold.youPayText'),
+        benefits: [
+          t('landing.statusBenefits.statuses.gold.benefit1'),
+          t('landing.statusBenefits.statuses.gold.benefit2'),
+          t('landing.statusBenefits.statuses.gold.benefit3'),
+          t('landing.statusBenefits.statuses.gold.benefit4'),
+          t('landing.statusBenefits.statuses.gold.benefit5'),
+          t('landing.statusBenefits.statuses.gold.benefit6'),
+          t('landing.statusBenefits.statuses.gold.benefit7'),
+        ]
+      },
+      platinum: {
+        type: 'platinum',
+        percent: '35',
+        coversText: t('landing.statusBenefits.statuses.platinum.coversText'),
+        youPayText: t('landing.statusBenefits.statuses.platinum.youPayText'),
+        benefits: [
+          t('landing.statusBenefits.statuses.platinum.benefit1'),
+          t('landing.statusBenefits.statuses.platinum.benefit2'),
+          t('landing.statusBenefits.statuses.platinum.benefit3'),
+          t('landing.statusBenefits.statuses.platinum.benefit4'),
+          t('landing.statusBenefits.statuses.platinum.benefit5'),
+          t('landing.statusBenefits.statuses.platinum.benefit6'),
+          t('landing.statusBenefits.statuses.platinum.benefit7'),
+          t('landing.statusBenefits.statuses.platinum.benefit8'),
+        ]
+      }
+    }
+    
+    return statusData[statusKey] || statusData.bronze
+  }
+
   // Структура подменю
   const submenus = {
     collect: {
@@ -100,10 +181,10 @@ const Header = ({ autoOpenAuth = false }) => {
     membership: {
       title: t('landing.header.menu.membership'),
       items: [
-        { label: 'Bronze', action: () => navigateToPage('/membership/bronze') },
-        { label: 'Silver', action: () => navigateToPage('/membership/silver') },
-        { label: 'Gold', action: () => navigateToPage('/membership/gold') },
-        { label: 'Platinum', action: () => navigateToPage('/membership/platinum') },
+        { label: t('landing.statusBenefits.statuses.bronze.name'), action: () => navigateToPage('/membership/bronze') },
+        { label: t('landing.statusBenefits.statuses.silver.name'), action: () => navigateToPage('/membership/silver') },
+        { label: t('landing.statusBenefits.statuses.gold.name'), action: () => navigateToPage('/membership/gold') },
+        { label: t('landing.statusBenefits.statuses.platinum.name'), action: () => navigateToPage('/membership/platinum') },
       ]
     }
   }
@@ -115,6 +196,86 @@ const Header = ({ autoOpenAuth = false }) => {
   const handleLanguageModalClose = () => {
     setIsLanguageModalOpen(false)
   }
+
+  // Анимация процентов покрытия
+  const animatePercentage = (cardId, targetPercent) => {
+    const duration = 800 // 0.8 секунды
+    const steps = 60
+    const stepTime = duration / steps
+    let currentStep = 0
+
+    const interval = setInterval(() => {
+      currentStep++
+      const progress = currentStep / steps
+      const currentPercent = Math.floor(targetPercent * progress)
+      
+      setAnimatedPercentages((prev) => ({
+        ...prev,
+        [cardId]: currentPercent
+      }))
+
+      if (currentStep >= steps) {
+        clearInterval(interval)
+        setAnimatedPercentages((prev) => ({
+          ...prev,
+          [cardId]: targetPercent
+        }))
+      }
+    }, stepTime)
+  }
+
+  // Отслеживание видимости карточек для анимации
+  useEffect(() => {
+    if (activeSubmenu !== 'membership') {
+      return
+    }
+
+    const observers = []
+    const visibleSet = new Set()
+
+    // Небольшая задержка для того, чтобы карточки успели отрендериться
+    const timeoutId = setTimeout(() => {
+      Object.keys(cardRefs.current).forEach((cardId) => {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting && !visibleSet.has(cardId)) {
+                visibleSet.add(cardId)
+                setVisibleCards((prev) => ({ ...prev, [cardId]: true }))
+                
+                // Анимация процентов
+                const index = parseInt(cardId.split('-')[2])
+                const item = submenus.membership.items[index]
+                if (item) {
+                  const statusData = getMembershipStatusData(item.label)
+                  const targetPercent = parseInt(statusData.percent)
+                  animatePercentage(cardId, targetPercent)
+                }
+              }
+            })
+          },
+          {
+            threshold: 0.2,
+          }
+        )
+
+        if (cardRefs.current[cardId]) {
+          observer.observe(cardRefs.current[cardId])
+          observers.push({ observer, element: cardRefs.current[cardId] })
+        }
+      })
+    }, 100)
+
+    return () => {
+      clearTimeout(timeoutId)
+      observers.forEach(({ observer, element }) => {
+        observer.unobserve(element)
+      })
+      // Сбрасываем состояние при закрытии подменю
+      setVisibleCards({})
+      setAnimatedPercentages({})
+    }
+  }, [activeSubmenu])
 
   // Слушаем изменения языка
   useEffect(() => {
@@ -337,19 +498,74 @@ const Header = ({ autoOpenAuth = false }) => {
                   <ChevronLeft size={24} />
                 </button>
               </div>
-              {submenus[activeSubmenu]?.items.map((item, index) => (
-                <button 
-                  key={index}
-                  className="burger-menu-item burger-submenu-item"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    item.action()
-                    closeMenu()
-                  }}
-                >
-                  {item.label}
-                </button>
-              ))}
+              {activeSubmenu === 'membership' ? (
+                <div className="burger-membership-section">
+                  <h1 className="burger-membership-title">
+                    {t('landing.statusBenefits.title')}
+                  </h1>
+                  <p className="burger-membership-subtitle">
+                    {t('landing.statusBenefits.subtitle')}
+                  </p>
+                  <div className="burger-membership-cards">
+                    {submenus[activeSubmenu]?.items.map((item, index) => {
+                    const statusData = getMembershipStatusData(item.label)
+                    const cardId = `membership-card-${index}`
+                    const isVisible = visibleCards[cardId] || false
+                    const animatedPercent = animatedPercentages[cardId] || 0
+                    
+                    return (
+                      <div
+                        key={index}
+                        ref={(el) => (cardRefs.current[cardId] = el)}
+                        className={`burger-membership-card burger-membership-card-${statusData.type} ${isVisible ? 'burger-membership-card-visible' : ''}`}
+                      >
+                        <div className="burger-membership-card-header">
+                          <h3 className="burger-membership-card-title">{item.label}</h3>
+                          <div className="burger-membership-coverage">
+                            <span className="burger-membership-coverage-text">
+                              {statusData.coversText.split(statusData.percent + '%')[0]}
+                            </span>
+                            <span className="burger-membership-coverage-percent">
+                              {animatedPercent}%
+                            </span>
+                            <span className="burger-membership-coverage-text">
+                              {statusData.coversText.split(statusData.percent + '%')[1] || ''}
+                            </span>
+                          </div>
+                          <div className="burger-membership-pay">
+                            {statusData.youPayText}
+                          </div>
+                        </div>
+                        <div className="burger-membership-benefits">
+                          <ul className="burger-membership-benefits-list">
+                            {statusData.benefits.slice(0, 3).map((benefit, benefitIndex) => (
+                              <li key={benefitIndex} className="burger-membership-benefit-item">
+                                <span className="burger-membership-benefit-check">✓</span>
+                                <span>{benefit}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )
+                  })}
+                  </div>
+                </div>
+              ) : (
+                submenus[activeSubmenu]?.items.map((item, index) => (
+                  <button 
+                    key={index}
+                    className="burger-menu-item burger-submenu-item"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      item.action()
+                      closeMenu()
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                ))
+              )}
             </nav>
           )}
         </div>
