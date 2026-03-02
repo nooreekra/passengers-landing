@@ -157,6 +157,7 @@ const AccountPage = () => {
     const [milesSummary, setMilesSummary] = useState<MilesSummary | null>(null);
     const [loadingMilesSummary, setLoadingMilesSummary] = useState(false);
     const [wishlistsMap, setWishlistsMap] = useState<Map<string, string>>(new Map()); // Map для быстрого поиска названий вишлистов по ID
+    const [wallet, setWallet] = useState<{ id: string } | null>(null);
     const detailsTabRef = useRef<HTMLButtonElement>(null);
     const transactionsTabRef = useRef<HTMLButtonElement>(null);
 
@@ -277,61 +278,60 @@ const AccountPage = () => {
     // Загрузка транзакций из API
     useEffect(() => {
         const fetchTransactions = async () => {
-            try {
-                setLoadingTransactions(true);
-                setTransactionsOffset(0);
-                setHasMoreTransactions(true);
-                const wallet = await getWallet();
-                const response = await getTransactions(wallet.id, 0, 10, true); // excludeTransfers = true
-                setTransactionsData(response.items);
-                setTransactionsOffset(response.offset + response.items.length);
-                // Проверяем, есть ли еще транзакции для загрузки
-                setHasMoreTransactions(response.offset + response.items.length < response.total);
-                
-                // Загружаем вишлисты для отображения названий в Transfer транзакциях
+            if (activeTab === "transactions") {
                 try {
-                    const wishlists = await getWishlists(wallet.id);
-                    const wishlistsMap = new Map<string, string>();
-                    wishlists.forEach(w => {
-                        wishlistsMap.set(w.id, w.title);
-                    });
-                    setWishlistsMap(wishlistsMap);
+                    setLoadingTransactions(true);
+                    setTransactionsOffset(0);
+                    setHasMoreTransactions(true);
+                    const walletData = await getWallet();
+                    setWallet(walletData);
+                    const response = await getTransactions(walletData.id, 0, 10, true); // excludeTransfers = true
+                    setTransactionsData(response.items);
+                    setTransactionsOffset(10);
+                    // Проверяем, есть ли еще транзакции для загрузки
+                    setHasMoreTransactions(response.items.length === 10);
+                    
+                    // Загружаем вишлисты для отображения названий в Transfer транзакциях
+                    try {
+                        const wishlists = await getWishlists(walletData.id);
+                        const wishlistsMap = new Map<string, string>();
+                        wishlists.forEach(w => {
+                            wishlistsMap.set(w.id, w.title);
+                        });
+                        setWishlistsMap(wishlistsMap);
+                    } catch (error) {
+                        console.error('Ошибка при загрузке вишлистов:', error);
+                    }
+                    
+                    // Разворачиваем первые несколько транзакций по умолчанию
+                    if (response.items.length > 0) {
+                        const defaultExpanded = new Set(response.items.slice(0, 3).map(item => item.id));
+                        setExpandedTransactions(defaultExpanded);
+                    }
                 } catch (error) {
-                    console.error('Ошибка при загрузке вишлистов:', error);
+                    console.error('Ошибка при загрузке транзакций:', error);
+                } finally {
+                    setLoadingTransactions(false);
                 }
-                
-                // Разворачиваем первые несколько транзакций по умолчанию
-                if (response.items.length > 0) {
-                    const defaultExpanded = new Set(response.items.slice(0, 3).map(item => item.id));
-                    setExpandedTransactions(defaultExpanded);
-                }
-            } catch (error) {
-                console.error('Ошибка при загрузке транзакций:', error);
-            } finally {
-                setLoadingTransactions(false);
             }
         };
 
-        if (activeTab === "transactions") {
-            fetchTransactions();
-        }
+        fetchTransactions();
     }, [activeTab]);
 
     // Функция для загрузки следующих транзакций
     const loadMoreTransactions = useCallback(async () => {
-        if (loadingMoreTransactions || !hasMoreTransactions) return;
+        if (loadingMoreTransactions || !hasMoreTransactions || !wallet?.id) return;
         
         try {
             setLoadingMoreTransactions(true);
-            const wallet = await getWallet();
             const response = await getTransactions(wallet.id, transactionsOffset, 10, true); // excludeTransfers = true
             
             if (response.items.length > 0) {
                 setTransactionsData(prev => [...prev, ...response.items]);
-                const newOffset = response.offset + response.items.length;
-                setTransactionsOffset(newOffset);
+                setTransactionsOffset(prev => prev + response.items.length);
                 // Проверяем, есть ли еще транзакции для загрузки
-                setHasMoreTransactions(newOffset < response.total);
+                setHasMoreTransactions(response.items.length === 10);
             } else {
                 setHasMoreTransactions(false);
             }
@@ -341,33 +341,39 @@ const AccountPage = () => {
         } finally {
             setLoadingMoreTransactions(false);
         }
-    }, [loadingMoreTransactions, hasMoreTransactions, transactionsOffset]);
+    }, [loadingMoreTransactions, hasMoreTransactions, wallet?.id, transactionsOffset]);
 
     // Intersection Observer для автоматической загрузки при прокрутке
     useEffect(() => {
-        if (activeTab !== "transactions" || !hasMoreTransactions || loadingMoreTransactions) return;
+        if (activeTab !== "transactions" || !hasMoreTransactions) return;
 
-        const triggerElement = loadMoreTriggerRef.current;
-        if (!triggerElement) return;
+        let observer: IntersectionObserver | null = null;
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting && !loadingMoreTransactions && hasMoreTransactions) {
-                    loadMoreTransactions();
-                }
-            },
-            { 
-                threshold: 0.1,
-                rootMargin: '100px' // Начинаем загрузку за 100px до появления элемента
-            }
-        );
+        // Используем setTimeout чтобы дать время DOM обновиться
+        const timeoutId = setTimeout(() => {
+            const triggerElement = loadMoreTriggerRef.current;
+            
+            if (!triggerElement) return;
 
-        observer.observe(triggerElement);
+            observer = new IntersectionObserver(
+                (entries) => {
+                    if (entries[0].isIntersecting && !loadingMoreTransactions) {
+                        loadMoreTransactions();
+                    }
+                },
+                { threshold: 0.1 }
+            );
+
+            observer.observe(triggerElement);
+        }, 300);
 
         return () => {
-            observer.disconnect();
+            clearTimeout(timeoutId);
+            if (observer) {
+                observer.disconnect();
+            }
         };
-    }, [activeTab, hasMoreTransactions, loadingMoreTransactions, loadMoreTransactions]);
+    }, [activeTab, hasMoreTransactions, loadingMoreTransactions, loadMoreTransactions, transactionsData.length]);
 
     // Вспомогательная функция для получения кода/типа тира (поддержка обоих форматов)
     const getTierCode = (tier: any): string => {
@@ -1874,9 +1880,9 @@ const AccountPage = () => {
                                             </div>
                                         </div>
                                     ))}
-                                    {/* Триггер для lazy load */}
+                                    {/* Триггер для lazy load - ВАЖНО: вне цикла по месяцам, но внутри основного контейнера */}
                                     {hasMoreTransactions && (
-                                        <div ref={loadMoreTriggerRef} className="py-4 min-h-[50px]">
+                                        <div ref={loadMoreTriggerRef} className="py-4">
                                             {loadingMoreTransactions && (
                                                 <div className="text-center">
                                                     <Loader text={t("passenger.account.loadingMore") || "Загрузка..."} />
