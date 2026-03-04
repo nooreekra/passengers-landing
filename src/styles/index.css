@@ -889,7 +889,6 @@ body > div[class*="react-international-phone"] {
   text-align: center;
   margin-bottom: 32px;
   line-height: 1.6;
-  max-width: 500px;
   padding: 0 20px;
 }
 
@@ -900,13 +899,14 @@ body > div[class*="react-international-phone"] {
   gap: 16px;
   width: 100%;
   max-width: 500px;
-  margin-bottom: 40px;
+  margin: 0 auto;
+  align-items: center;
 }
 
 .burger-membership-card {
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 16px;
+  padding: 24px;
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -914,6 +914,20 @@ body > div[class*="react-international-phone"] {
   max-width: 500px;
   opacity: 0;
   transform: translateY(20px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.burger-membership-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.6;
 }
 
 .burger-membership-card:hover {
@@ -944,134 +958,262 @@ body > div[class*="react-international-phone"] {
 }
 
 
-/* Bronze - нейтральный светлый фон, без свечения, минимальная тень */
+/* Bronze - нейтральный светлый фон */
 .burger-membership-card-bronze {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.burger-membership-card-bronze::before {
+  background: rgba(255, 255, 255, 0.4);
 }
 
 .burger-membership-card-bronze:hover {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  transform: translateY(-2px);
 }
 
-/* Silver - лёгкий серебристый оттенок фона, чуть более выраженная тень */
+/* Silver - серебристо-серый металлический вид */
 .burger-membership-card-silver {
-  background: rgba(245, 247, 250, 0.12);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+  background: linear-gradient(135deg, 
+    rgba(230, 232, 235, 0.25) 0%, 
+    rgba(200, 205, 210, 0.2) 50%,
+    rgba(230, 232, 235, 0.25) 100%);
+  border-color: rgba(200, 205, 210, 0.4);
+  color: rgba(230, 232, 235, 0.95);
+  box-shadow: 
+    0 6px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.burger-membership-card-silver::before {
+  background: rgba(230, 232, 235, 0.6);
 }
 
 .burger-membership-card-silver:hover {
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+  box-shadow: 
+    0 8px 28px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
 }
 
-/* Gold - тёплый золотистый оттенок, более выраженная тень, лёгкое внутреннее свечение */
+/* Gold - золотой металлический вид */
 .burger-membership-card-gold {
-  background: rgba(254, 249, 231, 0.15);
-  border-color: rgba(217, 172, 0, 0.35);
+  background: linear-gradient(135deg, 
+    rgba(255, 200, 0, 0.3) 0%, 
+    rgba(255, 180, 0, 0.25) 50%,
+    rgba(255, 200, 0, 0.3) 100%);
+  border-color: rgba(255, 200, 0, 0.5);
+  color: rgba(255, 255, 255, 0.95);
   box-shadow: 
-    0 5px 16px rgba(217, 172, 0, 0.25),
-    0 0 0 1px rgba(217, 172, 0, 0.15),
-    inset 0 0 20px rgba(255, 215, 0, 0.08);
+    0 6px 20px rgba(255, 200, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15),
+    0 0 15px rgba(255, 220, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.burger-membership-card-gold::before {
+  background: rgba(255, 220, 0, 0.7);
+}
+
+.burger-membership-card-gold::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+    radial-gradient(circle at 60% 70%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+    radial-gradient(circle at 10% 50%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+    radial-gradient(circle at 90% 60%, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+    radial-gradient(circle at 30% 10%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+    radial-gradient(circle at 70% 90%, rgba(255, 255, 255, 0.6) 1px, transparent 1px);
+  background-size: 
+    200px 200px,
+    150px 150px,
+    180px 180px,
+    160px 160px,
+    190px 190px,
+    170px 170px,
+    140px 140px,
+    200px 200px;
+  background-position: 
+    0% 0%,
+    50% 50%,
+    100% 0%,
+    0% 100%,
+    25% 25%,
+    75% 75%,
+    10% 90%,
+    90% 10%;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .burger-membership-card-gold:hover {
   box-shadow: 
-    0 6px 20px rgba(217, 172, 0, 0.3),
-    0 0 0 1px rgba(217, 172, 0, 0.2),
-    inset 0 0 25px rgba(255, 215, 0, 0.12);
+    0 8px 24px rgba(255, 200, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+    0 0 20px rgba(255, 220, 0, 0.3);
+  transform: translateY(-2px);
 }
 
-/* Platinum - холодный светлый фон (почти белый с лёгким холодным оттенком), 
-   самая сильная тень, лёгкое свечение по краям */
+.burger-membership-card-gold:hover::after {
+  opacity: 0.8;
+}
+
+/* Platinum - светлый серебристый металлический вид с легким голубым оттенком */
 .burger-membership-card-platinum {
-  background: rgba(248, 250, 252, 0.2);
-  border-color: rgba(148, 163, 184, 0.4);
+  background: linear-gradient(135deg, 
+    rgba(240, 244, 248, 0.35) 0%, 
+    rgba(220, 227, 235, 0.3) 50%,
+    rgba(240, 244, 248, 0.35) 100%);
+  border-color: rgba(203, 213, 225, 0.6);
+  color: rgba(241, 245, 249, 0.98);
   box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.25),
-    0 0 0 1px rgba(148, 163, 184, 0.3),
-    0 0 20px rgba(203, 213, 225, 0.3),
-    inset 0 0 30px rgba(226, 232, 240, 0.1);
+    0 10px 32px rgba(148, 163, 184, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+    0 0 25px rgba(203, 213, 225, 0.3);
   position: relative;
+  overflow: hidden;
 }
 
 .burger-membership-card-platinum::before {
+  background: rgba(241, 245, 249, 0.8);
+}
+
+.burger-membership-card-platinum::after {
   content: '';
   position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(135deg, 
-    rgba(203, 213, 225, 0.4) 0%, 
-    rgba(148, 163, 184, 0.3) 50%,
-    rgba(203, 213, 225, 0.4) 100%);
-  border-radius: 14px;
-  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+    radial-gradient(circle at 60% 70%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+    radial-gradient(circle at 10% 50%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+    radial-gradient(circle at 90% 60%, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+    radial-gradient(circle at 30% 10%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+    radial-gradient(circle at 70% 90%, rgba(255, 255, 255, 0.6) 1px, transparent 1px);
+  background-size: 
+    200px 200px,
+    150px 150px,
+    180px 180px,
+    160px 160px,
+    190px 190px,
+    170px 170px,
+    140px 140px,
+    200px 200px;
+  background-position: 
+    0% 0%,
+    50% 50%,
+    100% 0%,
+    0% 100%,
+    25% 25%,
+    75% 75%,
+    10% 90%,
+    90% 10%;
   opacity: 0.6;
-  filter: blur(4px);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .burger-membership-card-platinum:hover {
   box-shadow: 
-    0 10px 30px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(148, 163, 184, 0.4),
-    0 0 25px rgba(203, 213, 225, 0.4),
-    inset 0 0 35px rgba(226, 232, 240, 0.15);
+    0 12px 36px rgba(148, 163, 184, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+    0 0 30px rgba(203, 213, 225, 0.4);
+  transform: translateY(-2px);
 }
 
-.burger-membership-card-platinum:hover::before {
+.burger-membership-card-platinum:hover::after {
   opacity: 0.8;
 }
 
 .burger-membership-card-header {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 2;
 }
 
 .burger-membership-card-title {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  line-height: 1.2;
 }
 
 .burger-membership-coverage {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 8px;
-  line-height: 1.4;
+  margin-bottom: 12px;
+  line-height: 1.5;
   display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 4px;
 }
 
+.burger-membership-savvy {
+  font-size: 18px;
+  opacity: 0.9;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
 .burger-membership-coverage-text {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: 500;
 }
 
 .burger-membership-coverage-percent {
-  font-size: 32px;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0 2px;
+  font-size: 64px;
+  font-weight: 800;
+  line-height: 1;
+  margin: 4px 0;
   font-family: var(--font-inter), sans-serif;
+  letter-spacing: -2px;
+}
+
+.burger-membership-covers {
+  font-size: 14px;
+  opacity: 0.85;
+  font-weight: 500;
+  margin-top: -4px;
 }
 
 .burger-membership-pay {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
-  margin-top: 4px;
+  font-size: 15px;
+  opacity: 0.85;
+  font-weight: 500;
+  margin-top: 12px;
 }
 
 .burger-membership-benefits {
   margin-top: 12px;
   padding-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 2;
 }
 
 .burger-membership-benefits-list {
@@ -1141,24 +1283,28 @@ body > div[class*="react-international-phone"] {
   }
 
   .burger-membership-card {
-    padding: 16px;
+    padding: 20px;
+    border-radius: 12px;
   }
 
   .burger-membership-card-title {
-    font-size: 18px;
-    margin-bottom: 10px;
+    font-size: 20px;
   }
 
-  .burger-membership-coverage {
-    font-size: 14px;
+  .burger-membership-savvy {
+    font-size: 16px;
   }
 
   .burger-membership-coverage-percent {
-    font-size: 28px;
+    font-size: 48px;
+  }
+
+  .burger-membership-covers {
+    font-size: 13px;
   }
 
   .burger-membership-pay {
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .burger-membership-benefit-item {
@@ -1228,8 +1374,9 @@ body > div[class*="react-international-phone"] {
 
 /* Описание статуса */
 .burger-membership-status-detail {
-  margin-bottom: 40px;
   padding: 0 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .burger-membership-status-coverage {
@@ -1420,7 +1567,6 @@ body > div[class*="react-international-phone"] {
   }
 
   .burger-membership-status-detail {
-    margin-bottom: 32px;
     padding: 0 16px;
   }
 

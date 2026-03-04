@@ -16,7 +16,6 @@ const Header = ({ autoOpenAuth = false }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language || 'en')
   const [activeSubmenu, setActiveSubmenu] = useState(null)
-  const [isMembershipDetailOpen, setIsMembershipDetailOpen] = useState(false)
   const [selectedStatus, setSelectedStatus] = useState('bronze')
   const [openFaqIndex, setOpenFaqIndex] = useState(null)
   const [visibleCards, setVisibleCards] = useState({})
@@ -42,9 +41,10 @@ const Header = ({ autoOpenAuth = false }) => {
   const closeMenu = () => {
     setIsMenuOpen(false)
     setActiveSubmenu(null)
-    setIsMembershipDetailOpen(false)
     setSelectedStatus('bronze')
     setOpenFaqIndex(null)
+    setVisibleCards({})
+    setAnimatedPercentages({})
   }
 
   const openSubmenu = (submenuKey) => {
@@ -64,21 +64,13 @@ const Header = ({ autoOpenAuth = false }) => {
     // Устанавливаем флаг, чтобы предотвратить закрытие меню
     isClickingInsideMenuRef.current = true
     setActiveSubmenu(null)
-    setIsMembershipDetailOpen(false)
     setSelectedStatus('bronze')
+    setVisibleCards({})
+    setAnimatedPercentages({})
     // Сбрасываем флаг через небольшую задержку
     setTimeout(() => {
       isClickingInsideMenuRef.current = false
     }, 300)
-  }
-
-  const openMembershipDetail = () => {
-    setIsMembershipDetailOpen(true)
-  }
-
-  const closeMembershipDetail = () => {
-    setIsMembershipDetailOpen(false)
-    setSelectedStatus('bronze')
   }
 
   const handleFaqToggle = (index) => {
@@ -245,58 +237,36 @@ const Header = ({ autoOpenAuth = false }) => {
     }, stepTime)
   }
 
-  // Отслеживание видимости карточек для анимации
+  // Отслеживание видимости карточки для анимации
   useEffect(() => {
     if (activeSubmenu !== 'membership') {
       return
     }
 
-    const observers = []
-    const visibleSet = new Set()
-
-    // Небольшая задержка для того, чтобы карточки успели отрендериться
+    const cardId = `membership-card-${selectedStatus}`
+    let observer = null
+    
+    // Сбрасываем анимацию для новой карточки
+    setAnimatedPercentages((prev) => ({ ...prev, [cardId]: 0 }))
+    
     const timeoutId = setTimeout(() => {
-      Object.keys(cardRefs.current).forEach((cardId) => {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting && !visibleSet.has(cardId)) {
-                visibleSet.add(cardId)
-                setVisibleCards((prev) => ({ ...prev, [cardId]: true }))
-                
-                // Анимация процентов
-                const index = parseInt(cardId.split('-')[2])
-                const item = submenus.membership.items[index]
-                if (item) {
-                  const statusData = getMembershipStatusData(item.label)
-                  const targetPercent = parseInt(statusData.percent)
-                  animatePercentage(cardId, targetPercent)
-                }
-              }
-            })
-          },
-          {
-            threshold: 0.2,
-          }
-        )
-
-        if (cardRefs.current[cardId]) {
-          observer.observe(cardRefs.current[cardId])
-          observers.push({ observer, element: cardRefs.current[cardId] })
-        }
-      })
+      if (cardRefs.current[cardId]) {
+        // Сразу делаем карточку видимой и запускаем анимацию
+        setVisibleCards((prev) => ({ ...prev, [cardId]: true }))
+        
+        const statusData = getMembershipStatusData(t(`landing.statusBenefits.statuses.${selectedStatus}.name`))
+        const targetPercent = parseInt(statusData.percent)
+        animatePercentage(cardId, targetPercent)
+      }
     }, 100)
 
     return () => {
       clearTimeout(timeoutId)
-      observers.forEach(({ observer, element }) => {
-        observer.unobserve(element)
-      })
-      // Сбрасываем состояние при закрытии подменю
-      setVisibleCards({})
-      setAnimatedPercentages({})
+      if (observer && cardRefs.current[cardId]) {
+        observer.unobserve(cardRefs.current[cardId])
+      }
     }
-  }, [activeSubmenu])
+  }, [activeSubmenu, selectedStatus])
 
   // Слушаем изменения языка
   useEffect(() => {
@@ -506,183 +476,116 @@ const Header = ({ autoOpenAuth = false }) => {
           ) : (
             <nav className="burger-menu-nav">
               {activeSubmenu === 'membership' ? (
-                !isMembershipDetailOpen ? (
-                  <div className="burger-membership-section">
-                    <div className="burger-membership-title-wrapper">
-                      <button 
-                        className="burger-menu-back-button-inline"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          e.preventDefault()
-                          closeSubmenu()
-                        }}
-                        aria-label="Back"
-                      >
-                        <ChevronLeft size={24} />
-                      </button>
-                      <h1 
-                        className="burger-membership-title"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          openMembershipDetail()
-                        }}
-                        style={{ cursor: 'pointer' }}
-                      >
-                        {t('landing.statusBenefits.title')}
-                      </h1>
-                    </div>
+                <div className="burger-membership-detail-section">
+                  <div className="burger-membership-title-wrapper">
+                    <button 
+                      className="burger-menu-back-button-inline"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                        closeSubmenu()
+                      }}
+                      aria-label="Back"
+                    >
+                      <ChevronLeft size={24} />
+                    </button>
+                    <h1 className="burger-membership-title">
+                      {t('landing.statusBenefits.title')}
+                    </h1>
+                  </div>
+
+                  {/* Подзаголовок */}
                   <p className="burger-membership-subtitle">
                     {t('landing.statusBenefits.subtitle')}
                   </p>
-                  <div className="burger-membership-cards">
-                    {submenus[activeSubmenu]?.items.map((item, index) => {
-                    const statusData = getMembershipStatusData(item.label)
-                    const cardId = `membership-card-${index}`
-                    const isVisible = visibleCards[cardId] || false
-                    const animatedPercent = animatedPercentages[cardId] || 0
-                    
-                    return (
-                      <div
-                        key={index}
-                        ref={(el) => (cardRefs.current[cardId] = el)}
-                        className={`burger-membership-card burger-membership-card-${statusData.type} ${isVisible ? 'burger-membership-card-visible' : ''}`}
-                      >
-                        <div className="burger-membership-card-header">
-                          <h3 className="burger-membership-card-title">{item.label}</h3>
-                          <div className="burger-membership-coverage">
-                            <span className="burger-membership-coverage-text">
-                              {statusData.coversText.split(statusData.percent + '%')[0]}
-                            </span>
-                            <span className="burger-membership-coverage-percent">
-                              {animatedPercent}%
-                            </span>
-                            <span className="burger-membership-coverage-text">
-                              {statusData.coversText.split(statusData.percent + '%')[1] || ''}
-                            </span>
-                          </div>
-                          <div className="burger-membership-pay">
-                            {statusData.youPayText}
-                          </div>
-                        </div>
-                        <div className="burger-membership-benefits">
-                          <ul className="burger-membership-benefits-list">
-                            {statusData.benefits.slice(0, 3).map((benefit, benefitIndex) => (
-                              <li key={benefitIndex} className="burger-membership-benefit-item">
-                                <span className="burger-membership-benefit-check">✓</span>
-                                <span>{benefit}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    )
-                  })}
-                  </div>
-                </div>
-                ) : (
-                  <div className="burger-membership-detail-section">
-                    <div className="burger-membership-title-wrapper">
-                      <button 
-                        className="burger-menu-back-button-inline"
+
+                  {/* Переключатель статусов */}
+                  <div className="burger-membership-tabs">
+                    {['bronze', 'silver', 'gold', 'platinum'].map((status) => (
+                      <button
+                        key={status}
+                        className={`burger-membership-tab ${selectedStatus === status ? 'active' : ''}`}
                         onClick={(e) => {
                           e.stopPropagation()
-                          e.preventDefault()
-                          closeMembershipDetail()
+                          setSelectedStatus(status)
                         }}
-                        aria-label="Back"
                       >
-                        <ChevronLeft size={24} />
+                        {t(`landing.statusBenefits.statuses.${status}.name`)}
                       </button>
-                      <h1 className="burger-membership-title">
-                        {t('landing.statusBenefits.title')}
-                      </h1>
-                    </div>
+                    ))}
+                  </div>
 
-                    {/* Переключатель статусов */}
-                    <div className="burger-membership-tabs">
-                      {['bronze', 'silver', 'gold', 'platinum'].map((status) => (
-                        <button
-                          key={status}
-                          className={`burger-membership-tab ${selectedStatus === status ? 'active' : ''}`}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setSelectedStatus(status)
-                          }}
-                        >
-                          {t(`landing.statusBenefits.statuses.${status}.name`)}
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Описание выбранного статуса */}
-                    <div className="burger-membership-status-detail">
+                  {/* Карточка выбранного статуса */}
+                  <div className="burger-membership-status-detail">
+                    <div className="burger-membership-cards">
                       {(() => {
                         const statusData = getMembershipStatusData(t(`landing.statusBenefits.statuses.${selectedStatus}.name`))
+                        const cardId = `membership-card-${selectedStatus}`
+                        const isVisible = visibleCards[cardId] || false
+                        const animatedPercent = animatedPercentages[cardId] || 0
+                        
                         return (
-                          <>
-                            <div className="burger-membership-status-coverage">
-                              <div className="burger-membership-status-coverage-line">
-                                <span className="burger-membership-status-coverage-text">
-                                  {statusData.coversText.split(statusData.percent + '%')[0]}
-                                </span>
-                                <span className="burger-membership-status-coverage-percent">
-                                  {statusData.percent}%
-                                </span>
-                                <span className="burger-membership-status-coverage-text">
-                                  {statusData.coversText.split(statusData.percent + '%')[1] || ''}
-                                </span>
+                          <div
+                            ref={(el) => (cardRefs.current[cardId] = el)}
+                            className={`burger-membership-card burger-membership-card-${statusData.type} ${isVisible ? 'burger-membership-card-visible' : ''}`}
+                          >
+                            <div className="burger-membership-card-header">
+                              <h3 className="burger-membership-card-title">{t(`landing.statusBenefits.statuses.${selectedStatus}.name`)} Status</h3>
+                              <div className="burger-membership-coverage">
+                                <div className="burger-membership-savvy">IMS Savvy</div>
+                                <div className="burger-membership-coverage-percent">
+                                  {animatedPercent}%
+                                </div>
+                                <div className="burger-membership-covers">covers</div>
                               </div>
-                              <div className="burger-membership-status-pay">
+                              <div className="burger-membership-pay">
                                 {statusData.youPayText}
                               </div>
                             </div>
-                            <div className="burger-membership-status-benefits">
-                              <h3 className="burger-membership-status-benefits-title">
-                                {t('landing.statusBenefits.benefits')}
-                              </h3>
-                              <ul className="burger-membership-status-benefits-list">
+                            <div className="burger-membership-benefits">
+                              <ul className="burger-membership-benefits-list">
                                 {statusData.benefits.map((benefit, benefitIndex) => (
-                                  <li key={benefitIndex} className="burger-membership-status-benefit-item">
-                                    <span className="burger-membership-status-benefit-check">✓</span>
+                                  <li key={benefitIndex} className="burger-membership-benefit-item">
+                                    <span className="burger-membership-benefit-check">✓</span>
                                     <span>{benefit}</span>
                                   </li>
                                 ))}
                               </ul>
                             </div>
-                          </>
+                          </div>
                         )
                       })()}
                     </div>
+                  </div>
 
-                    {/* FAQ Section */}
-                    <div className="burger-membership-faq">
-                      <h2 className="burger-membership-faq-title">
-                        {t('landing.statusBenefits.faq.title')}
-                      </h2>
-                      <div className="burger-membership-faq-list">
-                        {[0, 1, 2, 3, 4, 5, 6].map((index) => (
-                          <div key={index} className="burger-membership-faq-item">
-                            <button
-                              className={`burger-membership-faq-question ${openFaqIndex === index ? 'open' : ''}`}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                handleFaqToggle(index)
-                              }}
-                            >
-                              <span>{t(`landing.statusBenefits.faq.items.${index}.question`)}</span>
-                              <span className="burger-membership-faq-arrow">›</span>
-                            </button>
-                            {openFaqIndex === index && (
-                              <div className="burger-membership-faq-answer">
-                                {t(`landing.statusBenefits.faq.items.${index}.answer`)}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
+                  {/* FAQ Section */}
+                  <div className="burger-membership-faq">
+                    <h2 className="burger-membership-faq-title">
+                      {t('landing.statusBenefits.faq.title')}
+                    </h2>
+                    <div className="burger-membership-faq-list">
+                      {[0, 1, 2, 3, 4, 5, 6].map((index) => (
+                        <div key={index} className="burger-membership-faq-item">
+                          <button
+                            className={`burger-membership-faq-question ${openFaqIndex === index ? 'open' : ''}`}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleFaqToggle(index)
+                            }}
+                          >
+                            <span>{t(`landing.statusBenefits.faq.items.${index}.question`)}</span>
+                            <span className="burger-membership-faq-arrow">›</span>
+                          </button>
+                          {openFaqIndex === index && (
+                            <div className="burger-membership-faq-answer">
+                              {t(`landing.statusBenefits.faq.items.${index}.answer`)}
+                            </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   </div>
-                )
+                </div>
               ) : (
                 <>
                   <div className="burger-submenu-title">
