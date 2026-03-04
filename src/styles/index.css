@@ -1551,7 +1551,7 @@ body > div[class*="react-international-phone"] {
 /* Мобильная версия для детальной страницы */
 @media (max-width: 640px) {
   .burger-membership-detail-section {
-    padding-bottom: 60px;
+    padding-bottom: 100px;
   }
 
   .burger-membership-tabs {
@@ -1601,7 +1601,7 @@ body > div[class*="react-international-phone"] {
     margin-top: 32px;
     padding: 0 16px;
     padding-top: 32px;
-    padding-bottom: 32px;
+    padding-bottom: 100px;
   }
 
   .burger-membership-faq-title {
